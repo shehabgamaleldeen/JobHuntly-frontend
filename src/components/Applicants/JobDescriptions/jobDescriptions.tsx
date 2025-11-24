@@ -2,10 +2,10 @@ const jobDescriptions = () => {
   return (
     <>
       <section className="bg-[#F8F8FD] w-screen flex justify-center">
-        <div className="bg-[#FFFFFF] w-4/5 m-auto p-6 flex lg:flex-row sm:flex-col justify-between border border-[#D6DDEB]">
-          <div className="flex  items-center">
+        <div className="bg-[#FFFFFF] w-4/5 m-auto p-6 flex max-sm:flex-col justify-between border border-[#D6DDEB]">
+          <div className="flex max-sm:flex-col items-center  max-sm:place-items-start">
             <img className="w-24" src="/CompanyLogo.png" alt="Company Logo" />
-            <div className="m-6">
+            <div className="m-6 max-sm:my-4 max-sm:mx-0">
               <h1 className="font-semibold text-3xl">Social Media Assistant</h1>
               <p className="text-[#515B6F] font-normal">
                 Stripe Paris, France Full-Time
