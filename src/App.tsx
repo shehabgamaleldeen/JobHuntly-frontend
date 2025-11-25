@@ -8,6 +8,8 @@ import Login from './components/Applicants/Login/Login';
 import Signup from './components/Applicants/Signup/Signup';
 import SearchCompanies from './components/Applicants/SearchCompanies/SearchCompanies';
 import NotFoundPage from './components/Basic/NotFoundPage';
+import Dashboard from './components/Recruiters/Dashboard/Dashboard';
+// import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings';
 import './App.css';
 
 function App() {
@@ -23,6 +25,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="*" element={<NotFoundPage />} />
+
+            // this is handled for now  ( moaz )
+            <Route path="/Company" element={<Dashboard />} />
+            {/* <Route path="/" element={<DashboardSettings />} /> */}
           </Routes>
         </main>
         <Footer />
