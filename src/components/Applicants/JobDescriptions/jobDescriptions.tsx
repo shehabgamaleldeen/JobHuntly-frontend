@@ -1,3 +1,4 @@
+import ApplyButton from './ApplyButoon'
 import PerksBenefits from './PerksBenefits'
 import SimilarJops from './SimilarJops'
 
@@ -24,7 +25,8 @@ const jobDescriptions = () => {
 
           <div className="flex items-center gap-16">
             <img className="w-8" src="/ShareIcon.png" alt="Share Icon" />
-            <button className="w-44 h-14 text-white bg-[#4640DE]">Apply</button>
+            <ApplyButton />
+            {/* <button className="w-44 h-14 text-white bg-[#4640DE]">Apply</button> */}
           </div>
         </div>
       </section>
