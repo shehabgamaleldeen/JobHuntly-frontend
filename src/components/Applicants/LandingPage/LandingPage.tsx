@@ -1,4 +1,5 @@
 import React from 'react'
+import CategoryCollection from './CategoryCollection'
 import CategoryHeader from './CategoryHeader'
 import HeaderTitle from './HeaderTitle'
 import LandingCompany from './LandingCompany'
@@ -13,6 +14,7 @@ import LandingCompany from './LandingCompany'
       <HeaderTitle/>
       <LandingCompany/>
       <CategoryHeader/>
+      <CategoryCollection/>
     </>
   )
 }
