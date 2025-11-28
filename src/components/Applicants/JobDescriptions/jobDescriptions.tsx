@@ -3,6 +3,7 @@ import PerksBenefits from './PerksBenefits.tsx'
 import SimilarJops from './SimilarJops.tsx'
 import { useEffect, useState } from 'react'
 import instance from '../../AxiosConfig/instance.ts'
+import './style.css'
 
 const JobDescriptions = () => {
   type Job = {
