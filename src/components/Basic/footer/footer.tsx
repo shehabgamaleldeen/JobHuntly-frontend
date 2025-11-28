@@ -6,7 +6,7 @@ type FooterProps = {
   logoSrc?: string;
 };
 
-const Footer: React.FC<FooterProps> = ({ logoSrc = logoImage }) => {
+const Footer: React.FC<FooterProps> = () => {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -101,7 +101,7 @@ return (
         {/* Bottom section */}
         <div className="mt-12 pt-8 border-t border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="text-slate-500 text-sm">
-            2021 © JobHuntly. All rights reserved.
+            2025 © JobHuntly. All rights reserved.
           </div>
           
           <div className="flex gap-3">
@@ -109,6 +109,7 @@ return (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-slate-300">
                 <path d="M22 12a10 10 0 10-11.5 9.95v-7.05H8.9v-2.9h1.6V9.4c0-1.6.95-2.5 2.4-2.5.7 0 1.44.12 1.44.12v1.58h-.8c-.79 0-1.04.5-1.04 1.02v1.22h1.77l-.28 2.9h-1.5V22A10 10 0 0022 12z"/>
               </svg>
+              {/* <img src="../../../assets/icons/instagram-brands-solid-full.svg"  alt="facebook" /> */}
             </a>
 
             <a href="#" aria-label="Instagram" className="w-9 h-9 bg-slate-700 rounded-md flex items-center justify-center hover:bg-slate-600 transition">
