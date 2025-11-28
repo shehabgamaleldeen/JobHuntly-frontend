@@ -1,4 +1,5 @@
 import React from 'react'
+import HeaderTitle from './HeaderTitle'
 
 
  function LandingPage() {
@@ -7,7 +8,7 @@ import React from 'react'
 
   return (
     <> 
-    LandingPage
+      <HeaderTitle/>
     </>
   )
 }
