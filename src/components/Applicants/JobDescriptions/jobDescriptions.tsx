@@ -1,8 +1,32 @@
 import ApplyButton from './ApplyButoon'
 import PerksBenefits from './PerksBenefits'
 import SimilarJops from './SimilarJops'
+import { useEffect, useState } from 'react'
+import instance from '../../AxiosConfig/instance.ts'
 
 const jobDescriptions = () => {
+  type Job = {
+    [key: string]: any
+  }
+  const [job, setJob] = useState<Job | null>(null)
+
+  async function getJop() {
+    try {
+      const res = await instance.get(`/jobs/1`)
+      setJob(res.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getJop()
+  }, [])
+
+  // check the respone jop object
+  useEffect(() => {
+    console.log(job)
+  }, [job])
   return (
     <>
       <section className="jobDescriptionsCard bg-[#F8F8FD] my-14 w-screen flex justify-center">
@@ -10,15 +34,15 @@ const jobDescriptions = () => {
           <div className="flex max-sm:flex-col items-center  max-sm:place-items-start">
             <img
               className="w-24 max-sm:w-16"
-              src="/CompanyLogo.png"
+              src={job?.image}
               alt="Company Logo"
             />
             <div className="m-6 max-sm:my-4 max-sm:mx-0">
               <h1 className="text-[#25324B] text-3xl font-semibold">
-                Social Media Assistant
+                {job?.title}
               </h1>
               <p className="text-[#515B6F] font-normal">
-                Stripe Paris, France Full-Time
+                {job?.company + job?.location + job?.employment_type}
               </p>
             </div>
           </div>
@@ -26,7 +50,6 @@ const jobDescriptions = () => {
           <div className="flex items-center gap-16">
             <img className="w-8" src="/ShareIcon.png" alt="Share Icon" />
             <ApplyButton />
-            {/* <button className="w-44 h-14 text-white bg-[#4640DE]">Apply</button> */}
           </div>
         </div>
       </section>
@@ -38,13 +61,7 @@ const jobDescriptions = () => {
               <h2 className="text-[#25324B] text-3xl font-semibold">
                 Description
               </h2>
-              <p className="text-[#515B6F] mt-4 mb-10">
-                Stripe is looking for Social Media Marketing expert to help
-                manage our online networks. You will be responsible for
-                monitoring our social media channels, creating content, finding
-                effective ways to engage the community and incentivize others to
-                engage on our channels.
-              </p>
+              <p className="text-[#515B6F] mt-4 mb-10">{job?.description}</p>
             </div>
             <div>
               <h2 className="text-[#25324B] text-3xl font-semibold">
