@@ -18,7 +18,7 @@ function App() {
         <Navbar />
         <main className="flex-grow">
           <Routes>
-            {/* <Route path="/" element={<LandingPage />} /> */}
+            <Route path="/Landing" element={<LandingPage />} />
             <Route path="/" element={<DashboardSettings />} />
             <Route path="/find-jobs" element={<FindJobs />} />
             <Route path="/browse-companies" element={<SearchCompanies />} />
