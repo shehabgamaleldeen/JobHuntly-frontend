@@ -105,23 +105,31 @@ const jobDescriptions = () => {
                   Apply Before
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  July 31, 2021
+                  {job?.about_this_role?.apply_before}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
                 <span className="text-[#515B6F] text-base font-normal">
-                  Apply Before
+                  Job Posted On
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  July 31, 2021
+                  {job?.about_this_role?.job_posted_on}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
                 <span className="text-[#515B6F] text-base font-normal">
-                  Apply Before
+                  Job Type
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  July 31, 2021
+                  {job?.about_this_role?.job_type}
+                </span>
+              </div>
+              <div className="mt-4 flex justify-between">
+                <span className="text-[#515B6F] text-base font-normal">
+                  Salary
+                </span>
+                <span className="text-[#25324B] text-base font-semibold">
+                  {job?.about_this_role?.salary}
                 </span>
               </div>
             </div>
