@@ -1,4 +1,5 @@
 import React from 'react';
+import mainImage from "../../../assets/images/Logo.svg"
 
 function Navbar() {
   return (
@@ -8,10 +9,11 @@ function Navbar() {
           
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-xl font-bold">J</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">JobHuntly</span>
+          <img
+            src={mainImage}
+            alt="JobHuntly logo"
+            className="object-cover"
+          />
             </div>
 
             <div className="hidden md:flex items-center gap-8">
