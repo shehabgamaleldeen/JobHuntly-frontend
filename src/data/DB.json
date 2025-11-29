@@ -127,7 +127,7 @@
   "jobs": [
     {
       "id": 1,
-      "title": "Social Media Assistant",
+      "title": "Social Media Assistant 1",
       "image": "/CompanyLogo.png",
       "company": "Stripe ",
       "location": "Paris, France ",
@@ -177,7 +177,7 @@
     },
     {
       "id": 2,
-      "title": "Social Media Assistant",
+      "title": "Social Media Assistant 2",
       "image": "/CompanyLogo.png",
       "company": "Stripe ",
       "location": "Paris, France ",
@@ -227,7 +227,7 @@
     },
     {
       "id": 3,
-      "title": "Social Media Assistant",
+      "title": "Social Media Assistant 3",
       "image": "/CompanyLogo.png",
       "company": "Stripe ",
       "location": "Paris, France ",
@@ -277,7 +277,7 @@
     },
     {
       "id": 4,
-      "title": "Social Media Assistant",
+      "title": "Social Media Assistant 4",
       "image": "/CompanyLogo.png",
       "company": "Stripe ",
       "location": "Paris, France ",
@@ -327,7 +327,7 @@
     },
     {
       "id": 5,
-      "title": "Social Media Assistant",
+      "title": "Social Media Assistant 5",
       "image": "/CompanyLogo.png",
       "company": "Stripe ",
       "location": "Paris, France ",
