@@ -9,7 +9,6 @@ import SearchCompanies from './components/Applicants/SearchCompanies/SearchCompa
 import NotFoundPage from './components/Basic/NotFoundPage';
 import CompanyPage from "./components/Applicants/CompanyProfile/CompanyPage";
 import { testCompany } from "./Data/testCompany";
-import Dashboard from './components/Recruiters/Dashboard/Dashboard';
 import JobDescriptions from './components/Applicants/JobDescriptions/JobDescriptions'
 import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';
 // import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings';
@@ -40,7 +39,6 @@ function App() {
 
             
             // this is handled for now ( moaz )
-            <Route path="/Company" element={<Dashboard />} />
             <Route path="/company" element={<CompanyDashboard />} />
             {/* <Route path="/" element={<DashboardSettings />} /> */}
           </Routes>
