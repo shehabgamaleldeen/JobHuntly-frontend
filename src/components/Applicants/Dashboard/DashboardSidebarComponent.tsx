@@ -1,4 +1,10 @@
 import type { JSX } from "react";
+import mainImage from "../../../assets/images/Logo.svg"
+import HouseIcon from "../../../assets/icons/house-solid-full (1).svg" 
+import FolderIcon from "../../../assets/icons/folder-closed-solid-full.svg" 
+import UserIcon from "../../../assets/icons/user-solid-full.svg" 
+import ProfileImage from "../../../assets/images/Property 1=Divvy.png" 
+
 
 export function DashboardSidebarComponent(): JSX.Element {
   return (
@@ -10,36 +16,35 @@ export function DashboardSidebarComponent(): JSX.Element {
       {/* Top section */}
       <div>
         {/* Logo */}
-        <div className="flex items-center gap-3 mb-7">
+        <div className="flex items-center gap-3 pb-5">
           <img
-            src="/mnt/data/0f71f64b-cdee-42ef-8b5a-20a3be3aa0ca.png"
+            src={mainImage}
             alt="JobHuntly logo"
-            className="w-9 h-9 rounded-lg object-cover"
+            className="object-cover"
           />
-          <span className="font-bold text-lg">JobHuntly</span>
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-col gap-3 text-gray-600">
+        <nav className="flex flex-col gap-3 text-[#7C8493]">
           <a className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100" href="#">
-            🏠 Dashboard
+            <img className="w-6 h-6" src={HouseIcon }  alt="houseIcon" /> Dashboard
           </a>
 
           <a className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100" href="#">
-            📁 My Applications
+            <img  className="w-6 h-6" src={FolderIcon }  alt="folderIcon" /> My Applications
           </a>
 
           <a className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100" href="./">
-            👤 My Public Profile
+            <img  className="w-6 h-6" src={UserIcon }  alt="UserIcon" /> My Public Profile
           </a>
         </nav>
 
         {/* Settings */}
         <div className="mt-10">
-          <h4 className="text-xs text-gray-400 uppercase mb-2">Settings</h4>
+          <h4 className="text-xs text-[#7C8493] uppercase mb-2">Settings</h4>
 
           <ul className="space-y-2">
-            <li className="px-3 py-2 rounded-lg bg-purple-50 text-purple-700 font-semibold cursor-pointer">
+            <li className="px-3 py-2 rounded-lg bg-purple-50 text-[#4640DE] font-semibold cursor-pointer">
               Settings
             </li>
             <li className="px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
@@ -52,7 +57,7 @@ export function DashboardSidebarComponent(): JSX.Element {
       {/* Profile / Logout */}
       <div className="flex items-center gap-3 mt-6">
         <img
-          src="/mnt/data/fb6c2671-c864-476f-b70f-4b9bbc6d1be0.png"
+          src={ProfileImage}
           alt="avatar"
           className="w-11 h-11 rounded-full object-cover"
         />
@@ -60,7 +65,7 @@ export function DashboardSidebarComponent(): JSX.Element {
         <div className="text-sm">
           <button className="text-red-500 text-xs mb-1 hover:underline">Log Out</button>
           <div className="font-semibold">Jake Gyll</div>
-          <div className="text-gray-400 text-xs">jakegyll@email.com</div>
+          <div className="text-[#7C8493] text-xs">jakegyll@email.com</div>
         </div>
       </div>
     </aside>
