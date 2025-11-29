@@ -10,7 +10,7 @@ import NotFoundPage from './components/Basic/NotFoundPage';
 import CompanyPage from "./components/Applicants/CompanyProfile/CompanyPage";
 import { testCompany } from "./Data/testCompany";
 import Dashboard from './components/Recruiters/Dashboard/Dashboard';
-import JobDescriptions from './components/Applicants/JobDescriptions/JobDescriptions'
+import JobDescriptions from './components/Applicants/JobDescriptions/jobDescriptions';
 import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';
 // import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings';
 import './App.css';
