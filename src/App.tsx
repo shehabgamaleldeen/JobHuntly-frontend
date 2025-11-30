@@ -7,7 +7,10 @@ import Login from './components/Applicants/Login/Login';
 import Signup from './components/Applicants/Signup/Signup';
 import SearchCompanies from './components/Applicants/SearchCompanies/SearchCompanies';
 import NotFoundPage from './components/Basic/NotFoundPage';
-// import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings';
+import JobDescriptions from './components/Applicants/JobDescriptions/jobDescriptions';
+import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';
+import CompanyPageWrapper from "./components/Applicants/CompanyProfile/CompanyPageWrapper";
+
 import './App.css';
 
 function App() {
@@ -25,13 +28,9 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="*" element={<NotFoundPage />} />
-
-             // mariz
-            <Route path="/companies" element={<CompanyPage company={testCompany} />}/>
-            <Route path="/companies/:id" element={<CompanyPage company={testCompany} />} />
-            
-
-            
+            // mariz
+            <Route path="/companies" element={<CompanyPageWrapper />} />
+            <Route path="/companies/:id" element={<CompanyPageWrapper />} />
             // this is handled for now ( moaz )
             <Route path="/company" element={<CompanyDashboard />} />
             {/* <Route path="/" element={<DashboardSettings />} /> */}
@@ -40,7 +39,7 @@ function App() {
         <Footer />
       </div>
     </Router>
-  )
+  );
 }
 
 export default App
