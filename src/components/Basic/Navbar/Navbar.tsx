@@ -9,11 +9,13 @@ function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-2">
-              <img
-                src={mainImage}
-                alt="JobHuntly logo"
-                className="object-cover"
-              />
+              <Link to={'/'}>
+                <img
+                  src={mainImage}
+                  alt="JobHuntly logo"
+                  className="object-cover"
+                />
+              </Link>
             </div>
 
             <div className="hidden md:flex items-center gap-8">
