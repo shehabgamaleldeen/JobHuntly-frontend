@@ -12,7 +12,7 @@ import './App.css';
 import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings';
 
 function App() {
-  return (
+  return ( 
     <Router>
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <Navbar />
