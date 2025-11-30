@@ -1,6 +1,5 @@
 import JopCard from './JopCard'
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import instance from '@/components/AxiosConfig/instance'
 
 const Jop = () => {
@@ -29,9 +28,7 @@ const Jop = () => {
         <div className="bg-amber-400 h-32">text</div>
         <div>
           {jops?.map((jop) => (
-            <Link to={jop.id}>
-              <JopCard key={jop.id} jop={jop} />
-            </Link>
+            <JopCard key={jop.id} jop={jop} />
           ))}
         </div>
       </section>
