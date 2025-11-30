@@ -1,5 +1,6 @@
 import React from 'react';
 import mainImage from "../../../assets/images/Logo.svg"
+import { Link } from 'react-router-dom';
 
 function Navbar() {
   return (
@@ -34,10 +35,14 @@ function Navbar() {
 
           <div className="flex items-center gap-3">
             <button className="px-6 py-2 text-indigo-600 font-medium text-sm hover:text-indigo-700 transition-colors">
+             <Link to="/login" >
               Login
+            </Link>
             </button>
             <button className="px-6 py-2 bg-indigo-600 text-white font-medium text-sm rounded-md hover:bg-indigo-700 transition-colors">
+              <Link to="/signup">
               Sign Up
+            </Link>
             </button>
           </div>
 
