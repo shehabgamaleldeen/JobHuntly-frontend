@@ -8,7 +8,7 @@ import OfficeLocationSection from './CompanySections/OfficeLocationSection';
 import CompanyImagesSection from './CompanySections/CompanyImages';
 
 interface Props {
-  company: Company & { jobCount: number };
+  company: Company & { jobCount?: number };
 }
 
 function CompanyPage({ company }: Props) {
