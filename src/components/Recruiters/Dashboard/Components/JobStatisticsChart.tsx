@@ -176,7 +176,7 @@ export default function JobStatisticsChart() {
 
     return (
         <>
-            <main className="m-8 border border-gray-200 rounded-xl shadow-lg bg-white">
+            <div className="m-8 border border-gray-200 rounded-xl shadow-lg bg-white">
                 <header className="w-full flex items-center justify-between p-6">
 
                     {/* Left side: title + date */}
@@ -279,7 +279,7 @@ export default function JobStatisticsChart() {
                         </aside>
                     </div>
                 </section>
-            </main >
+            </div >
         </>
     );
 }
