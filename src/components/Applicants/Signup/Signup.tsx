@@ -7,7 +7,7 @@ function Signup() {
     "jobseeker");
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-white [&_*]:!overflow-visible">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-white **:overflow-visible!">
 
       <div className="w-full lg:w-[634px] h-[400px] lg:h-[850px] bg-gray-100 overflow-hidden">
         <img
