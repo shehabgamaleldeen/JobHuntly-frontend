@@ -32,102 +32,154 @@
       "offers": 1
     }
   },
-  "companies": [
+ "companies": [
     {
-      "id": "comp_001",
-      "name": "Nebula Labs",
-      "slug": "nebula-labs",
-      "logo": "https://dummyimage.com/100x100/000/fff&text=N",
-      "coverImage": "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&fit=crop&w=1200&q=80",
-      "website": "https://nebulalabs.example.com",
-      "location": "Berlin, Germany",
-      "employeeCount": "50-200",
-      "industry": "SaaS",
-      "founded": 2018,
-      "description": "<p>Nebula Labs builds collaboration tools for remote design teams focused on speed and accessibility.</p>",
-      "techStack": ["React", "Node.js", "Postgres"],
-      "social": {
-        "linkedin": "https://linkedin.com/company/nebulalabs",
-        "twitter": "https://twitter.com/nebulalabs"
-      }
+      "id": 1,
+      "name": "Stripe",
+      "8ogo": "/images/company/stripe.png",
+      "website": "https://stripe.com",
+      "description": "Stripe is a software platform for starting and running internet businesses. Millions of businesses rely on Stripe's software tools to accept payments, expand globally, and manage their businesses online.",
+      "founded": "2010",
+      "employees": "7000+",
+      "industry": "FinTech",
+      "linkedin": "https://www.linkedin.com/company/stripe/",
+      "facebook": "https://www.facebook.com/stripe",
+      "twitter": "https://twitter.com/stripe",
+      "locations": [
+        { "name": "United States", "logo": "/images/location/us.png" },
+        { "name": "England", "logo": "/images/location/england.png" },
+        { "name": "Japan", "logo": "/images/location/japan.png" },
+        { "name": "Paris, France", "logo": "/images/location/france.png" },
+        { "name": "China", "logo": "/images/location/china.png" },
+        { "name": "Italy", "logo": "/images/location/italy.png" }
+      ],
+      "techStack": [
+        { "name": "Mix Panel", "logo": "/images/stack/mixpanel.png" },
+        { "name": "CSS", "logo": "/images/stack/css.png" },
+        { "name": "JavaScript", "logo": "/images/stack/js.png" },
+        { "name": "Python", "logo": "/images/stack/python.png" },
+        { "name": "TypeScript", "logo": "/images/stack/typescript.png" },
+        { "name": "Ruby", "logo": "/images/stack/ruby.png" },
+        { "name": "Framer", "logo": "/images/stack/framer.png" }
+      ],
+      "images": [
+        { "src": "/images/companyImage/img1.png" },
+        { "src": "/images/companyImage/img2.png" },
+        { "src": "/images/companyImage/img3.png" }
+      ],
+      "jobCount": 14
     },
     {
-      "id": "comp_002",
+      "id": 2,
       "name": "Discord",
-      "slug": "discord",
       "logo": "https://cdn.worldvectorlogo.com/logos/discord-6.svg",
-      "coverImage": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1200&q=80",
       "website": "https://discord.com",
-      "location": "San Francisco, USA",
-      "employeeCount": "1000+",
+      "description": "Discord is the easiest way to talk over voice, video, and text. Talk, hang out, and stay close with your friends and communities.",
+      "founded": "2015",
+      "employees": "1000+",
       "industry": "Social Media",
-      "founded": 2015,
-      "description": "<p>Discord is the easiest way to talk over voice, video, and text. Talk, hang out, and stay close with your friends and communities.</p>",
-      "techStack": ["Elixir", "React", "Postgres"],
-      "social": {
-        "linkedin": "https://linkedin.com/company/discord",
-        "twitter": "https://twitter.com/discord"
-      }
+      "linkedin": "https://linkedin.com/company/discord",
+      "facebook": "https://facebook.com/discord",
+      "twitter": "https://twitter.com/discord",
+      "locations": [
+        { "name": "San Francisco, USA", "logo": "/images/location/us.png" },
+        { "name": "China", "logo": "/images/location/china.png" }
+      ],
+      "techStack": [
+        { "name": "CSS", "logo": "/images/stack/css.png" },
+        { "name": "JavaScript", "logo": "/images/stack/js.png" },
+        { "name": "Python", "logo": "/images/stack/python.png" }
+      ],
+      "images": [
+        {
+          "src": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=1200&q=80"
+        }
+      ],
+      "jobCount": 8
     },
     {
-      "id": "comp_003",
+      "id": 3,
       "name": "Maze",
-      "slug": "maze",
-      "logo": "https://cdn.worldvectorlogo.com/logos/maze.svg",
-      "coverImage": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80",
+      "logo": "/images/company/maze.png",
       "website": "https://maze.co",
-      "location": "Remote",
-      "employeeCount": "200-500",
+      "description": "Maze is a rapid testing platform that empowers designers and product teams to test and validate ideas quickly.",
+      "founded": "2017",
+      "employees": "200-500",
       "industry": "Design Tools",
-      "founded": 2017,
-      "description": "<p>Maze is a rapid testing platform that empowers designers and product teams to test and validate ideas quickly.</p>",
-      "techStack": ["Vue.js", "Nuxt", "Firebase"],
-      "social": {
-        "linkedin": "https://linkedin.com/company/maze",
-        "twitter": "https://twitter.com/maze"
-      }
+      "linkedin": "https://linkedin.com/company/maze",
+      "facebook": "https://facebook.com/maze",
+      "twitter": "https://twitter.com/maze",
+      "locations": [
+        { "name": "Japan", "logo": "/images/location/japan.png" },
+        { "name": "Paris, France", "logo": "/images/location/france.png" },
+        { "name": "China", "logo": "/images/location/china.png" },
+        { "name": "Italy", "logo": "/images/location/italy.png" }
+      ],
+      "techStack": [
+        { "name": "Python", "logo": "/images/stack/python.png" },
+        { "name": "TypeScript", "logo": "/images/stack/typescript.png" },
+        { "name": "Ruby", "logo": "/images/stack/ruby.png" },
+        { "name": "Framer", "logo": "/images/stack/framer.png" }
+      ],
+      "images": [
+        {
+          "src": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80"
+        }
+      ],
+      "jobCount": 5
     },
     {
-      "id": "comp_004",
+      "id": 4,
       "name": "Spotify",
-      "slug": "spotify",
-      "logo": "https://cdn.worldvectorlogo.com/logos/spotify-2.svg",
-      "coverImage": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=1200&q=80",
+      "logo": "/images/company/spotify.png",
       "website": "https://spotify.com",
-      "location": "Stockholm, Sweden",
-      "employeeCount": "5000+",
+      "description": "Spotify is a digital music service that gives you access to millions of songs.",
+      "founded": "2006",
+      "employees": "5000+",
       "industry": "Music Streaming",
-      "founded": 2006,
-      "description": "<p>Spotify is a digital music service that gives you access to millions of songs.</p>",
-      "techStack": ["Java", "Kotlin", "React"],
-      "social": {
-        "linkedin": "https://linkedin.com/company/spotify",
-        "twitter": "https://twitter.com/spotify"
-      }
-    },
-    {
-      "id": "comp_005",
-      "name": "InVision",
-      "slug": "invision",
-      "logo": "https://cdn.worldvectorlogo.com/logos/invision.svg",
-      "coverImage": "https://images.unsplash.com/photo-1505238680356-667803448bb6?auto=format&fit=crop&w=1200&q=80",
-      "website": "https://invisionapp.com",
-      "location": "New York, USA",
-      "employeeCount": "500-1000",
-      "industry": "Design Collaboration",
-      "founded": 2011,
-      "description": "<p>InVision helps teams create better digital products by enabling rapid feedback and prototyping.</p>",
-      "techStack": ["Rails", "React", "Redis"],
-      "social": {
-        "linkedin": "https://linkedin.com/company/invision",
-        "twitter": "https://twitter.com/invision"
-      }
+      "linkedin": "https://linkedin.com/company/spotify",
+      "facebook": "https://facebook.com/spotify",
+      "twitter": "https://twitter.com/spotify",
+      "locations": [
+        { "name": "Turkey", "logo": "/images/location/turkey.png" },
+        { "name": "USA", "logo": "/images/location/us.png" },
+        { "name": "France", "logo": "/images/location/france.png" },
+        { "name": "Germany", "logo": "/images/location/germany.png" }
+      ],
+      "techStack": [
+        { "name": "Java", "logo": "/images/stack/java.png" },
+        { "name": "Python", "logo": "/images/stack/python.png" }
+      ],
+      "images": [
+        {
+          "src": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?auto=format&fit=crop&w=1200&q=80"
+        }
+      ],
+      "jobCount": 12
     }
   ],
   "jobs": [
     {
       "id": 1,
-      "title": "Social Media Assistant",
+      "title": "Social Media Assistant 1",
       "image": "/CompanyLogo.png",
       "company": "Stripe ",
       "location": "Paris, France ",
@@ -175,174 +227,205 @@
         "Copy Editing"
       ]
     },
-
     {
-      "id": "job_108",
-      "companyId": "comp_001",
-      "title": "Growth Product Manager",
-      "type": "Full-Time",
-      "level": "Mid Level",
-      "location": "Berlin, Germany",
-      "categories": ["Product", "Growth"],
-      "salary": {
-        "min": 70000,
-        "max": 90000,
-        "currency": "EUR",
-        "period": "yearly"
+      "id": 2,
+      "title": "Social Media Assistant 2",
+      "image": "/CompanyLogo.png",
+      "company": "Stripe ",
+      "location": "Paris, France ",
+      "employment_type": "Full-Time",
+      "description": "Stripe is looking for Social Media Marketing expert to help manage our online networks. You will be responsible for monitoring our social media channels, creating content, finding effective ways to engage the community and incentivize others to engage on our channels.",
+      "job_needs": [
+        {
+          "Responsibilities": [
+            "Community engagement to ensure that is supported and actively represented online",
+            "Focus on social media content development and publication",
+            "Marketing and strategy support",
+            "Stay on top of trends on social media platforms, and suggest content ideas to the team",
+            "Engage with online communities"
+          ]
+        },
+        {
+          "Who You Are": [
+            "You get energy from people and building the ideal work environment",
+            "You have a sense for beautiful spaces and office experiences",
+            "You are a confident office manager, ready for added responsibilities",
+            "You’re detail-oriented and creative",
+            "You’re a growth marketer and know how to run campaigns"
+          ]
+        },
+        {
+          "Nice To Haves": [
+            "Fluent in English",
+            "Project management skills",
+            "Copy editing skills"
+          ]
+        }
+      ],
+      "about_this_role": {
+        "apply_before": "July 31, 2021",
+        "job_posted_on": "July 1, 2021",
+        "job_type": "Full-Time",
+        "salary": "$75k–$85k USD"
       },
-      "postedAt": "2023-11-05T08:30:00Z",
-      "description": "<p>Lead growth experiments and convert visitors into active users.</p>",
-      "requirements": ["A/B testing", "Data-driven", "SQL"],
-      "capacity": 1,
-      "applicantsCount": 26,
-      "isHot": true
+      "categories": ["Marketing", "Design"],
+      "required_skills": [
+        "Project Management",
+        "Copywriting",
+        "Social Media Marketing",
+        "English",
+        "Copy Editing"
+      ]
     },
     {
-      "id": "job_109",
-      "companyId": "comp_002",
-      "title": "Mobile Engineer (iOS)",
-      "type": "Full-Time",
-      "level": "Mid Level",
-      "location": "San Francisco, USA",
-      "categories": ["Engineering", "Mobile"],
-      "salary": {
-        "min": 140000,
-        "max": 180000,
-        "currency": "USD",
-        "period": "yearly"
+      "id": 3,
+      "title": "Social Media Assistant 3",
+      "image": "/CompanyLogo.png",
+      "company": "Stripe ",
+      "location": "Paris, France ",
+      "employment_type": "Full-Time",
+      "description": "Stripe is looking for Social Media Marketing expert to help manage our online networks. You will be responsible for monitoring our social media channels, creating content, finding effective ways to engage the community and incentivize others to engage on our channels.",
+      "job_needs": [
+        {
+          "Responsibilities": [
+            "Community engagement to ensure that is supported and actively represented online",
+            "Focus on social media content development and publication",
+            "Marketing and strategy support",
+            "Stay on top of trends on social media platforms, and suggest content ideas to the team",
+            "Engage with online communities"
+          ]
+        },
+        {
+          "Who You Are": [
+            "You get energy from people and building the ideal work environment",
+            "You have a sense for beautiful spaces and office experiences",
+            "You are a confident office manager, ready for added responsibilities",
+            "You’re detail-oriented and creative",
+            "You’re a growth marketer and know how to run campaigns"
+          ]
+        },
+        {
+          "Nice To Haves": [
+            "Fluent in English",
+            "Project management skills",
+            "Copy editing skills"
+          ]
+        }
+      ],
+      "about_this_role": {
+        "apply_before": "July 31, 2021",
+        "job_posted_on": "July 1, 2021",
+        "job_type": "Full-Time",
+        "salary": "$75k–$85k USD"
       },
-      "postedAt": "2023-11-03T10:15:00Z",
-      "description": "<p>Build delightful mobile experiences for millions of users.</p>",
-      "requirements": ["Swift", "Architecture", "Unit testing"],
-      "capacity": 2,
-      "applicantsCount": 112,
-      "isHot": true
+      "categories": ["Marketing", "Design"],
+      "required_skills": [
+        "Project Management",
+        "Copywriting",
+        "Social Media Marketing",
+        "English",
+        "Copy Editing"
+      ]
     },
     {
-      "id": "job_110",
-      "companyId": "comp_004",
-      "title": "Data Scientist",
-      "type": "Full-Time",
-      "level": "Senior",
-      "location": "Remote",
-      "categories": ["Data"],
-      "salary": {
-        "min": 90000,
-        "max": 130000,
-        "currency": "USD",
-        "period": "yearly"
+      "id": 4,
+      "title": "Social Media Assistant 4",
+      "image": "/CompanyLogo.png",
+      "company": "Stripe ",
+      "location": "Paris, France ",
+      "employment_type": "Full-Time",
+      "description": "Stripe is looking for Social Media Marketing expert to help manage our online networks. You will be responsible for monitoring our social media channels, creating content, finding effective ways to engage the community and incentivize others to engage on our channels.",
+      "job_needs": [
+        {
+          "Responsibilities": [
+            "Community engagement to ensure that is supported and actively represented online",
+            "Focus on social media content development and publication",
+            "Marketing and strategy support",
+            "Stay on top of trends on social media platforms, and suggest content ideas to the team",
+            "Engage with online communities"
+          ]
+        },
+        {
+          "Who You Are": [
+            "You get energy from people and building the ideal work environment",
+            "You have a sense for beautiful spaces and office experiences",
+            "You are a confident office manager, ready for added responsibilities",
+            "You’re detail-oriented and creative",
+            "You’re a growth marketer and know how to run campaigns"
+          ]
+        },
+        {
+          "Nice To Haves": [
+            "Fluent in English",
+            "Project management skills",
+            "Copy editing skills"
+          ]
+        }
+      ],
+      "about_this_role": {
+        "apply_before": "July 31, 2021",
+        "job_posted_on": "July 1, 2021",
+        "job_type": "Full-Time",
+        "salary": "$75k–$85k USD"
       },
-      "postedAt": "2023-10-30T14:00:00Z",
-      "description": "<p>Build models for personalization and recommendations.</p>",
-      "requirements": ["Python", "ML pipelines", "Production experience"],
-      "capacity": 2,
-      "applicantsCount": 64,
-      "isHot": false
+      "categories": ["Marketing", "Design"],
+      "required_skills": [
+        "Project Management",
+        "Copywriting",
+        "Social Media Marketing",
+        "English",
+        "Copy Editing"
+      ]
     },
     {
-      "id": "job_111",
-      "companyId": "comp_005",
-      "title": "Customer Success Associate",
-      "type": "Full-Time",
-      "level": "Junior",
-      "location": "New York, USA",
-      "categories": ["Customer Success"],
-      "salary": {
-        "min": 35000,
-        "max": 45000,
-        "currency": "USD",
-        "period": "yearly"
+      "id": 5,
+      "title": "Social Media Assistant 5",
+      "image": "/CompanyLogo.png",
+      "company": "Stripe ",
+      "location": "Paris, France ",
+      "employment_type": "Full-Time",
+      "description": "Stripe is looking for Social Media Marketing expert to help manage our online networks. You will be responsible for monitoring our social media channels, creating content, finding effective ways to engage the community and incentivize others to engage on our channels.",
+      "job_needs": [
+        {
+          "Responsibilities": [
+            "Community engagement to ensure that is supported and actively represented online",
+            "Focus on social media content development and publication",
+            "Marketing and strategy support",
+            "Stay on top of trends on social media platforms, and suggest content ideas to the team",
+            "Engage with online communities"
+          ]
+        },
+        {
+          "Who You Are": [
+            "You get energy from people and building the ideal work environment",
+            "You have a sense for beautiful spaces and office experiences",
+            "You are a confident office manager, ready for added responsibilities",
+            "You’re detail-oriented and creative",
+            "You’re a growth marketer and know how to run campaigns"
+          ]
+        },
+        {
+          "Nice To Haves": [
+            "Fluent in English",
+            "Project management skills",
+            "Copy editing skills"
+          ]
+        }
+      ],
+      "about_this_role": {
+        "apply_before": "July 31, 2021",
+        "job_posted_on": "July 1, 2021",
+        "job_type": "Full-Time",
+        "salary": "$75k–$85k USD"
       },
-      "postedAt": "2023-10-28T09:30:00Z",
-      "description": "<p>Support customers and help them succeed with our tools.</p>",
-      "requirements": ["Customer-facing experience", "Empathy"],
-      "capacity": 3,
-      "applicantsCount": 19,
-      "isHot": false
-    },
-    {
-      "id": "job_112",
-      "companyId": "comp_001",
-      "title": "Frontend Engineer (React)",
-      "type": "Full-Time",
-      "level": "Mid Level",
-      "location": "Berlin, Germany",
-      "categories": ["Engineering", "Frontend"],
-      "salary": {
-        "min": 55000,
-        "max": 75000,
-        "currency": "EUR",
-        "period": "yearly"
-      },
-      "postedAt": "2023-10-27T11:45:00Z",
-      "description": "<p>Work on our web app to deliver performant user experiences.</p>",
-      "requirements": ["React", "TypeScript", "Testing"],
-      "capacity": 2,
-      "applicantsCount": 43,
-      "isHot": true
-    },
-    {
-      "id": "job_113",
-      "companyId": "comp_002",
-      "title": "Content Designer",
-      "type": "Contract",
-      "level": "Mid Level",
-      "location": "San Francisco, USA",
-      "categories": ["Design", "Content"],
-      "salary": {
-        "min": 60,
-        "max": 90,
-        "currency": "USD",
-        "period": "hourly"
-      },
-      "postedAt": "2023-10-26T16:20:00Z",
-      "description": "<p>Create microcopy and content strategies for product surfaces.</p>",
-      "requirements": ["Writing portfolio", "UX understanding"],
-      "capacity": 1,
-      "applicantsCount": 31,
-      "isHot": false
-    },
-    {
-      "id": "job_114",
-      "companyId": "comp_003",
-      "title": "QA Automation Engineer",
-      "type": "Full-Time",
-      "level": "Mid Level",
-      "location": "Remote",
-      "categories": ["Engineering", "QA"],
-      "salary": {
-        "min": 50000,
-        "max": 70000,
-        "currency": "USD",
-        "period": "yearly"
-      },
-      "postedAt": "2023-10-22T12:10:00Z",
-      "description": "<p>Implement test automation and ensure product quality.</p>",
-      "requirements": ["Selenium or Playwright", "CI experience"],
-      "capacity": 2,
-      "applicantsCount": 27,
-      "isHot": false
-    },
-    {
-      "id": "job_115",
-      "companyId": "comp_004",
-      "title": "Security Engineer",
-      "type": "Full-Time",
-      "level": "Senior",
-      "location": "Stockholm, Sweden",
-      "categories": ["Security"],
-      "salary": {
-        "min": 90000,
-        "max": 140000,
-        "currency": "EUR",
-        "period": "yearly"
-      },
-      "postedAt": "2023-10-21T10:00:00Z",
-      "description": "<p>Protect user data and secure our infrastructure.</p>",
-      "requirements": ["Security audits", "Incident response"],
-      "capacity": 1,
-      "applicantsCount": 12,
-      "isHot": false
+      "categories": ["Marketing", "Design"],
+      "required_skills": [
+        "Project Management",
+        "Copywriting",
+        "Social Media Marketing",
+        "English",
+        "Copy Editing"
+      ]
     }
   ],
   "applicants": [
