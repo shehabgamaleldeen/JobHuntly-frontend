@@ -7,15 +7,14 @@ function Login() {
   const [selected, setSelected] = useState<"job" | "company">("job");
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-white overflow-x-hidden;
-">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-white overflow-x-hidden">
 
       <div className="w-full lg:w-[634px] h-[400px] lg:h-[850px] bg-gray-100">
         <img src="/images/login.png"
              className="w-full h-full object-cover" />
       </div>
 
-      <div className="flex-1 flex justify-center items-start">
+      <div className="flex-1 flex justify-center items-start pb-5">
         <div className="w-[408px] pt-[63px] flex flex-col gap-6">
 
           <div className="flex justify-center gap-6">
