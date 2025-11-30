@@ -1,6 +1,7 @@
 import { useState } from "react";
 import JobSeekerForm from "./JobSeekerForm";
 import CompanyForm from "./CompanyForm";
+import { Link } from "react-router-dom";
 
 function Signup() {
   const [activeTab, setActiveTab] = useState<"jobseeker" | "company">(
@@ -17,7 +18,7 @@ function Signup() {
         />
       </div>
 
-      <div className="flex-1 flex justify-center items-start">
+      <div className="flex-1 flex justify-center items-start pb-5">
         <div className="w-[408px] pt-[63px] flex flex-col gap-6">
 
           <div className="flex justify-center gap-6">
@@ -65,7 +66,9 @@ function Signup() {
 
           <p className="text-gray-600 text-sm text-center">
             Already have an account?{" "}
-            <a className="font-semibold text-[#4640DE] cursor-pointer">Login</a>
+            <Link to="/login" className="font-semibold text-[#4640DE] cursor-pointer">
+              Login
+            </Link>
           </p>
 
           <p className="text-xs text-gray-500 leading-5 text-center">
