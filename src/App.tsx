@@ -10,6 +10,7 @@ import NotFoundPage from './components/Basic/NotFoundPage';
 import JobDescriptions from './components/Applicants/JobDescriptions/jobDescriptions';
 import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';
 import CompanyPageWrapper from "./components/Applicants/CompanyProfile/CompanyPageWrapper";
+import DashboardSettings from "./components/Applicants/DashboardSettings/DashboardSettings";
 
 import './App.css';
 
@@ -21,19 +22,26 @@ function App() {
         <Navbar />
         <main className="grow">
           <Routes>
-            <Route path="/Landing" element={<LandingPage />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/find-jobs" element={<FindJobs />} />
             <Route path="/browse-companies" element={<SearchCompanies />} />
             <Route path="/job-descriptions" element={<JobDescriptions />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="*" element={<NotFoundPage />} />
-            // mariz
+
+
+            {/*mariz*/}
             <Route path="/companies" element={<CompanyPageWrapper />} />
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
-            // this is handled for now ( moaz )
+
+
+            {/*this is handled for now ( moaz )*/}
+            <Route path="/dashboardSettings" element={<DashboardSettings />} />
+
+
+            {/*Ahmed*/}
             <Route path="/company" element={<CompanyDashboard />} />
-            {/* <Route path="/" element={<DashboardSettings />} /> */}
           </Routes>
         </main>
         <Footer />
