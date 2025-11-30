@@ -1,4 +1,6 @@
 import React from 'react';
+import mainImage from "../../../assets/images/Logo.svg"
+import { Link } from 'react-router-dom';
 
 function Navbar() {
   return (
@@ -8,10 +10,11 @@ function Navbar() {
           
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-xl font-bold">J</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">JobHuntly</span>
+          <img
+            src={mainImage}
+            alt="JobHuntly logo"
+            className="object-cover"
+          />
             </div>
 
             <div className="hidden md:flex items-center gap-8">
@@ -32,10 +35,14 @@ function Navbar() {
 
           <div className="flex items-center gap-3">
             <button className="px-6 py-2 text-indigo-600 font-medium text-sm hover:text-indigo-700 transition-colors">
+             <Link to="/login" >
               Login
+            </Link>
             </button>
             <button className="px-6 py-2 bg-indigo-600 text-white font-medium text-sm rounded-md hover:bg-indigo-700 transition-colors">
+              <Link to="/signup">
               Sign Up
+            </Link>
             </button>
           </div>
 
