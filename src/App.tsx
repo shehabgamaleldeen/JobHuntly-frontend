@@ -8,16 +8,21 @@ import Signup from './components/Applicants/Signup/Signup'
 import SearchCompanies from './components/Applicants/SearchCompanies/SearchCompanies'
 import NotFoundPage from './components/Basic/NotFoundPage'
 import JobDescriptions from './components/Applicants/JobDescriptions/jobDescriptions'
-import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard'
 import CompanyPageWrapper from './components/Applicants/CompanyProfile/CompanyPageWrapper'
 import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings'
+import CompanyLayout from './components/Recruiters/CompanyLayout';
+import JobCreateLayout from './components/Recruiters/JobCreate/JobCreateLayout';
+import Step1 from './components/Recruiters/JobCreate/Components/Steps/Step1';
+import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2';
+import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3';
+import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';
 
 import './App.css'
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="grow">
           <Routes>
@@ -37,7 +42,17 @@ function App() {
             <Route path="/dashboardSettings" element={<DashboardSettings />} />
 
             {/*Ahmed*/}
-            <Route path="/company" element={<CompanyDashboard />} />
+            <Route path="/company" element={<CompanyDashboard />} /> // old 
+            <Route path="/company" element={<CompanyLayout />}> // new 
+              <Route index element={<CompanyDashboard />} />
+
+              <Route path="job-create" element={<JobCreateLayout />}>
+                <Route index element={<Step1 />} />
+                <Route path="step-1" element={<Step1 />} />
+                <Route path="step-2" element={<Step2 />} />
+                <Route path="step-3" element={<Step3 />} />
+              </Route>
+            </Route>
           </Routes>
         </main>
         <Footer />
