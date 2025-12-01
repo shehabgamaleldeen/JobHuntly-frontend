@@ -32,96 +32,148 @@
       "offers": 1
     }
   },
-  "companies": [
+ "companies": [
     {
-      "id": "comp_001",
-      "name": "Nebula Labs",
-      "slug": "nebula-labs",
-      "logo": "https://dummyimage.com/100x100/000/fff&text=N",
-      "coverImage": "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&fit=crop&w=1200&q=80",
-      "website": "https://nebulalabs.example.com",
-      "location": "Berlin, Germany",
-      "employeeCount": "50-200",
-      "industry": "SaaS",
-      "founded": 2018,
-      "description": "<p>Nebula Labs builds collaboration tools for remote design teams focused on speed and accessibility.</p>",
-      "techStack": ["React", "Node.js", "Postgres"],
-      "social": {
-        "linkedin": "https://linkedin.com/company/nebulalabs",
-        "twitter": "https://twitter.com/nebulalabs"
-      }
+      "id": 1,
+      "name": "Stripe",
+      "8ogo": "/images/company/stripe.png",
+      "website": "https://stripe.com",
+      "description": "Stripe is a software platform for starting and running internet businesses. Millions of businesses rely on Stripe's software tools to accept payments, expand globally, and manage their businesses online.",
+      "founded": "2010",
+      "employees": "7000+",
+      "industry": "FinTech",
+      "linkedin": "https://www.linkedin.com/company/stripe/",
+      "facebook": "https://www.facebook.com/stripe",
+      "twitter": "https://twitter.com/stripe",
+      "locations": [
+        { "name": "United States", "logo": "/images/location/us.png" },
+        { "name": "England", "logo": "/images/location/england.png" },
+        { "name": "Japan", "logo": "/images/location/japan.png" },
+        { "name": "Paris, France", "logo": "/images/location/france.png" },
+        { "name": "China", "logo": "/images/location/china.png" },
+        { "name": "Italy", "logo": "/images/location/italy.png" }
+      ],
+      "techStack": [
+        { "name": "Mix Panel", "logo": "/images/stack/mixpanel.png" },
+        { "name": "CSS", "logo": "/images/stack/css.png" },
+        { "name": "JavaScript", "logo": "/images/stack/js.png" },
+        { "name": "Python", "logo": "/images/stack/python.png" },
+        { "name": "TypeScript", "logo": "/images/stack/typescript.png" },
+        { "name": "Ruby", "logo": "/images/stack/ruby.png" },
+        { "name": "Framer", "logo": "/images/stack/framer.png" }
+      ],
+      "images": [
+        { "src": "/images/companyImage/img1.png" },
+        { "src": "/images/companyImage/img2.png" },
+        { "src": "/images/companyImage/img3.png" }
+      ],
+      "jobCount": 14
     },
     {
-      "id": "comp_002",
+      "id": 2,
       "name": "Discord",
-      "slug": "discord",
       "logo": "https://cdn.worldvectorlogo.com/logos/discord-6.svg",
-      "coverImage": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1200&q=80",
       "website": "https://discord.com",
-      "location": "San Francisco, USA",
-      "employeeCount": "1000+",
+      "description": "Discord is the easiest way to talk over voice, video, and text. Talk, hang out, and stay close with your friends and communities.",
+      "founded": "2015",
+      "employees": "1000+",
       "industry": "Social Media",
-      "founded": 2015,
-      "description": "<p>Discord is the easiest way to talk over voice, video, and text. Talk, hang out, and stay close with your friends and communities.</p>",
-      "techStack": ["Elixir", "React", "Postgres"],
-      "social": {
-        "linkedin": "https://linkedin.com/company/discord",
-        "twitter": "https://twitter.com/discord"
-      }
+      "linkedin": "https://linkedin.com/company/discord",
+      "facebook": "https://facebook.com/discord",
+      "twitter": "https://twitter.com/discord",
+      "locations": [
+        { "name": "San Francisco, USA", "logo": "/images/location/us.png" },
+        { "name": "China", "logo": "/images/location/china.png" }
+      ],
+      "techStack": [
+        { "name": "CSS", "logo": "/images/stack/css.png" },
+        { "name": "JavaScript", "logo": "/images/stack/js.png" },
+        { "name": "Python", "logo": "/images/stack/python.png" }
+      ],
+      "images": [
+        {
+          "src": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=1200&q=80"
+        }
+      ],
+      "jobCount": 8
     },
     {
-      "id": "comp_003",
+      "id": 3,
       "name": "Maze",
-      "slug": "maze",
-      "logo": "https://cdn.worldvectorlogo.com/logos/maze.svg",
-      "coverImage": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80",
+      "logo": "/images/company/maze.png",
       "website": "https://maze.co",
-      "location": "Remote",
-      "employeeCount": "200-500",
+      "description": "Maze is a rapid testing platform that empowers designers and product teams to test and validate ideas quickly.",
+      "founded": "2017",
+      "employees": "200-500",
       "industry": "Design Tools",
-      "founded": 2017,
-      "description": "<p>Maze is a rapid testing platform that empowers designers and product teams to test and validate ideas quickly.</p>",
-      "techStack": ["Vue.js", "Nuxt", "Firebase"],
-      "social": {
-        "linkedin": "https://linkedin.com/company/maze",
-        "twitter": "https://twitter.com/maze"
-      }
+      "linkedin": "https://linkedin.com/company/maze",
+      "facebook": "https://facebook.com/maze",
+      "twitter": "https://twitter.com/maze",
+      "locations": [
+        { "name": "Japan", "logo": "/images/location/japan.png" },
+        { "name": "Paris, France", "logo": "/images/location/france.png" },
+        { "name": "China", "logo": "/images/location/china.png" },
+        { "name": "Italy", "logo": "/images/location/italy.png" }
+      ],
+      "techStack": [
+        { "name": "Python", "logo": "/images/stack/python.png" },
+        { "name": "TypeScript", "logo": "/images/stack/typescript.png" },
+        { "name": "Ruby", "logo": "/images/stack/ruby.png" },
+        { "name": "Framer", "logo": "/images/stack/framer.png" }
+      ],
+      "images": [
+        {
+          "src": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80"
+        }
+      ],
+      "jobCount": 5
     },
     {
-      "id": "comp_004",
+      "id": 4,
       "name": "Spotify",
-      "slug": "spotify",
-      "logo": "https://cdn.worldvectorlogo.com/logos/spotify-2.svg",
-      "coverImage": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=1200&q=80",
+      "logo": "/images/company/spotify.png",
       "website": "https://spotify.com",
-      "location": "Stockholm, Sweden",
-      "employeeCount": "5000+",
+      "description": "Spotify is a digital music service that gives you access to millions of songs.",
+      "founded": "2006",
+      "employees": "5000+",
       "industry": "Music Streaming",
-      "founded": 2006,
-      "description": "<p>Spotify is a digital music service that gives you access to millions of songs.</p>",
-      "techStack": ["Java", "Kotlin", "React"],
-      "social": {
-        "linkedin": "https://linkedin.com/company/spotify",
-        "twitter": "https://twitter.com/spotify"
-      }
-    },
-    {
-      "id": "comp_005",
-      "name": "InVision",
-      "slug": "invision",
-      "logo": "https://cdn.worldvectorlogo.com/logos/invision.svg",
-      "coverImage": "https://images.unsplash.com/photo-1505238680356-667803448bb6?auto=format&fit=crop&w=1200&q=80",
-      "website": "https://invisionapp.com",
-      "location": "New York, USA",
-      "employeeCount": "500-1000",
-      "industry": "Design Collaboration",
-      "founded": 2011,
-      "description": "<p>InVision helps teams create better digital products by enabling rapid feedback and prototyping.</p>",
-      "techStack": ["Rails", "React", "Redis"],
-      "social": {
-        "linkedin": "https://linkedin.com/company/invision",
-        "twitter": "https://twitter.com/invision"
-      }
+      "linkedin": "https://linkedin.com/company/spotify",
+      "facebook": "https://facebook.com/spotify",
+      "twitter": "https://twitter.com/spotify",
+      "locations": [
+        { "name": "Turkey", "logo": "/images/location/turkey.png" },
+        { "name": "USA", "logo": "/images/location/us.png" },
+        { "name": "France", "logo": "/images/location/france.png" },
+        { "name": "Germany", "logo": "/images/location/germany.png" }
+      ],
+      "techStack": [
+        { "name": "Java", "logo": "/images/stack/java.png" },
+        { "name": "Python", "logo": "/images/stack/python.png" }
+      ],
+      "images": [
+        {
+          "src": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?auto=format&fit=crop&w=1200&q=80"
+        }
+      ],
+      "jobCount": 12
     }
   ],
   "jobs": [

@@ -1,0 +1,11 @@
+import { Outlet } from "react-router-dom";
+import JobCreateHeader from "./Components/JobCreateHeader";
+
+export default function JobCreateLayout() {
+    return (
+        <div className="job-create-layout">
+            <JobCreateHeader />
+            <Outlet />
+        </div>
+    );
+}
