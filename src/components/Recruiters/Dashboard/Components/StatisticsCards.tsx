@@ -38,20 +38,20 @@ export default function StatisticsCards() {
     }
 
     return (
-        <main className={containerClasses}>
+        <div className={containerClasses}>
 
-            <div className={cardWidth}>
+            <section className={cardWidth}>
                 <StatisticsCard title="New candidates to review" bgColor="bg-[#4640DE]" />
-            </div>
+            </section>
 
-            <div className={cardWidth}>
+            <section className={cardWidth}>
                 <StatisticsCard title="Candidates reviewed today" bgColor="bg-[#56CDAD]" />
-            </div>
+            </section>
 
-            <div className={cardWidth}>
+            <section className={cardWidth}>
                 <StatisticsCard title="Jobs Opened" bgColor="bg-[#26A4FF]" />
-            </div>
+            </section>
 
-        </main>
+        </div>
     );
 }
