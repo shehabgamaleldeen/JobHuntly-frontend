@@ -1,15 +1,34 @@
-import React from "react";
-import Filter from "./Filter";
-import FindJobContent from "./FindJobContent";
+import React from 'react'
+import { useState, useEffect } from 'react'
+import Filter from './Filter'
+import FindJobContent from './FindJobContent'
+import instance from '../../AxiosConfig/instance.ts'
+import JopCard from '../Jop/JopCard.tsx'
 
 function FindJobs() {
+  type Jops = Array<{ [key: string]: any }>
+
+  const [jops, setjops] = useState<Jops | null>(null)
+  async function getJops() {
+    try {
+      const res = await instance.get('/jobs')
+      setjops(res.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getJops()
+  }, [])
+
   return (
     <>
       <FindJobContent
-        title={"Find Your"}
-        highlightText={"dream job"}
+        title={'Find Your'}
+        highlightText={'dream job'}
         description={
-          "Find your next career at companies like HubSpot, Nike, and Dropbox"
+          'Find your next career at companies like HubSpot, Nike, and Dropbox'
         }
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -71,13 +90,17 @@ function FindJobs() {
           <div className="lg:col-span-3">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h2 className="text-2xl font-bold">All Jobs</h2>
-              {/* هنا هتحط الـ Job Cards */}
+              <div>
+                {jops?.map((jop) => (
+                  <JopCard key={jop.id} jop={jop} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default FindJobs;
+export default FindJobs
