@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Basic/Navbar/Navbar';
 import Footer from './components/Basic/footer/footer';
@@ -10,6 +9,7 @@ import SearchCompanies from './components/Applicants/SearchCompanies/SearchCompa
 import NotFoundPage from './components/Basic/NotFoundPage';
 import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings';
 import './App.css';
+import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile';
 
 function App() {
   return (
@@ -18,8 +18,9 @@ function App() {
         <Navbar />
         <main className="flex-grow">
           <Routes>
-            {/* <Route path="/" element={<LandingPage />} /> */}
-            <Route path="/" element={<DashboardSettings />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/DashboardSettings" element={<DashboardSettings />} />
+            <Route path="/PublicProfile" element={<DashboardPublicProfile />} />
             <Route path="/find-jobs" element={<FindJobs />} />
             <Route path="/browse-companies" element={<SearchCompanies />} />
             <Route path="/login" element={<Login />} />
