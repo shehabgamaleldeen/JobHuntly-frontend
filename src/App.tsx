@@ -16,12 +16,15 @@ import Step1 from './components/Recruiters/JobCreate/Components/Steps/Step1'
 import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2'
 import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3'
 import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard'
+import MyApplications from './components/Applicants/MyApplications/MyApplications';
 import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile'
 import ApplicantProfile from './components/Recruiters/ApplicantProfile/ApplicantProfile'
 import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
 import DashboardRecruiterSettings from "./components/Recruiters/DashboardSettings/DashboardRecruiterSettings";
 import './App.css'
+import JobListPage from "./components/Recruiters/JobList/JobListPage";
+import ApplicantsTable from "./components/Recruiters/Applicants/ApplicantsTable";
 
 function App() {
   return (
@@ -43,6 +46,12 @@ function App() {
             {/*mariz*/}
             <Route path="/companies" element={<CompanyPageWrapper />} />
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
+            <Route path="/my-applications" element={<MyApplications />} />
+            <Route path="/job-lists" element={<JobListPage />} />
+            <Route path="/applicants/:jobId" element={<ApplicantsTable />} />
+
+
+
             
             {/*( moaz )*/}
             <Route path="/dashboardSettings" element={<DashboardSettings />} />
