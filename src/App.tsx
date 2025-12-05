@@ -22,10 +22,10 @@ import ApplicantProfile from './components/Recruiters/ApplicantProfile/Applicant
 import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
 import DashboardRecruiterSettings from "./components/Recruiters/DashboardSettings/DashboardRecruiterSettings";
-import './App.css'
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
 import ApplicantsTable from "./components/Recruiters/Applicants/ApplicantsTable";
-
+import { JobCreateProvider } from "./components/Recruiters/JobCreate/JobCreateContext";
+import './App.css'
 function App() {
   return (
     <Router>
@@ -72,13 +72,22 @@ function App() {
 
 
             {/*Ahmed*/}
-            <Route path="/company" element={<CompanyLayout />}> // new 
+            <Route path="/company" element={<CompanyLayout />}>
               <Route index element={<CompanyDashboard />} />
-              <Route path="job-create" element={<JobCreateLayout />}>
+
+              <Route
+                path="job-create"
+                element={
+                  <JobCreateProvider>
+                    <JobCreateLayout />
+                  </JobCreateProvider>
+                }
+              >
                 <Route index element={<Step1 />} />
                 <Route path="step-1" element={<Step1 />} />
                 <Route path="step-2" element={<Step2 />} />
                 <Route path="step-3" element={<Step3 />} />
+                <Route path="step-4" element={<Step4 />} />
               </Route>
             </Route>
 
