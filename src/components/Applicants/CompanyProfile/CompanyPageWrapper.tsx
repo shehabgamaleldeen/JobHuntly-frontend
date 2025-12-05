@@ -19,7 +19,7 @@ function CompanyPageWrapper() {
         const companyId = id || '1';
         
         const response = await axios.get<Company>(
-          `http://localhost:3001/companies/${companyId}`
+          `http://localhost:3000/companies/${companyId}`
         );
         
         setCompany(response.data);
