@@ -36,9 +36,8 @@ export default function Step4() {
         updateStep4({ questions });
 
         console.log("FINAL JOB DATA:", jobData);
-        console.log("STEP 4 QUESTIONS:", questions);
 
-        navigate("/company/job-create/finish");
+        //navigate("/company/job-create/finish");
     };
 
     return (
