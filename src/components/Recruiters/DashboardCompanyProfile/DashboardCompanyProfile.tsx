@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
  *
  * Replace avatar src and text with your real data as needed.
  */
-export function DashboardPublicProfile(): JSX.Element {
+export function DashboardCompanyProfile(): JSX.Element {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       {/* Page header */}
@@ -126,4 +126,4 @@ export function DashboardPublicProfile(): JSX.Element {
   );
 }
 
-export default DashboardPublicProfile;
+export default DashboardCompanyProfile;

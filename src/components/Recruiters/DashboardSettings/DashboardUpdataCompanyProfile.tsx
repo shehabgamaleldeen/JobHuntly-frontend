@@ -3,7 +3,7 @@ import { useState } from "react";
 import ProfileImage from "../../../assets/images/alex-suprun-ZHvM3XIOHoE-unsplash 1.png";
 import { Link } from "react-router-dom";
 
-export function DashboardUpdateProfile(): JSX.Element {
+export function DashboardUpdateCompanyProfile(): JSX.Element {
   const [activeTab, setActiveTab] = useState<"profile" | "login">("profile");
 
   const [newEmail, setNewEmail] = useState("");
