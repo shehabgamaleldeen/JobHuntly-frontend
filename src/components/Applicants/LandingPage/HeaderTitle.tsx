@@ -3,9 +3,9 @@ import React from "react";
 function HeaderTitle() {
   return (
     <section className="bg-white py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="max-w-2xl">
-          <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 leading-tight mb-4">
+      <div className="max-w-7xl mx-auto ">
+        <div className="max-w-2xl  ">
+          <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 leading-tight mb-4 overflow-y-hidden">
             Discover
             <br />
             more than
@@ -15,7 +15,7 @@ function HeaderTitle() {
 
           <div className="w-96 h-2 bg-blue-600 rounded-full mb-8"></div>
 
-          <p className="text-gray-600 text-lg mb-10">
+          <p className="text-gray-600 text-lg mb-10 overflow-x-hidden ">
             Great platform for the job seeker that searching for new career
             heights and passionate about startups.
           </p>
