@@ -2,6 +2,7 @@ import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { InputTitle } from "./InputTitle";
+import { useJobCreateContext } from "../../JobCreateContext";
 
 
 type Option = {
@@ -42,7 +43,8 @@ const requiredSkillsOptions: Option[] = [
 
 export default function Step1() {
     const navigate = useNavigate();
-    
+    const { updateStep1 } = useJobCreateContext();
+
     const {
         register,
         handleSubmit,
@@ -76,6 +78,7 @@ export default function Step1() {
 
     const onSubmit = (data: any) => {
         console.log("FORM DATA:", data);
+        updateStep1(data);
         navigate("/company/job-create/step-2")
     };
 
@@ -91,7 +94,7 @@ export default function Step1() {
             {/* Job Title */}
             <section className="flex mb-4 md:mb-8">
                 <InputTitle title="Job Title" description="Choose a title that best describes the job you are offering" />
-                <div className="w-1/2">
+                <div className="w-1/2 overflow-y-hidden">
                     <input
                         type="text"
                         placeholder="e.g. Software Engineer"
@@ -184,7 +187,8 @@ export default function Step1() {
                         <input
                             type="number"
                             placeholder="From"
-                            className="text-xs lg:text-base w-[100px] md:w-[150px] lg:w-[200px] h-7 md:h-10 p-4 border-2 border-[#D6DDEB] rounded"
+                            className="text-xs lg:text-base 
+                            w-[80px] sm:w-[100px] md:w-[150px] lg:w-[200px] h-7 md:h-10 p-4 border-2 border-[#D6DDEB] rounded"
                             {...register("salaryFrom", { required: "Required" })}
                         />
                         {/* reserved error space: show message or a non-breaking space so height stays same */}
@@ -199,7 +203,8 @@ export default function Step1() {
                         <input
                             type="number"
                             placeholder="To"
-                            className="text-xs lg:text-base w-[100px] md:w-[150px] lg:w-[200px] h-7 md:h-10 p-4 border-2 border-[#D6DDEB] rounded"
+                            className="text-xs lg:text-base 
+                            w-[80px] sm:w-[100px] md:w-[150px] lg:w-[200px] h-7 md:h-10 p-4 border-2 border-[#D6DDEB] rounded"
                             {...register("salaryTo", {
                                 required: "Required",
                                 validate: (value) => {
@@ -244,7 +249,7 @@ export default function Step1() {
                                 value={field.value}
                                 onChange={(val) => field.onChange(val)}
                                 placeholder="Select Job Categories"
-                                className="text-xs lg:text-base w-[250px] md:w-2/3"
+                                className="text-xs lg:text-base w-[200px] sm:w-[250px] md:w-2/3"
                                 classNamePrefix="rs"
                             />
                         )}
@@ -280,7 +285,7 @@ export default function Step1() {
                                 value={field.value}
                                 onChange={(val) => field.onChange(val)}
                                 placeholder="Select Required Skills"
-                                className="text-xs lg:text-base w-[250px] md:w-2/3"
+                                className="text-xs lg:text-base w-[200px] sm:w-[250px] md:w-2/3"
                                 classNamePrefix="rs"
                             />
                         )}
