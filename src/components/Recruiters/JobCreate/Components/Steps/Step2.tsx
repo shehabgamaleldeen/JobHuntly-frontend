@@ -216,7 +216,8 @@ export default function Step2() {
             <section className="flex justify-end">
                 <button
                     type="submit"
-                    className="px-3 md:px-8 py-2 md:py-3 mb-2 md:mb-4 mx-4 md:mx-8
+                    className="
+                    px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8
                     self-end rounded-md font-medium text-white transition-colors text-sm
                     bg-indigo-600 hover:bg-indigo-700"
                 >

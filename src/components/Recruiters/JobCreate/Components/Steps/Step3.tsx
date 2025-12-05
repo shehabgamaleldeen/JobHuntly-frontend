@@ -132,8 +132,8 @@ const Step3: React.FC = () => {
                                     <div
                                         key={benefit.id}
                                         className={`cursor-pointer p-3 border rounded-md flex justify-between items-center ${selected
-                                                ? "border-indigo-600 bg-indigo-50"
-                                                : "border-gray-300"
+                                            ? "border-indigo-600 bg-indigo-50"
+                                            : "border-gray-300"
                                             }`}
                                         onClick={() => toggleBenefit(benefit)}
                                     >
@@ -165,7 +165,7 @@ const Step3: React.FC = () => {
             <section className="flex justify-end">
                 <button
                     type="submit"
-                    className="px-3 md:px-8 py-2 md:py-3 mb-2 md:mb-4 mx-4 md:mx-8
+                    className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8
                     self-end rounded-md font-medium text-white transition-colors text-sm
                     bg-indigo-600 hover:bg-indigo-700"
                 >

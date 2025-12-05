@@ -39,11 +39,24 @@ export type Step3Data = {
     benefits: Benefit[];
 };
 
+// Step 4 fields - Application Questions
+export type QuestionType = "yesno" | "essay";
+export type Question = {
+    id: number;
+    type: QuestionType;
+    text: string;
+};
+
+export type Step4Data = {
+    questions: Question[];
+};
+
 // Main combined type
 export interface JobPostData {
     step1?: Step1Data;
     step2?: Step2Data;
     step3: Step3Data; // Always initialized
+    step4: Step4Data; // Always initialized so it is never undefined
 }
 
 // Context value type
@@ -52,12 +65,12 @@ export interface JobCreateContextType {
     updateStep1: (data: Step1Data) => void;
     updateStep2: (data: Step2Data) => void;
     updateStep3: (data: Step3Data) => void;
+    updateStep4: (data: Step4Data) => void;
 }
 
 /* ------------------------------------------
    CONTEXT
 -------------------------------------------*/
-
 const JobCreateContext = createContext<JobCreateContextType | undefined>(
     undefined
 );
@@ -65,10 +78,10 @@ const JobCreateContext = createContext<JobCreateContextType | undefined>(
 /* ------------------------------------------
    PROVIDER
 -------------------------------------------*/
-
 export function JobCreateProvider({ children }: { children: React.ReactNode }) {
     const [jobData, setJobData] = useState<JobPostData>({
-        step3: { benefits: [] }, // Default so it's never undefined
+        step3: { benefits: [] },       // default to avoid undefined
+        step4: { questions: [] },      // default so step4 is never undefined
     });
 
     const updateStep1 = (data: Step1Data) =>
@@ -89,6 +102,12 @@ export function JobCreateProvider({ children }: { children: React.ReactNode }) {
             step3: { ...data }, // replaces benefits completely
         }));
 
+    const updateStep4 = (data: Step4Data) =>
+        setJobData((prev) => ({
+            ...prev,
+            step4: { ...data },
+        }));
+
     return (
         <JobCreateContext.Provider
             value={{
@@ -96,6 +115,7 @@ export function JobCreateProvider({ children }: { children: React.ReactNode }) {
                 updateStep1,
                 updateStep2,
                 updateStep3,
+                updateStep4,
             }}
         >
             {children}
@@ -106,7 +126,6 @@ export function JobCreateProvider({ children }: { children: React.ReactNode }) {
 /* ------------------------------------------
    HOOK
 -------------------------------------------*/
-
 export const useJobCreateContext = (): JobCreateContextType => {
     const ctx = useContext(JobCreateContext);
     if (!ctx) {
