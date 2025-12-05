@@ -10,8 +10,8 @@ import ProfileImage from "../../../assets/images/alex-suprun-ZHvM3XIOHoE-unsplas
 
 export type PageKey =
   | "dashboard"
-  | "applications"
-  | "publicProfile"
+  | "JobListing"
+  | "CompanyProfile"
   | "settings"
   | "help";
 
@@ -20,7 +20,7 @@ export interface DashboardSidebarProps {
   onNavigate?: (page: PageKey) => void;
 }
 
-export function DashboardSidebarComponent({
+export function DashboardSidebarRecruiterComponent({
   active = "dashboard",
   onNavigate,
 }: DashboardSidebarProps): JSX.Element {
@@ -76,15 +76,16 @@ export function DashboardSidebarComponent({
               <span>Dashboard</span>
             </button>
 
-            <button type="button" className={itemClass("applications")} onClick={() => handleNav("applications")}>
-              <img className="w-5 h-5" src={FolderIcon} alt="Applications" />
-              <span>My Applications</span>
+            <button type="button" className={itemClass("CompanyProfile")} onClick={() => handleNav("CompanyProfile")}>
+              <img className="w-5 h-5" src={UserIcon} alt="Company Profile" />
+              <span>Company Profile</span>
             </button>
 
-            <button type="button" className={itemClass("publicProfile")} onClick={() => handleNav("publicProfile")}>
-              <img className="w-5 h-5" src={UserIcon} alt="Public profile" />
-              <span>My Public Profile</span>
+            <button type="button" className={itemClass("JobListing")} onClick={() => handleNav("JobListing")}>
+              <img className="w-5 h-5" src={FolderIcon} alt="Job Listing" />
+              <span>Job Listing</span>
             </button>
+
           </nav>
 
           {/* Settings */}
@@ -182,14 +183,14 @@ export function DashboardSidebarComponent({
                     <span>Dashboard</span>
                   </button>
 
-                  <button type="button" className={itemClass("applications")} onClick={() => handleNav("applications")}>
-                    <img className="w-5 h-5" src={FolderIcon} alt="Applications" />
-                    <span>My Applications</span>
+                  <button type="button" className={itemClass("CompanyProfile")} onClick={() => handleNav("CompanyProfile")}>
+                    <img className="w-5 h-5" src={UserIcon} alt="Company Profile" />
+                    <span>Company Profile</span>
                   </button>
-
-                  <button type="button" className={itemClass("publicProfile")} onClick={() => handleNav("publicProfile")}>
-                    <img className="w-5 h-5" src={UserIcon} alt="Public profile" />
-                    <span>My Public Profile</span>
+      
+                  <button type="button" className={itemClass("JobListing")} onClick={() => handleNav("JobListing")}>
+                    <img className="w-5 h-5" src={FolderIcon} alt="Job Listing" />
+                    <span>Job Listing</span>
                   </button>
 
                   <div className="mt-8 text-[#7C8493]">
@@ -250,4 +251,4 @@ export function DashboardSidebarComponent({
   );
 }
 
-export default DashboardSidebarComponent;
+export default DashboardSidebarRecruiterComponent ;

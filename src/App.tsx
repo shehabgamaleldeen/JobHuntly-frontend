@@ -16,8 +16,8 @@ import Step1 from './components/Recruiters/JobCreate/Components/Steps/Step1';
 import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2';
 import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3';
 import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';;
-import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile';
 import './App.css'
+import DashboardRecruiterSettings from "./components/Recruiters/DashboardSettings/DashboardRecruiterSettings";
 
 function App() {
   return (
@@ -26,10 +26,10 @@ function App() {
         <Navbar />
         <main className="grow">
           <Routes>
+            
+            {/*Applicants=================================================*/}
             <Route path="/" element={<LandingPage />} />
             <Route path="/DashboardSettings" element={<DashboardSettings />} />
-            <Route path="/PublicProfile" element={<DashboardPublicProfile />} />
-            <Route path="/Landing" element={<LandingPage />} />
             <Route path="/find-jobs" element={<FindJobs />} />
             <Route path="/find-jobs/:id" element={<JobDescriptions />} />
             <Route path="/browse-companies" element={<SearchCompanies />} />
@@ -41,14 +41,23 @@ function App() {
             <Route path="/companies" element={<CompanyPageWrapper />} />
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
 
-            {/*this is handled for now ( moaz )*/}
+            {/*( moaz )*/}
             <Route path="/dashboardSettings" element={<DashboardSettings />} />
 
+
+
+
+
+            {/*Recruiters===============================================*/}
+
+            {/*( moaz )*/}
+            <Route path="/DashboardRecruiterSettings" element={<DashboardRecruiterSettings />} />
+            
+
+
             {/*Ahmed*/}
-            <Route path="/company" element={<CompanyDashboard />} /> // old 
             <Route path="/company" element={<CompanyLayout />}> // new 
               <Route index element={<CompanyDashboard />} />
-
               <Route path="job-create" element={<JobCreateLayout />}>
                 <Route index element={<Step1 />} />
                 <Route path="step-1" element={<Step1 />} />
@@ -56,6 +65,8 @@ function App() {
                 <Route path="step-3" element={<Step3 />} />
               </Route>
             </Route>
+
+
           </Routes>
         </main>
         <Footer />
