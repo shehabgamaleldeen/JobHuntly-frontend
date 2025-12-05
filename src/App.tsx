@@ -15,6 +15,7 @@ import JobCreateLayout from './components/Recruiters/JobCreate/JobCreateLayout';
 import Step1 from './components/Recruiters/JobCreate/Components/Steps/Step1';
 import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2';
 import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3';
+import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4';
 import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';;
 import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile';
 import './App.css'
@@ -61,6 +62,7 @@ function App() {
                 <Route path="step-1" element={<Step1 />} />
                 <Route path="step-2" element={<Step2 />} />
                 <Route path="step-3" element={<Step3 />} />
+                <Route path="step-4" element={<Step4 />} />
               </Route>
             </Route>
 
