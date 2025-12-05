@@ -44,7 +44,7 @@ export default function StatisticsCard({ title, bgColor }: { title: string; bgCo
 
                 {Icon && <Icon size={24} className="opacity-80" />}
             </header>
-            <h1>70</h1>
+            <h1 className="overflow-y-hidden">70</h1>
         </div>
     );
 }
