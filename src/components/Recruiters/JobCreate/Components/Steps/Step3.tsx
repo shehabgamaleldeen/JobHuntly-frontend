@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PerksBenefitCard from "../PerksBenefitsCard";
 import { useJobCreateContext } from "../../JobCreateContext";
 import { useNavigate } from "react-router-dom";
+import { InputTitle } from "./InputTitle";
 
 interface Benefit {
     id: number;
@@ -42,24 +43,25 @@ const Step3: React.FC = () => {
     const [selectedBenefits, setSelectedBenefits] = useState<Benefit[]>(
         jobData.step3?.benefits || []
     );
-    const [error, setError] = useState(""); // For validation error message
+    const [error, setError] = useState("");
 
     const toggleBenefit = (benefit: Benefit) => {
         const exists = selectedBenefits.some((b) => b.id === benefit.id);
 
-        let updated = exists
+        const updated = exists
             ? selectedBenefits.filter((b) => b.id !== benefit.id)
             : [...selectedBenefits, benefit];
 
         setSelectedBenefits(updated);
         updateStep3({ benefits: updated });
-        setError(""); // Clear error when user adds/removes
+        setError("");
     };
 
     const removeBenefit = (id: number) => {
         const updated = selectedBenefits.filter((b) => b.id !== id);
         setSelectedBenefits(updated);
         updateStep3({ benefits: updated });
+
         if (updated.length === 0) setError("Please add at least one benefit.");
     };
 
@@ -71,20 +73,21 @@ const Step3: React.FC = () => {
             return;
         }
 
+        console.log("FORM DATA:", selectedBenefits);
+        updateStep3({ benefits: selectedBenefits });
+
         navigate("/company/job-create/step-4");
     };
 
     return (
-        <form onSubmit={handleSubmit} className="mt-10">
+        <form onSubmit={handleSubmit} className="job-create-step3">
             {/* Left section */}
-            <div className="mb-6">
-                <h2 className="text-xl font-semibold text-[#25324B]">
-                    Perks and Benefits
-                </h2>
-                <p className="text-[#515B6F] mt-1">
-                    Share the attractive perks your company provides.
-                </p>
-            </div>
+            <section className="mb-4 md:mb-8">
+                <InputTitle
+                    title="Perks & Benefits"
+                    description="Share the attractive perks your company provides."
+                />
+            </section>
 
             {/* Add Button */}
             <button
@@ -129,8 +132,8 @@ const Step3: React.FC = () => {
                                     <div
                                         key={benefit.id}
                                         className={`cursor-pointer p-3 border rounded-md flex justify-between items-center ${selected
-                                            ? "border-indigo-600 bg-indigo-50"
-                                            : "border-gray-300"
+                                                ? "border-indigo-600 bg-indigo-50"
+                                                : "border-gray-300"
                                             }`}
                                         onClick={() => toggleBenefit(benefit)}
                                     >
