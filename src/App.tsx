@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from './components/Basic/Navbar/Navbar';
 import Footer from './components/Basic/footer/footer';
 import LandingPage from './components/Applicants/LandingPage/LandingPage';
@@ -18,6 +18,7 @@ import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3';
 import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';;
 import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile';
 import './App.css'
+import { JobCreateProvider } from "./components/Recruiters/JobCreate/JobCreateContext";
 
 function App() {
   return (
@@ -45,17 +46,24 @@ function App() {
             <Route path="/dashboardSettings" element={<DashboardSettings />} />
 
             {/*Ahmed*/}
-            <Route path="/company" element={<CompanyDashboard />} /> // old 
-            <Route path="/company" element={<CompanyLayout />}> // new 
+            <Route path="/company" element={<CompanyLayout />}>
               <Route index element={<CompanyDashboard />} />
 
-              <Route path="job-create" element={<JobCreateLayout />}>
+              <Route
+                path="job-create"
+                element={
+                  <JobCreateProvider>
+                    <JobCreateLayout />
+                  </JobCreateProvider>
+                }
+              >
                 <Route index element={<Step1 />} />
                 <Route path="step-1" element={<Step1 />} />
                 <Route path="step-2" element={<Step2 />} />
                 <Route path="step-3" element={<Step3 />} />
               </Route>
             </Route>
+
           </Routes>
         </main>
         <Footer />
