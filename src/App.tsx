@@ -18,9 +18,10 @@ import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3'
 import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard'
 import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile'
 import ApplicantProfile from './components/Recruiters/ApplicantProfile/ApplicantProfile'
-import './App.css'
 import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
+import DashboardRecruiterSettings from "./components/Recruiters/DashboardSettings/DashboardRecruiterSettings";
+import './App.css'
 
 function App() {
   return (
@@ -29,10 +30,10 @@ function App() {
         <Navbar />
         <main className="grow">
           <Routes>
+            
+            {/*Applicants=================================================*/}
             <Route path="/" element={<LandingPage />} />
             <Route path="/DashboardSettings" element={<DashboardSettings />} />
-            <Route path="/PublicProfile" element={<DashboardPublicProfile />} />
-            <Route path="/Landing" element={<LandingPage />} />
             <Route path="/find-jobs" element={<FindJobs />} />
             <Route path="/find-jobs/:id" element={<JobDescriptions />} />
             <Route path="/browse-companies" element={<SearchCompanies />} />
@@ -42,19 +43,27 @@ function App() {
             {/*mariz*/}
             <Route path="/companies" element={<CompanyPageWrapper />} />
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
-            {/*this is handled for now ( moaz )*/}
+            
+            {/*( moaz )*/}
             <Route path="/dashboardSettings" element={<DashboardSettings />} />
-            {/*Ahmed*/}
-            <Route path="/company" element={<CompanyDashboard />} /> // old
-            <Route path="/company" element={<CompanyLayout />}>
-              <Route
-                path="applicant-profile/:id"
-                element={<ApplicantProfile />}
-              >
+
+            
+              <Route path="applicant-profile/:id" element={<ApplicantProfile />}>
                 <Route index element={<Resume />} />
                 <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
               </Route>{' '}
-              // new
+
+
+
+            {/*Recruiters===============================================*/}
+
+            {/*( moaz )*/}
+            <Route path="/DashboardRecruiterSettings" element={<DashboardRecruiterSettings />} />
+            
+
+
+            {/*Ahmed*/}
+            <Route path="/company" element={<CompanyLayout />}> // new 
               <Route index element={<CompanyDashboard />} />
               <Route path="job-create" element={<JobCreateLayout />}>
                 <Route index element={<Step1 />} />
@@ -63,6 +72,8 @@ function App() {
                 <Route path="step-3" element={<Step3 />} />
               </Route>
             </Route>
+
+
           </Routes>
         </main>
         <Footer />
