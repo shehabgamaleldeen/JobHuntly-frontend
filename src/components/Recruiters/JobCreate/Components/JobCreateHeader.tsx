@@ -1,7 +1,7 @@
 export default function JobCreateHeader() {
     return (
         <div className="job-create-header">
-            <header className="flex items-center gap-2 p-2 md:p-4 lg:p-8">
+            <header className="flex items-center gap-2 pb-2 md:pb-4 lg:pb-8">
                 <button>
                     <img
                         className="w-5 h-5 md:w-6 md:h-6 lg:w-9 lg:h-9"
@@ -9,10 +9,12 @@ export default function JobCreateHeader() {
                         alt="Back"
                     />
                 </button>
-                <p className="text-base font-normal md:text-lg md:font-medium lg:text-2xl lg:font-semibold">Post a Job</p>
+                <p className="text-base font-normal md:text-lg md:font-medium lg:text-2xl lg:font-semibold">
+                    Post a Job
+                </p>
             </header>
 
-            <nav className="px-2 pb-2 md:px-4 md:pb-4 lg:px-8 lg:pb-8">
+            <nav className="pb-2 md:pb-4 lg:pb-8">
                 <ul className="flex flex-col items-center sm:flex-row sm:justify-evenly sm:border sm:border-[#D6DDEB] sm:rounded">
                     <li
                         className="w-1/2 sm:w-auto justify-start flex gap-4 items-center py-1 px-2 border-b border-b-[#D6DDEB]

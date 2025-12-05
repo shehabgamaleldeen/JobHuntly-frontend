@@ -1,24 +1,8 @@
-import { useState } from "react";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { InputTitle } from "./InputTitle";
 
-export function InputTitle({ title, description }: { title: string; description: string }) {
-    return (
-        <div className="px-8 w-1/2">
-            <p className="text-base font-semibold
-                            sm:text-xs sm:font-medium
-                            md:text-sm md:font-medium
-                            lg:text-base
-                            xl:text-lg xl:font-semibold">
-                {title}
-            </p>
-            <p className="text-[#7C8493] text-xs 
-            lg:text-sm xl:text-base">
-                {description}
-            </p>
-        </div>
-    );
-}
 
 type Option = {
     value: string;
@@ -57,7 +41,8 @@ const requiredSkillsOptions: Option[] = [
 ];
 
 export default function Step1() {
-
+    const navigate = useNavigate();
+    
     const {
         register,
         handleSubmit,
@@ -80,7 +65,7 @@ export default function Step1() {
         mode: "onChange"
     });
 
-    const atLeastOne = (value: any, allValues: any) =>
+    const atLeastOne = (_: any, allValues: any) =>
         allValues.fullTime ||
         allValues.partTime ||
         allValues.remote ||
@@ -88,8 +73,10 @@ export default function Step1() {
         allValues.contract ||
         "Select at least one job type";
 
+
     const onSubmit = (data: any) => {
         console.log("FORM DATA:", data);
+        navigate("/company/job-create/step-2")
     };
 
     return (
@@ -307,8 +294,8 @@ export default function Step1() {
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
             {/* Submit */}
-            <section className="flex justify-end mb-4 md:mb-8">
-                <button type="submit" className="px-3 md:px-4 py-2 md:py-3 mb-4 md:mb-8 mx-4 md:mx-8 
+            <section className="flex justify-end">
+                <button type="submit" className="px-3 md:px-8 py-2 md:py-3 mb-2 md:mb-4 mx-4 md:mx-8 
                 self-end rounded-md font-medium text-white transition-colors text-sm
                   bg-indigo-600 hover:bg-indigo-700">
                     Next Step
