@@ -1,6 +1,6 @@
 export function InputTitle({ title, description }: { title: string; description: string }) {
     return (
-        <div className="w-1/2">
+        <div className="w-1/2 mr-4">
             <p className="text-base font-semibold
                             sm:text-xs sm:font-medium
                             md:text-sm md:font-medium
