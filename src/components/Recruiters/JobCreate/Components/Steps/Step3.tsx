@@ -24,14 +24,42 @@ const staticBenefits: Benefit[] = [
         icon: "/public/images/Perks/PerksVacation.png",
         title: "Unlimited Vacation",
         description:
-            "A flexible schedule that supports family life, wellness, and personal time.",
+            "We believe you should have a flexible schedule that makes space for family, wellness, and fun.",
     },
     {
         id: 3,
         icon: "/public/images/Perks/PerksSkills.png",
         title: "Skill Development",
         description:
-            "We invest in learning—courses, conferences, workshops, and more.",
+            "We believe in always learning and leveling up our skills. Whether it's a conference or online course.",
+    },
+    {
+        id: 4,
+        icon: "/public/images/Perks/PerksRemote.png",
+        title: "Remote Working",
+        description:
+            "You know how you perform your best. Work from home, coffee shop or anywhere when you feel like it.",
+    },
+    {
+        id: 5,
+        icon: "/public/images/Perks/PerksTeamSummits.png",
+        title: "Team Summits",
+        description:
+            "Every 6 months we have a full team summit where we have fun, reflect, and plan for the upcoming quarter.",
+    },
+    {
+        id: 6,
+        icon: "/public/images/Perks/PerksCommuter.png",
+        title: "Commuter Benefits",
+        description:
+            "We’re grateful for all the time and energy each team member puts into getting to work every day.",
+    },
+    {
+        id: 7,
+        icon: "/public/images/Perks/PerksGive.png",
+        title: "We give back.",
+        description:
+            "We anonymously match any donation our employees make (up to $/€ 600) so they can support the organizations they care about most—times two.",
     },
 ];
 
