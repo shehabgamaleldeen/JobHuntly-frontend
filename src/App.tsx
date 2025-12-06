@@ -1,12 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from './components/Basic/Navbar/Navbar';
-import Footer from './components/Basic/footer/footer';
-import LandingPage from './components/Applicants/LandingPage/LandingPage';
-import FindJobs from './components/Applicants/FindJobs/FindJobs';
-import Login from './components/Applicants/Login/Login';
-import Signup from './components/Applicants/Signup/Signup';
-import SearchCompanies from './components/Applicants/SearchCompanies/SearchCompanies';
-import NotFoundPage from './components/Basic/NotFoundPage';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Navbar from './components/Basic/Navbar/Navbar'
+import Footer from './components/Basic/footer/footer'
+import LandingPage from './components/Applicants/LandingPage/LandingPage'
+import FindJobs from './components/Applicants/FindJobs/FindJobs'
+import Login from './components/Applicants/Login/Login'
+import Signup from './components/Applicants/Signup/Signup'
+import SearchCompanies from './components/Applicants/SearchCompanies/SearchCompanies'
+import NotFoundPage from './components/Basic/NotFoundPage'
 import JobDescriptions from './components/Applicants/JobDescriptions/jobDescriptions'
 import CompanyPageWrapper from './components/Applicants/CompanyProfile/CompanyPageWrapper'
 import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings'
@@ -19,6 +19,13 @@ import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2';
 import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3';
 import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4';
 import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile';
+import MyApplications from './components/Applicants/MyApplications/MyApplications';
+import ApplicantProfile from './components/Recruiters/ApplicantProfile/ApplicantProfile'
+import Resume from './components/Recruiters/ApplicantProfile/Resume'
+import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
+import DashboardRecruiterSettings from "./components/Recruiters/DashboardSettings/DashboardRecruiterSettings";
+import JobListPage from "./components/Recruiters/JobList/JobListPage";
+import ApplicantsTable from "./components/Recruiters/Applicants/ApplicantsTable";
 import './App.css'
 
 function App() {
@@ -28,23 +35,43 @@ function App() {
         <Navbar />
         <main className="grow">
           <Routes>
+            
+            {/*Applicants=================================================*/}
             <Route path="/" element={<LandingPage />} />
             <Route path="/DashboardSettings" element={<DashboardSettings />} />
-            <Route path="/PublicProfile" element={<DashboardPublicProfile />} />
-            <Route path="/Landing" element={<LandingPage />} />
             <Route path="/find-jobs" element={<FindJobs />} />
             <Route path="/find-jobs/:id" element={<JobDescriptions />} />
             <Route path="/browse-companies" element={<SearchCompanies />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="*" element={<NotFoundPage />} />
-
             {/*mariz*/}
             <Route path="/companies" element={<CompanyPageWrapper />} />
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
+            <Route path="/my-applications" element={<MyApplications />} />
+            <Route path="/job-lists" element={<JobListPage />} />
+            <Route path="/applicants/:jobId" element={<ApplicantsTable />} />
 
-            {/*this is handled for now ( moaz )*/}
+
+
+            
+            {/*( moaz )*/}
             <Route path="/dashboardSettings" element={<DashboardSettings />} />
+
+            
+              <Route path="applicant-profile/:id" element={<ApplicantProfile />}>
+                <Route index element={<Resume />} />
+                <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
+              </Route>{' '}
+
+
+
+            {/*Recruiters===============================================*/}
+
+            {/*( moaz )*/}
+            <Route path="/DashboardRecruiterSettings" element={<DashboardRecruiterSettings />} />
+            
+
 
             {/*Ahmed*/}
             <Route path="/company" element={<CompanyLayout />}>
@@ -65,6 +92,7 @@ function App() {
                 <Route path="step-4" element={<Step4 />} />
               </Route>
             </Route>
+
 
           </Routes>
         </main>
