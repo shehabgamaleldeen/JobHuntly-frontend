@@ -6,7 +6,7 @@
     "email": "jake@example.com",
     "avatar": "https://i.pravatar.cc/150?u=user_applicant_001",
     "location": "Berlin, Germany",
-    "bio": "Product Designer with 5 years of experience in SaaS and Fintech. Obsessed with clean UI and accessible UX."
+    "bio": "Product Designer with 5 years of experience in SaaS and Fintech. Obsessed with clean UI and accessible UX." 
   },
   "stats": {
     "recruiter": {
@@ -36,7 +36,7 @@
     {
       "id": 1,
       "name": "Stripe",
-      "8ogo": "/images/company/stripe.png",
+      "logo": "/images/company/stripe.png",
       "website": "https://stripe.com",
       "description": "Stripe is a software platform for starting and running internet businesses. Millions of businesses rely on Stripe's software tools to accept payments, expand globally, and manage their businesses online.",
       "founded": "2010",
@@ -779,5 +779,71 @@
       "skills": ["Security", "Compliance"],
       "avatar": "https://i.pravatar.cc/150?u=app_025"
     }
-  ]
+  ],
+  "applications": [
+  {
+    "id": 1,
+    "logo":"/images/company/stripe.png",
+    "userId": "user_applicant_001",
+    "jobId": 1,
+    "companyId": 1,
+    "company": "Stripe",
+    "role": "Social Media Assistant 1",
+    "dateApplied": "2025-11-20"
+  },
+  {
+    "id": 2,
+    "userId": "user_applicant_001",
+    "jobId": 2,
+    "companyId": 1,
+    "company": "Stripe",
+    "role": "Social Media Assistant 2",
+    "dateApplied": "2025-11-18"
+  },
+  {
+    "id": 3,
+    "userId": "user_applicant_001",
+    "jobId": 3,
+    "companyId": 1,
+    "company": "Stripe",
+    "role": "Social Media Assistant 3",
+    "dateApplied": "2025-11-15"
+  },
+    {
+    "id": 4,
+    "userId": "user_applicant_001",
+    "jobId": 3,
+    "companyId": 1,
+    "company": "Stripe",
+    "role": "Social Media Assistant 3",
+    "dateApplied": "2025-11-15"
+  },
+    {
+    "id": 5,
+    "userId": "user_applicant_001",
+    "jobId": 3,
+    "companyId": 1,
+    "company": "Stripe",
+    "role": "Social Media Assistant 3",
+    "dateApplied": "2025-11-15"
+  },
+    {
+    "id": 6,
+    "userId": "user_applicant_001",
+    "jobId": 3,
+    "companyId": 1,
+    "company": "Stripe",
+    "role": "Social Media Assistant 3",
+    "dateApplied": "2025-11-15"
+  },
+    {
+    "id": 7,
+    "userId": "user_applicant_001",
+    "jobId": 3,
+    "companyId": 1,
+    "company": "company",
+    "role": "Social Media Assistant 3",
+    "dateApplied": "2025-11-15"
+  }
+]
 }
