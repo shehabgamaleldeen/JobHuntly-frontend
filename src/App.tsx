@@ -11,15 +11,15 @@ import JobDescriptions from './components/Applicants/JobDescriptions/jobDescript
 import CompanyPageWrapper from './components/Applicants/CompanyProfile/CompanyPageWrapper'
 import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings'
 import CompanyLayout from './components/Recruiters/CompanyLayout';
+import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';
 import JobCreateLayout from './components/Recruiters/JobCreate/JobCreateLayout';
+import { JobCreateProvider } from "./components/Recruiters/JobCreate/JobCreateContext";
 import Step1 from './components/Recruiters/JobCreate/Components/Steps/Step1';
 import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2';
 import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3';
 import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4';
-import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';;
 import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile';
 import './App.css'
-import { JobCreateProvider } from "./components/Recruiters/JobCreate/JobCreateContext";
 
 function App() {
   return (

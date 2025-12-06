@@ -87,7 +87,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ data, timeFrame }) => {
                 {data.title}
                 <span className="p-2 bg-[#E9EBFD] rounded-full">{data.icon}</span>
             </h3>
-            <h1 className="text-[#25324B] mb-1 overflow-y-hidden">{data.count.toLocaleString()}</h1>
+            <h1 className="text-[#25324B] mb-1">{data.count.toLocaleString()}</h1>
 
             <p className={"text-base font-semibold text-[#7C8493]"}>
                 {timeFrame} <span className={`text-base font-semibold ${colorClass}`}>{Math.abs(data.change).toFixed(1)}% {arrow}</span>

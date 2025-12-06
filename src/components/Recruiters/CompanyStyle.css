@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@layer base {
+  * {
+    overflow-x:visible;
+  }
+}
+
 .company-layout{
     background-color: white;
 }
