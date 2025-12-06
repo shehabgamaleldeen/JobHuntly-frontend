@@ -62,8 +62,8 @@ export default function Step2() {
                                 message: "Minimum 100 characters"
                             },
                             maxLength: {
-                                value: 500,
-                                message: "Maximum 500 characters allowed"
+                                value: 1000,
+                                message: "Maximum 1000 characters allowed"
                             }
                         })}
                         placeholder="Write the job description here..."
@@ -75,7 +75,7 @@ export default function Step2() {
 
                     {/* Character counter */}
                     <p className="text-[#7C8493] text-[11px] md:text-xs lg:text-sm mt-1">
-                        {jobDescription.length} / 500
+                        {jobDescription.length} / 1000
                     </p>
 
                     {/* Errors */}
@@ -105,8 +105,8 @@ export default function Step2() {
                                 message: "Minimum 100 characters"
                             },
                             maxLength: {
-                                value: 500,
-                                message: "Maximum 500 characters allowed"
+                                value: 1000,
+                                message: "Maximum 1000 characters allowed"
                             }
                         })}
                         placeholder="List the responsibilities here..."
@@ -117,7 +117,7 @@ export default function Step2() {
                     ></textarea>
 
                     <p className="text-[#7C8493] text-[11px] md:text-xs lg:text-sm mt-1">
-                        {responsibilities.length} / 500
+                        {responsibilities.length} / 1000
                     </p>
 
                     {errors.responsibilities && (
@@ -146,8 +146,8 @@ export default function Step2() {
                                 message: "Minimum 100 characters"
                             },
                             maxLength: {
-                                value: 500,
-                                message: "Maximum 500 characters allowed"
+                                value: 1000,
+                                message: "Maximum 1000 characters allowed"
                             }
                         })}
                         placeholder="Describe who you are looking for..."
@@ -158,7 +158,7 @@ export default function Step2() {
                     ></textarea>
 
                     <p className="text-[#7C8493] text-[11px] md:text-xs lg:text-sm mt-1">
-                        {whoYouAre.length} / 500
+                        {whoYouAre.length} / 1000
                     </p>
 
                     {errors.whoYouAre && (
@@ -187,8 +187,8 @@ export default function Step2() {
                                 message: "Minimum 100 characters"
                             },
                             maxLength: {
-                                value: 500,
-                                message: "Maximum 500 characters allowed"
+                                value: 1000,
+                                message: "Maximum 1000 characters allowed"
                             }
                         })}
                         placeholder="Mention optional but useful skills..."
@@ -199,7 +199,7 @@ export default function Step2() {
                     ></textarea>
 
                     <p className="text-[#7C8493] text-[11px] md:text-xs lg:text-sm mt-1">
-                        {niceToHaves.length} / 500
+                        {niceToHaves.length} / 1000
                     </p>
 
                     {errors.niceToHaves && (
