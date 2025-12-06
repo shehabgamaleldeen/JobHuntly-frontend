@@ -94,7 +94,7 @@ export default function Step1() {
             {/* Job Title */}
             <section className="flex mb-4 md:mb-8">
                 <InputTitle title="Job Title" description="Choose a title that best describes the job you are offering" />
-                <div className="w-1/2 overflow-y-hidden">
+                <div className="w-1/2">
                     <input
                         type="text"
                         placeholder="e.g. Software Engineer"
