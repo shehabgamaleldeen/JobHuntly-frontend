@@ -23,25 +23,25 @@ const mockMetricData = {
 // Data for the bar chart based on time filter
 const mockChartData = {
     'Week': [
-        { name: 'Mon', 'Job View': 120, 'Job Applications': 280 }, 
-        { name: 'Tue', 'Job View': 180, 'Job Applications': 320 }, 
-        { name: 'Wed', 'Job View': 122, 'Job Applications': 34 },  
-        { name: 'Thu', 'Job View': 90, 'Job Applications': 350 }, 
-        { name: 'Fri', 'Job View': 150, 'Job Applications': 200 }, 
-        { name: 'Sat', 'Job View': 100, 'Job Applications': 120 }, 
-        { name: 'Sun', 'Job View': 50, 'Job Applications': 180 }, 
+        { name: 'Mon', 'Job View': 120, 'Job Applications': 280 },
+        { name: 'Tue', 'Job View': 180, 'Job Applications': 320 },
+        { name: 'Wed', 'Job View': 122, 'Job Applications': 34 },
+        { name: 'Thu', 'Job View': 90, 'Job Applications': 350 },
+        { name: 'Fri', 'Job View': 150, 'Job Applications': 200 },
+        { name: 'Sat', 'Job View': 100, 'Job Applications': 120 },
+        { name: 'Sun', 'Job View': 50, 'Job Applications': 180 },
     ],
     'Month': [
-        { name: 'Wk 1', 'Job View': 4000, 'Job Applications': 1500 }, 
-        { name: 'Wk 2', 'Job View': 3500, 'Job Applications': 1200 }, 
-        { name: 'Wk 3', 'Job View': 2800, 'Job Applications': 1000 }, 
-        { name: 'Wk 4', 'Job View': 3200, 'Job Applications': 1300 }, 
+        { name: 'Wk 1', 'Job View': 4000, 'Job Applications': 1500 },
+        { name: 'Wk 2', 'Job View': 3500, 'Job Applications': 1200 },
+        { name: 'Wk 3', 'Job View': 2800, 'Job Applications': 1000 },
+        { name: 'Wk 4', 'Job View': 3200, 'Job Applications': 1300 },
     ],
     'Year': [
-        { name: 'Q1', 'Job View': 28000, 'Job Applications': 12000 }, 
-        { name: 'Q2', 'Job View': 30000, 'Job Applications': 14000 }, 
-        { name: 'Q3', 'Job View': 32000, 'Job Applications': 15000 }, 
-        { name: 'Q4', 'Job View': 30000, 'Job Applications': 13000 }, 
+        { name: 'Q1', 'Job View': 28000, 'Job Applications': 12000 },
+        { name: 'Q2', 'Job View': 30000, 'Job Applications': 14000 },
+        { name: 'Q3', 'Job View': 32000, 'Job Applications': 15000 },
+        { name: 'Q4', 'Job View': 30000, 'Job Applications': 13000 },
     ],
 };
 
@@ -51,7 +51,7 @@ const chartTabs = ['Overview', 'Job Views', 'Job Applications'];
 
 
 // Custom Tooltip to display specific data on hover (matching the dark box style)
-const CustomTooltip = ({ active, payload}: any) => {
+const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
         return (
             <div className="bg-gray-800 text-white p-2 rounded-lg text-xs shadow-xl">
@@ -124,7 +124,7 @@ export default function JobStatisticsChart() {
     const getTimeFilterButtonClass = (filter: string) => {
         const isActive = filter === activeFilter;
         // Base classes: padding, margin, transition, rounded corners
-        const baseClasses = "p-3 m-1 transition-colors duration-200 rounded-lg";
+        const baseClasses = "text-xs font-light sm:text-base sm:font-semibold p-1 sm:p-3 m-1 transition-colors duration-200 rounded-lg";
 
         // Use bg-white for the active state, and make inactive state transparent 
         const activeClasses = isActive
@@ -138,7 +138,7 @@ export default function JobStatisticsChart() {
     const getTabButtonClass = (tab: string) => {
         const isActive = tab === activeTab;
         // Base classes for all tabs. text-base (1rem) respects the user's button CSS.
-        const baseClasses = "py-4 px-6 text-base font-semibold transition-all duration-200";
+        const baseClasses = "text-xs font-light sm:text-base sm:font-semibold py-2 px-3 sm:py-4 sm:px-6 transition-all duration-200";
 
         // Dynamic classes: Text color and bottom border style
         const activeClasses = isActive
@@ -159,16 +159,29 @@ export default function JobStatisticsChart() {
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 >
                     <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#e0e0e0" />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} stroke="#7C8493" />
+                    <XAxis
+                        dataKey="name"
+                        axisLine={false}
+                        tickLine={false}
+                        stroke="#7C8493"
+                        interval={0}
+                        tick={{
+                            className:
+                                "text-[10px] font-light sm:text-xl sm:font-semibold text-[#25324B]"
+                        }}
+                    />
                     <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
                     <Legend
                         verticalAlign="bottom"
                         height={36}
                         iconType="square"
                         wrapperStyle={{ paddingTop: '10px' }}
+                        formatter={(value) => (
+                            <span className="text-xs font-light sm:text-lg sm:font-semibold text-[#25324B]">{value}</span> // ⭐ Tailwind
+                        )}
                     />
                     {/* The single Bar element */}
-                    <Bar dataKey={dataKey} fill={fill} barSize={30} />
+                    <Bar dataKey={dataKey} fill={fill} barSize={30} isAnimationActive={false} />
                 </BarChart>
             </ResponsiveContainer>
         </div>
@@ -182,8 +195,15 @@ export default function JobStatisticsChart() {
                     {/* Left side: title + date */}
                     <div className="w-1/2">
                         {/* h3 remains text-xl font-bold (700) to comply with user's CSS */}
-                        <h2 className="pb-1 text-[#25324B]">Job Statistics</h2>
-                        <p className="text-sm font-normal text-[#7C8493]">From July 19 to July 25</p>
+                        <p className="text-base sm:text-xl md:text-2xl 
+                        font-light sm:font-medium md:font-semibold
+                        pb-1 text-[#25324B]">
+                            Job Statistics
+                        </p>
+                        <p className="text-[10px] font-light sm:text-sm sm:font-normal 
+                        text-[#7C8493]">
+                            From July 19 to July 25
+                        </p>
                     </div>
 
                     {/* Right side: time filter navigation (Week/Month/Year) */}
@@ -231,17 +251,30 @@ export default function JobStatisticsChart() {
                                             stackOffset="none"
                                         >
                                             <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#e0e0e0" />
-                                            <XAxis dataKey="name" axisLine={false} tickLine={false} stroke="#7C8493" />
-                                            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
+                                            <XAxis
+                                                dataKey="name"
+                                                axisLine={false}
+                                                tickLine={false}
+                                                stroke="#7C8493"
+                                                interval={0}
+                                                tick={{
+                                                    className:
+                                                        "text-[10px] font-light sm:text-xl sm:font-semibold text-[#25324B]"
+                                                }}
+                                            />
+                                            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0)' }} />
                                             <Legend
                                                 verticalAlign="bottom"
                                                 height={36}
                                                 iconType="square"
                                                 wrapperStyle={{ paddingTop: '10px' }}
+                                                formatter={(value) => (
+                                                    <span className="text-xs font-light sm:text-lg sm:font-semibold text-[#25324B]">{value}</span> // ⭐ Tailwind
+                                                )}
                                             />
                                             {/* Overview Chart: Stacked bars for Applications and Views */}
-                                            <Bar dataKey="Job Applications" stackId="a" fill="#4640DE" barSize={30} />
-                                            <Bar dataKey="Job View" stackId="a" fill="#FFC93C" barSize={30} />
+                                            <Bar dataKey="Job Applications" stackId="a" fill="#4640DE" barSize={30} isAnimationActive={false} />
+                                            <Bar dataKey="Job View" stackId="a" fill="#FFC93C" barSize={30} isAnimationActive={false} />
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
