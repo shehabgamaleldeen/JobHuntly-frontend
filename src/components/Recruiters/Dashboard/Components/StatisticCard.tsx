@@ -23,7 +23,7 @@ export default function StatisticsCard({ title, bgColor }: { title: string; bgCo
     // React supports this with string tag names
     let TitleTag = "h2" as keyof HTMLElementTagNameMap;
 
-    if (width < 670) TitleTag = "h2";
+    if (width < 670) TitleTag = "h4";
     else if (width < 800) TitleTag = "h5";
     else if (width < 950) TitleTag = "h3";
     else if (width < 1050) TitleTag = "h2";
