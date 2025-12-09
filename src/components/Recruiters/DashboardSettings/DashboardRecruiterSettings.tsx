@@ -27,7 +27,7 @@ export default function DashboardRecruiterSettings(): JSX.Element {
         return <CompanyPageRecruiterWrapper />;
 
       case "JobListing":
-        return (<><div className="text-lg p-4">Job Listing</div> <JobListing/></>)
+        return  <JobListing/>
 
       case "help":
         return < DashboardHelpCenterRecruiter/>

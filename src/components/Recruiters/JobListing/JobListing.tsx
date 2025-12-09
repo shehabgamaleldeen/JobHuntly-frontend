@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { useState } from "react";
 import { PageHeader } from "../DashboardSettings/headParts/headerPart";
 import JobDescriptionsRec from "../JobDescriptions/jobDescriptions";
+import ApplicantsPage from "../Applicants/Applicants";
 
 export function JobListing(): JSX.Element {
   const [activeTab, setActiveTab] = useState<"Applicants" | "JobDetails">("Applicants");
@@ -53,6 +54,7 @@ export function JobListing(): JSX.Element {
           {/* Only show Applicants form when Applicants tab active */}
           {activeTab === "Applicants" && (
             <>
+            <ApplicantsPage/>
             </>
           )}
 
