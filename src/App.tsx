@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Basic/Navbar/Navbar'
 import Footer from './components/Basic/footer/footer'
 import LandingPage from './components/Applicants/LandingPage/LandingPage'
@@ -26,11 +26,22 @@ import JobListPage from "./components/Recruiters/JobList/JobListPage";
 import ApplicantsTable from "./components/Recruiters/Applicants/ApplicantsTable";
 import { JobCreateProvider } from "./components/Recruiters/JobCreate/JobCreateContext";
 import './App.css'
+import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4'
 function App() {
+  const location = useLocation();
+
+  // Hide navbar on these routes
+  const hideNavbarRoutes = ["/"];
+
+  const shouldShowNavbar = hideNavbarRoutes.includes(location.pathname);
+
+
+
   return (
-    <Router>
+
+
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+      {shouldShowNavbar && <Navbar />}
         <main className="grow">
           <Routes>
             
@@ -57,6 +68,7 @@ function App() {
             <Route path="/dashboardSettings" element={<DashboardSettings />} />
 
             
+            {/*( shuab )*/}
               <Route path="applicant-profile/:id" element={<ApplicantProfile />}>
                 <Route index element={<Resume />} />
                 <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
@@ -96,7 +108,6 @@ function App() {
         </main>
         <Footer />
       </div>
-    </Router>
   )
 }
 
