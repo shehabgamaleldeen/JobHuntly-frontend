@@ -98,7 +98,7 @@ export default function Step1() {
                     <input
                         type="text"
                         placeholder="e.g. Software Engineer"
-                        className="text-[11px] sm:text-sm lg:text-base p-4 h-[35px] md:h-3/5 w-10/11 md:w-2/3 border-2 border-[#D6DDEB]"
+                        className="text-[11px] sm:text-sm lg:text-base p-4 h-[35px] md:h-3/5 w-10/11 sm:w-12/15 md:w-2/3 border-2 border-[#D6DDEB]"
                         {...register("jobTitle", {
                             required: "Job title is required",
                             minLength: {
@@ -188,7 +188,7 @@ export default function Step1() {
                             type="number"
                             placeholder="From"
                             className="text-[11px] lg:text-base 
-                            w-[70px] sm:w-[120px] md:w-[150px] lg:w-[200px] h-7 md:h-10 p-3 sm:p-4 border-2 border-[#D6DDEB] rounded"
+                            w-[70px] sm:w-[120px] md:w-[150px] lg:w-[130px] h-7 md:h-10 p-3 sm:p-4 border-2 border-[#D6DDEB] rounded"
                             {...register("salaryFrom", { required: "Required" })}
                         />
                         {/* reserved error space: show message or a non-breaking space so height stays same */}
@@ -204,7 +204,7 @@ export default function Step1() {
                             type="number"
                             placeholder="To"
                             className="text-[11px] lg:text-base 
-                            w-[70px] sm:w-[100px] md:w-[150px] lg:w-[200px] h-7 md:h-10 p-3 sm:p-4 border-2 border-[#D6DDEB] rounded"
+                            w-[70px] sm:w-[100px] md:w-[150px] lg:w-[130px] h-7 md:h-10 p-3 sm:p-4 border-2 border-[#D6DDEB] rounded"
                             {...register("salaryTo", {
                                 required: "Required",
                                 validate: (value) => {
@@ -249,7 +249,16 @@ export default function Step1() {
                                 value={field.value}
                                 onChange={(val) => field.onChange(val)}
                                 placeholder="Select Job Categories"
-                                className="text-[10px] sm:text-xs lg:text-base w-14/15 sm:w-12/15 md:w-2/3"
+                                className="text-[8px] sm:text-xs lg:text-base w-10/11 sm:w-12/15 md:w-2/3"
+                                classNames={{
+                                    // 1. Force the value container to have specific padding
+                                    valueContainer: () => "px-[2px] md:px-[4px]",
+
+                                    // 2. Make indicators responsive using Tailwind prefixes
+                                    // Example: very small padding on mobile, slightly larger on desktop
+                                    dropdownIndicator: () => "p-0 sm:p-1 lg:p-2",
+                                    clearIndicator: () => "p-0 sm:p-1 lg:p-2"
+                                }}
                                 classNamePrefix="rs"
                             />
                         )}
@@ -300,10 +309,10 @@ export default function Step1() {
 
             {/* Submit */}
             <section className="flex justify-end">
-                <button type="submit" className="
-                px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8
+                <button type="submit"
+                    className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8
                 self-end rounded-md font-medium text-white transition-colors text-sm
-                  bg-indigo-600 hover:bg-indigo-700">
+                bg-indigo-600 hover:bg-indigo-700">
                     Next Step
                 </button>
             </section>
