@@ -1,45 +1,57 @@
 @import "tailwindcss";
 
+/* I removed headings here and also i don't use the headings tags (h1,..) 
+and still i must have this line to remove scrolling */
+
 @layer base {
   * {
-    overflow-x:visible;
+    overflow-x: visible;
   }
 }
 
-.company-layout{
+.company-layout {
     background-color: white;
 }
 
-h1 {
+button {
+    cursor: pointer;
+}
+
+/* New class-based styles extracted from original tag selectors */
+/* For the statistic value (original h1) */
+.stat-value {
     font-weight: 650;
     font-size: 3rem;
     line-height: 1;
 }
 
-h2 {
+/* Title style variants (mapped from your h2-h5) */
+.title-style-a {  /* Like original h2 */
     font-weight: 650;
     font-size: 1.5rem;
     line-height: 2rem;
 }
 
-h3 {
+.title-style-b {  /* Like original h3 */
     font-weight: 600;
     font-size: 1.2rem;
     line-height: 1.75rem;
 }
 
-h4{
+.title-style-c {  /* Like original h4 */
     font-weight: 600;
     font-size: 1.1rem;
     line-height: 1.5rem;
 }
 
-h5{
+.title-style-d {  /* Like original h5 */
     font-weight: 600;
     font-size: 1rem;
     line-height: 1.5rem;
 }
 
-button {
-    cursor: pointer;
+.title-style-e {  /* Like original h5 */
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.5rem;
 }
