@@ -83,14 +83,14 @@ const MetricCard: React.FC<MetricCardProps> = ({ data, timeFrame }) => {
 
     return (
         <article className="bg-white p-4 rounded-lg shadow-md border border-gray-100 h-40">
-            <h3 className="text-[#25324B] flex justify-between items-center mb-1">
+            <p className="text-xl font-bold text-[#25324B] flex justify-between items-center mb-1">
                 {data.title}
                 <span className="p-2 bg-[#E9EBFD] rounded-full">{data.icon}</span>
-            </h3>
-            <h1 className="text-[#25324B] mb-1">{data.count.toLocaleString()}</h1>
+            </p>
+            <p className="text-3xl sm:text-5xl text-[#25324B] mb-1">{data.count.toLocaleString()}</p>
 
-            <p className={"text-base font-semibold text-[#7C8493]"}>
-                {timeFrame} <span className={`text-base font-semibold ${colorClass}`}>{Math.abs(data.change).toFixed(1)}% {arrow}</span>
+            <p className={"text-lg font-bold text-[#7C8493]"}>
+                {timeFrame} <span className={`text-base font-bold ${colorClass}`}>{Math.abs(data.change).toFixed(1)}% {arrow}</span>
             </p>
         </article>
     );
@@ -195,7 +195,7 @@ export default function JobStatisticsChart() {
                     {/* Left side: title + date */}
                     <div className="w-1/2">
                         {/* h3 remains text-xl font-bold (700) to comply with user's CSS */}
-                        <p className="text-base sm:text-xl md:text-2xl 
+                        <p className="text-lg sm:text-xl md:text-2xl 
                         font-light sm:font-medium md:font-semibold
                         pb-1 text-[#25324B]">
                             Job Statistics
