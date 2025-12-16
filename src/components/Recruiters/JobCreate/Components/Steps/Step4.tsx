@@ -44,7 +44,7 @@ export default function Step4() {
         <div className="job-create-step4">
 
             {/* PAGE TITLE */}
-            <section className="mb-6 md:mb-10">
+            <section className="mb-6 md:mb-8">
                 <InputTitle
                     title="Job Application Questions"
                     description="Add optional questions for your applicants such as essay or yes/no type questions"
