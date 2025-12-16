@@ -1,14 +1,5 @@
 @import "tailwindcss";
 
-/* I removed headings here and also i don't use the headings tags (h1,..) 
-and still i must have this line to remove scrolling */
-
-@layer base {
-  * {
-    overflow-x: visible;
-  }
-}
-
 .company-layout {
     background-color: white;
 }
