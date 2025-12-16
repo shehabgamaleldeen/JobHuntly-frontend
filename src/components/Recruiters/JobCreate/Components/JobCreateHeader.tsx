@@ -39,7 +39,7 @@ export default function JobCreateHeader() {
                             <p className="text-[#7C8493] text-sm sm:text-[10px] md:text-xs lg:text-sm xl:text-base">
                                 Step 1/4
                             </p>
-                            <p className="text-base font-semibold
+                            <p className="text-sm font-semibold
                             sm:text-xs sm:font-medium
                             lg:text-base
                             xl:text-lg xl:font-semibold">
@@ -65,7 +65,7 @@ export default function JobCreateHeader() {
                             <p className="text-[#7C8493] text-sm sm:text-[10px] md:text-xs lg:text-sm xl:text-base">
                                 Step 2/4
                             </p>
-                            <p className="text-base font-semibold
+                            <p className="text-sm font-semibold
                             sm:text-xs sm:font-medium
                             lg:text-base
                             xl:text-lg xl:font-semibold">
@@ -91,7 +91,7 @@ export default function JobCreateHeader() {
                             <p className="text-[#7C8493] text-sm sm:text-[10px] md:text-xs lg:text-sm xl:text-base">
                                 Step 3/4
                             </p>
-                            <p className="text-base font-semibold
+                            <p className="text-sm font-semibold
                             sm:text-xs sm:font-medium
                             lg:text-base
                             xl:text-lg xl:font-semibold">
@@ -116,7 +116,7 @@ export default function JobCreateHeader() {
                             <p className="text-[#7C8493] text-sm sm:text-[10px] md:text-xs lg:text-sm xl:text-base">
                                 Step 4/4
                             </p>
-                            <p className="text-base font-semibold
+                            <p className="text-sm font-semibold
                             sm:text-xs sm:font-medium
                             lg:text-base
                             xl:text-lg xl:font-semibold">
