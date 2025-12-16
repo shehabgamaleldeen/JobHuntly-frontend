@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { useState } from "react";
 import ProfileImage from "../../../assets/images/alex-suprun-ZHvM3XIOHoE-unsplash 1.png";
 import { Link } from "react-router-dom";
+import { PageHeader } from "./headParts/headerPart";
 
 export function DashboardUpdateProfile(): JSX.Element {
   const [activeTab, setActiveTab] = useState<"profile" | "login">("profile");
@@ -15,18 +16,12 @@ export function DashboardUpdateProfile(): JSX.Element {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      {/* Page header */}
-      <header className="flex items-start justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-90 overflow-y-hidden ">Settings</h1>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <button className="px-4 py-2 border border-purple-200 rounded text-[#4640DE] text-sm hover:bg-purple-50">
-            <Link  to={"/"} >Back to homepage</Link>
-          </button>
-        </div>
-      </header>
+      
+    <PageHeader
+  title="Settings"
+  buttonText="Back to homepage"
+  buttonLink="/"
+/>
 
       {/* Card */}
       <main className="max-w-6xl mx-auto bg-white rounded-lg shadow-sm ring-1 ring-slate-100">

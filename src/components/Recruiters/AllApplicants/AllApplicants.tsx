@@ -1,7 +1,7 @@
 const AllAplllicants = () => {
   return (
     <>
-      <h1>AllAplllicants Page</h1>
+      <h1>All Aplllicants Page</h1>
     </>
   )
 }

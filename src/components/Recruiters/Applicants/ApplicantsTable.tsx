@@ -5,8 +5,6 @@ import type{ Applicant} from "./SampleData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
-
-
 interface Props {
   rowsPerPage?: number;
 }
@@ -59,11 +57,7 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <div className="w-[272px] min-h-full bg-gray-50">Side bar</div>
       <div className="flex-1 w-full px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-8">
-        <div className="mb-6">
-          <h2 className="font-bold text-[#25324B] text-2xl">Applicants</h2>
-        </div>
 
         <div className="w-full max-w-[1104px] mx-auto">
           <div className="overflow-x-auto">
@@ -87,7 +81,7 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
                     <td className="py-3 px-2 md:px-4 whitespace-nowrap">{app.appliedDate}</td>
                     <td className="py-3 px-2 md:px-4 whitespace-nowrap">
                 <button className="px-3 py-1 bg-[#E9EBFD] text-[#4640DE] border border-[#4640DE] text-sm hover:bg-purple-700 hover:text-white">
-                        See Application
+                         See Application 
                       </button>
                     </td>
                   </tr>
