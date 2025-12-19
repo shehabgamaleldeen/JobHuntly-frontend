@@ -14,10 +14,10 @@ import { Textarea } from '@/components/ui/textarea'
 export function ApplyButton() {
   return (
     <Dialog>
-      <form className="">
+      <form className="flex min-w-0">
         <DialogTrigger asChild>
           <Button
-            className="w-44 h-14 font-semibold text-lg text-white bg-[#4640DE]"
+            className="w-44 h-14 shrink font-semibold text-lg text-white bg-[#4640DE]"
             variant="outline"
           >
             Apply
