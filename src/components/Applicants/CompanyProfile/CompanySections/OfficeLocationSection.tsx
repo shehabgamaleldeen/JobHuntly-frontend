@@ -12,8 +12,9 @@ function OfficeLocationSection({ locations }: { locations: Location[] }) {
   const startIndex = page * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
 
-  const visibleLocations = locations.slice(startIndex, endIndex);
-  const hasNextPage = endIndex < locations.length;
+  const hasNextPage = endIndex < (locations?.length || 0);
+  const visibleLocations = locations?.slice(startIndex, endIndex) || [];
+
   const hasPrevPage = page>0;
 
   return (
