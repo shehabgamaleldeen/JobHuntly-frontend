@@ -20,6 +20,7 @@ import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3';
 import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4';
 import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile';
 import MyApplications from './components/Applicants/MyApplications/MyApplications';
+// import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile'
 import ApplicantProfile from './components/Recruiters/ApplicantProfile/ApplicantProfile'
 import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
@@ -58,10 +59,9 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="*" element={<NotFoundPage />} />
             {/*mariz*/}
-            <Route path="/companies" element={<CompanyPageWrapper />} />
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
             <Route path="/my-applications" element={<MyApplications />} />
-            <Route path="/job-lists" element={<JobListPage />} />
+            <Route path="/companies/:companyId/jobs" element={<JobListPage />} />
             <Route path="/applicants/:jobId" element={<ApplicantsTable />} />
 
 

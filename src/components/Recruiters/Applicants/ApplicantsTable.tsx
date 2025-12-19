@@ -61,7 +61,7 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
 
         <div className="w-full max-w-[1104px] mx-auto">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px]">
+            <table className="w-full  min-w-[640px]">
               <thead className="bg-white border-b border-[#D6DDEB]">
                 <tr className="text-[#7C8493] text-sm">
                   <th className="py-3 px-2 md:px-4 text-left whitespace-nowrap">#</th>
