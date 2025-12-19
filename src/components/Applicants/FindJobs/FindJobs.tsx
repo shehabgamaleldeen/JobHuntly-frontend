@@ -12,7 +12,7 @@ function FindJobs() {
   async function getJops() {
     try {
       const res = await instance.get('/jobs')
-      setjops(res.data)
+      setjops(res.data.data)
     } catch (err) {
       console.log(err)
     }
@@ -21,6 +21,10 @@ function FindJobs() {
   useEffect(() => {
     getJops()
   }, [])
+
+  useEffect(() => {
+    console.log(jops)
+  }, [jops])
 
   return (
     <>
@@ -92,7 +96,7 @@ function FindJobs() {
               <h2 className="text-2xl font-bold">All Jobs</h2>
               <div>
                 {jops?.map((jop) => (
-                  <JopCard key={jop.id} jop={jop} />
+                  <JopCard key={jop._id} jop={jop} />
                 ))}
               </div>
             </div>
