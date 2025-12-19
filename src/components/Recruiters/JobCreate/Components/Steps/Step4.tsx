@@ -60,13 +60,14 @@ export default function Step4() {
                     description="Choose a type and write the question text"
                 />
 
-                <div className="w-2/3 space-y-3 mt-3">
+                <div className="flex flex-col space-y-8 mt-3">
                     {/* Question Type */}
                     <select
                         value={questionType}
                         onChange={(e) => setQuestionType(e.target.value as QuestionType)}
                         className="
-                            w-full text-xs lg:text-base p-3 
+                            w-[150px]
+                            text-xs lg:text-base p-3 
                             border-2 border-[#D6DDEB] rounded
                         "
                     >
@@ -80,7 +81,7 @@ export default function Step4() {
                         onChange={(e) => setQuestionText(e.target.value)}
                         placeholder="Write your question here..."
                         className="
-                            w-full text-xs lg:text-base p-4 
+                            w-14/16 text-xs lg:text-base p-4 
                             h-[90px] md:h-[120px]
                             border-2 border-[#D6DDEB] rounded resize-none
                         "
@@ -91,6 +92,7 @@ export default function Step4() {
                         onClick={handleAddQuestion}
                         type="button"
                         className="
+                            w-[150px]
                             px-4 py-2 md:px-6 md:py-3 
                             bg-indigo-600 hover:bg-indigo-700
                             text-white rounded-md text-sm font-medium
