@@ -5,9 +5,9 @@ const ApplicantProfile = () => {
     <>
       <section className="flex">
         <div className="sideBar w-[272px] bg-amber-200 max-sm:hidden">
-          side bar
+          side bar side barside barside barside barside bar
         </div>
-        <section className="applicant-profile grid grid-cols-[1fr_2fr] max-sm:grid-cols-1 gap-8 m-8">
+        <section className="applicant-profile grid grid-cols-[1fr_2fr] max-lg:grid-cols-1 gap-8 m-8">
           <div className="applicant-info border border-[#D6DDEB] p-8">
             <div className="applicant-profile-card flex items-center gap-7">
               <img src="/Avatar.png" alt="" />
@@ -67,7 +67,7 @@ const ApplicantProfile = () => {
               </div>
             </div>
           </div>
-          <div className="Nav-bar border border-[#D6DDEB] p-8">
+          <div className="Nav-bar border border-[#D6DDEB] p-8 max-w-[718px]">
             <ApplicantProfileNavbar />
           </div>
         </section>

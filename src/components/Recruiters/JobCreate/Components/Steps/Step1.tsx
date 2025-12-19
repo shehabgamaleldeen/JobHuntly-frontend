@@ -1,24 +1,9 @@
-import { useState } from "react";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { InputTitle } from "./InputTitle";
+import { useJobCreateContext } from "../../JobCreateContext";
 
-export function InputTitle({ title, description }: { title: string; description: string }) {
-    return (
-        <div className="px-8 w-1/2">
-            <p className="text-base font-semibold
-                            sm:text-xs sm:font-medium
-                            md:text-sm md:font-medium
-                            lg:text-base
-                            xl:text-lg xl:font-semibold">
-                {title}
-            </p>
-            <p className="text-[#7C8493] text-xs 
-            lg:text-sm xl:text-base">
-                {description}
-            </p>
-        </div>
-    );
-}
 
 type Option = {
     value: string;
@@ -57,6 +42,8 @@ const requiredSkillsOptions: Option[] = [
 ];
 
 export default function Step1() {
+    const navigate = useNavigate();
+    const { updateStep1 } = useJobCreateContext();
 
     const {
         register,
@@ -80,7 +67,7 @@ export default function Step1() {
         mode: "onChange"
     });
 
-    const atLeastOne = (value: any, allValues: any) =>
+    const atLeastOne = (_: any, allValues: any) =>
         allValues.fullTime ||
         allValues.partTime ||
         allValues.remote ||
@@ -88,8 +75,11 @@ export default function Step1() {
         allValues.contract ||
         "Select at least one job type";
 
+
     const onSubmit = (data: any) => {
         console.log("FORM DATA:", data);
+        updateStep1(data);
+        navigate("/company/job-create/step-2")
     };
 
     return (
@@ -108,7 +98,7 @@ export default function Step1() {
                     <input
                         type="text"
                         placeholder="e.g. Software Engineer"
-                        className="text-xs lg:text-base p-4 h-[35px] md:h-3/5 w-[200px] md:w-2/3 border-2 border-[#D6DDEB]"
+                        className="text-[11px] sm:text-sm lg:text-base p-4 h-[35px] md:h-3/5 w-10/11 sm:w-12/15 md:w-2/3 border-2 border-[#D6DDEB]"
                         {...register("jobTitle", {
                             required: "Job title is required",
                             minLength: {
@@ -120,7 +110,7 @@ export default function Step1() {
                     {errors.jobTitle && (
                         <p className="text-red-500 text-xs md:text-sm">{errors.jobTitle.message}</p>
                     )}
-                    <p className="text-[#7C8493] text-[11px] md:text-xs lg:text-sm xl:text-base">
+                    <p className="text-[#7C8493] text-[10px] md:text-xs lg:text-sm">
                         At Least 10 Characters
                     </p>
                 </div>
@@ -192,16 +182,17 @@ export default function Step1() {
                     title="Salary"
                     description="Please specify the monthly salary range in EGP for the role"
                 />
-                <div className="flex items-baseline gap-4 w-1/2">
+                <div className="flex items-baseline gap-2 sm:gap-4 w-1/2">
                     <div>
                         <input
                             type="number"
                             placeholder="From"
-                            className="text-xs lg:text-base w-[100px] md:w-[150px] lg:w-[200px] h-7 md:h-10 p-4 border-2 border-[#D6DDEB] rounded"
+                            className="text-[11px] lg:text-base 
+                            w-[70px] sm:w-[120px] md:w-[150px] lg:w-[130px] h-7 md:h-10 p-3 sm:p-4 border-2 border-[#D6DDEB] rounded"
                             {...register("salaryFrom", { required: "Required" })}
                         />
                         {/* reserved error space: show message or a non-breaking space so height stays same */}
-                        <p className="text-red-500 text-xs md:text-sm">
+                        <p className="text-red-500 text-[11px] sm:text-xs md:text-sm">
                             {errors.salaryFrom ? errors.salaryFrom.message : "\u00A0"}
                         </p>
                     </div>
@@ -212,7 +203,8 @@ export default function Step1() {
                         <input
                             type="number"
                             placeholder="To"
-                            className="text-xs lg:text-base w-[100px] md:w-[150px] lg:w-[200px] h-7 md:h-10 p-4 border-2 border-[#D6DDEB] rounded"
+                            className="text-[11px] lg:text-base 
+                            w-[70px] sm:w-[100px] md:w-[150px] lg:w-[130px] h-7 md:h-10 p-3 sm:p-4 border-2 border-[#D6DDEB] rounded"
                             {...register("salaryTo", {
                                 required: "Required",
                                 validate: (value) => {
@@ -223,7 +215,7 @@ export default function Step1() {
                         />
 
                         {/* same reserved error space for the 'To' input */}
-                        <p className="text-red-500 text-xs md:text-sm">
+                        <p className="text-red-500 text-[11px] sm:text-xs md:text-sm">
                             {errors.salaryTo ? errors.salaryTo.message : "\u00A0"}
                         </p>
                     </div>
@@ -257,7 +249,16 @@ export default function Step1() {
                                 value={field.value}
                                 onChange={(val) => field.onChange(val)}
                                 placeholder="Select Job Categories"
-                                className="text-xs lg:text-base w-[250px] md:w-2/3"
+                                className="text-[8px] sm:text-xs lg:text-base w-10/11 sm:w-12/15 md:w-2/3"
+                                classNames={{
+                                    // 1. Force the value container to have specific padding
+                                    valueContainer: () => "px-[2px] md:px-[4px]",
+
+                                    // 2. Make indicators responsive using Tailwind prefixes
+                                    // Example: very small padding on mobile, slightly larger on desktop
+                                    dropdownIndicator: () => "p-0 sm:p-1 lg:p-2",
+                                    clearIndicator: () => "p-0 sm:p-1 lg:p-2"
+                                }}
                                 classNamePrefix="rs"
                             />
                         )}
@@ -293,7 +294,7 @@ export default function Step1() {
                                 value={field.value}
                                 onChange={(val) => field.onChange(val)}
                                 placeholder="Select Required Skills"
-                                className="text-xs lg:text-base w-[250px] md:w-2/3"
+                                className="text-[10px] sm:text-xs lg:text-base w-14/15 sm:w-12/15 md:w-2/3"
                                 classNamePrefix="rs"
                             />
                         )}
@@ -307,10 +308,11 @@ export default function Step1() {
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
             {/* Submit */}
-            <section className="flex justify-end mb-4 md:mb-8">
-                <button type="submit" className="px-3 md:px-4 py-2 md:py-3 mb-4 md:mb-8 mx-4 md:mx-8 
+            <section className="flex justify-end">
+                <button type="submit"
+                    className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8
                 self-end rounded-md font-medium text-white transition-colors text-sm
-                  bg-indigo-600 hover:bg-indigo-700">
+                bg-indigo-600 hover:bg-indigo-700">
                     Next Step
                 </button>
             </section>

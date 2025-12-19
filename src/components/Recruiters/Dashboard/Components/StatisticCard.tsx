@@ -1,9 +1,7 @@
 import { Users, CheckCircle, Briefcase } from "lucide-react";
 import { useState, useEffect } from "react";
 
-
 // Window width hook
-
 export const useWindowWidth = () => {
     const [width, setWidth] = useState(window.innerWidth);
 
@@ -20,16 +18,18 @@ export const useWindowWidth = () => {
 export default function StatisticsCard({ title, bgColor }: { title: string; bgColor: string }) {
     const width = useWindowWidth();
 
-    // React supports this with string tag names
-    let TitleTag = "h2" as keyof HTMLElementTagNameMap;
+    // Determine the class based on width (mirroring your original tag selection)
+    let titleClass = "title-style-a";  // Default to h2-like
 
-    if (width < 670) TitleTag = "h2";
-    else if (width < 800) TitleTag = "h5";
-    else if (width < 950) TitleTag = "h3";
-    else if (width < 1050) TitleTag = "h2";
-    else if (width < 1150) TitleTag = "h4";
-    else if (width < 1350) TitleTag = "h3";
-    else TitleTag = "h2";
+    if (width < 410) titleClass = "title-style-c";  // h4-like
+    else if (width < 640) titleClass = "title-style-b";  // h5-like    
+    else if (width < 670) titleClass = "title-style-e";  // h6-like
+    else if (width < 755) titleClass = "title-style-d";  // h5-like
+    else if (width < 870) titleClass = "title-style-b";  // h3-like
+    else if (width < 1024) titleClass = "title-style-a";  // h2-like
+    else if (width < 1150) titleClass = "title-style-c";  // h4-like
+    else if (width < 1350) titleClass = "title-style-b";  // h3-like
+    else titleClass = "title-style-a";  // h2-like
 
     let Icon =
         title.includes("candidates") ? Users :
@@ -37,14 +37,14 @@ export default function StatisticsCard({ title, bgColor }: { title: string; bgCo
                 title.includes("Jobs") ? Briefcase :
                     null;
 
+    // Use a fixed h2 for semantics, but apply dynamic class for styles
     return (
         <div className={`text-white p-6 flex flex-col justify-between h-35 rounded-xl shadow-md ${bgColor}`}>
             <header className="flex justify-between">
-                <TitleTag>{title}</TitleTag>
-
+                <p className={titleClass}>{title}</p>
                 {Icon && <Icon size={24} className="opacity-80" />}
             </header>
-            <h1>70</h1>
+            <p className="stat-value">70</p>
         </div>
     );
 }
