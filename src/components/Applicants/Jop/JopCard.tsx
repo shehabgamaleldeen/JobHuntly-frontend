@@ -36,7 +36,9 @@ const JopCard = ({ jop }: JopCardProps) => {
             </div>
           </div>
         </Link>
-        <ApplyButton />
+        <Link to={jop.id}>
+          <ApplyButton />
+        </Link>
       </article>
     </>
   )
