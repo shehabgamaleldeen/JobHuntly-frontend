@@ -16,7 +16,7 @@ const JobDescriptions = () => {
   async function getJop() {
     try {
       const res = await instance.get(`/jobs/${id}`)
-      setJob(res.data)
+      setJob(res.data.data)
     } catch (err) {
       console.log(err)
     }
@@ -25,15 +25,18 @@ const JobDescriptions = () => {
   useEffect(() => {
     getJop()
   }, [])
+  useEffect(() => {
+    console.log(job)
+  }, [job])
 
   return (
     <>
-      <section className="jobDescriptionsCard bg-[#F8F8FD] my-14 w-screen flex justify-center">
+      <section className="jobDescriptionsCard bg-[#F8F8FD] py-14 w-screen flex justify-center">
         <div className="bg-[#FFFFFF] w-4/5 m-auto p-6 flex max-sm:flex-col justify-between border border-[#D6DDEB]">
           <div className="flex max-sm:flex-col items-center  max-sm:place-items-start">
             <img
               className="w-24 max-sm:w-16"
-              src={job?.image}
+              src={job?.logoUrl}
               alt="Company Logo"
             />
             <div className="m-6 max-sm:my-4 max-sm:mx-0">
@@ -41,7 +44,7 @@ const JobDescriptions = () => {
                 {job?.title}
               </h1>
               <p className="text-[#515B6F] font-normal">
-                {job?.company + job?.location + job?.employment_type}
+                {job?.companyId?.name}
               </p>
             </div>
           </div>
@@ -64,32 +67,66 @@ const JobDescriptions = () => {
             </div>
 
             <div className="job-needs">
-              {job?.job_needs?.map((item: any, index: any) => {
-                const key = Object.keys(item)[0] // "responsibilities", "Who You Are", "Nice To Haves".
-                const list = item[key] // array of strings
-
-                return (
-                  <div key={index} className="mb-8">
-                    <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
-                      {key}
-                    </h2>
-
-                    {list.map((line: any, i: any) => (
-                      <div
-                        key={i}
-                        className="flex items-center max-sm:items-start text-[#515B6F] my-2"
-                      >
-                        <img
-                          className="mr-1"
-                          src="/checkIcon.png"
-                          alt="check Icon"
-                        />
-                        {line}
-                      </div>
-                    ))}
-                  </div>
-                )
-              })}
+              <div className="mb-5">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                  Responsibilities
+                </h2>
+                <div className="mt-2">
+                  {job?.responsibilities?.map((item: any, index: any) => (
+                    <div
+                      key={index}
+                      className="flex items-center max-sm:items-start text-[#515B6F] my-2"
+                    >
+                      <img
+                        className="mr-1 w-5 h-5"
+                        src="/checkIcon.png"
+                        alt="check Icon"
+                      />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-5">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                  Who You Are
+                </h2>
+                <div className="mt-2">
+                  {job?.whoYouAre?.map((item: any, index: any) => (
+                    <div
+                      key={index}
+                      className="flex items-center max-sm:items-start text-[#515B6F] my-2"
+                    >
+                      <img
+                        className="mr-1 w-5 h-5"
+                        src="/checkIcon.png"
+                        alt="check Icon"
+                      />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-5">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                  Nice-To-Haves
+                </h2>
+                <div className="mt-2">
+                  {job?.niceToHaves?.map((item: any, index: any) => (
+                    <div
+                      key={index}
+                      className="flex items-center max-sm:items-start text-[#515B6F] my-2"
+                    >
+                      <img
+                        className="mr-1 w-5 h-5"
+                        src="/checkIcon.png"
+                        alt="check Icon"
+                      />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -119,7 +156,7 @@ const JobDescriptions = () => {
                   Job Type
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.about_this_role?.job_type}
+                  {job?.employmentTypes?.[0]}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
@@ -127,7 +164,7 @@ const JobDescriptions = () => {
                   Salary
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.about_this_role?.salary}
+                  {job?.salaryMin} - {job?.salaryMax} {job?.salaryCurrency}
                 </span>
               </div>
             </div>
@@ -136,11 +173,11 @@ const JobDescriptions = () => {
                 Categories
               </h2>
               <div>
-                <span className="text-[#FFB836] bg-[#EB85331A] w-24 inline-block text-base font-semibold rounded-3xl text-center my-4 mr-4">
-                  Marketing
+                <span className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
+                  {job?.categories?.[0]}
                 </span>
-                <span className="text-[#56CDAD] bg-[#56CDAD1A] w-24 inline-block text-base font-semibold rounded-3xl text-center my-4 mr-4">
-                  Design
+                <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
+                  {job?.categories?.[0]}
                 </span>
               </div>
             </div>
@@ -148,24 +185,14 @@ const JobDescriptions = () => {
               <h2 className="text-[#25324B] text-3xl font-semibold">
                 Required Skills
               </h2>
-              <div className="flex flex-wrap">
-                {job?.required_skills.map((item: any, index: any) => {
-                  return (
-                    <span
-                      key={index}
-                      className="text-[#4640DE] p-2 bg-[#F8F8FD] w-fit inline-block text-base font-semibold rounded-3xl text-center my-1 mr-4"
-                    >
-                      {item}
-                    </span>
-                  )
-                })}
-              </div>
             </div>
           </div>
         </div>
       </section>
       <PerksBenefits />
-      <SimilarJops />
+      <div className="bg-[#F8F8FD]">
+        <SimilarJops />
+      </div>
     </>
   )
 }
