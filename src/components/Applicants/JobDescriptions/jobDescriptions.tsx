@@ -51,7 +51,7 @@ const JobDescriptions = () => {
 
           <div className="flex items-center gap-16">
             <img className="w-8" src="/ShareIcon.png" alt="Share Icon" />
-            <ApplyButton />
+            <ApplyButton questions={job?.questions} />
           </div>
         </div>
       </section>
