@@ -11,7 +11,10 @@ import {
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 
-export function ApplyButton() {
+type ApplyButtonProps = {
+  questions?: any[]
+}
+export function ApplyButton(props: ApplyButtonProps) {
   return (
     <Dialog>
       <form className="flex min-w-0">
@@ -31,24 +34,21 @@ export function ApplyButton() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
-            <Label htmlFor="salary-expectations">
-              What are your salary expectations?
-            </Label>
-            <Textarea
-              id="salary-expectations"
-              name="salary-expectations"
-              placeholder="Write your answer here.."
-              maxLength={500}
-            />
-            <Label htmlFor="ideal-candidate">
-              What makes you the ideal candidate for this position?
-            </Label>
-            <Textarea
-              id="ideal-candidate"
-              name="ideal-candidate"
-              placeholder="Write your answer here.."
-              maxLength={500}
-            />
+            {props?.questions?.map((question: any) => {
+              return (
+                <div key={question?._id}>
+                  <Label className="py-3" htmlFor={String(question?._id)}>
+                    {question?.questionText}
+                  </Label>
+                  <Textarea
+                    id={String(question?._id)}
+                    name={String(question?._id)}
+                    placeholder="Write your answer here.."
+                    maxLength={500}
+                  />
+                </div>
+              )
+            })}
             <Label htmlFor="additional-info">Additional information</Label>
             <Textarea
               id="additional-info"
@@ -56,6 +56,7 @@ export function ApplyButton() {
               placeholder="Add a cover letter or anything else you want to share (Max 500 characters)"
               maxLength={500}
             />
+
             <div className="flex justify-between items-center pt-2">
               <p className="font-medium text-gray-900">Attach your resume</p>
               <Button
