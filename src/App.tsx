@@ -27,15 +27,24 @@ import DashboardRecruiterSettings from "./components/Recruiters/DashboardSetting
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
 import ApplicantsTable from "./components/Recruiters/Applicants/ApplicantsTable";
 import './App.css'
+import { StepGuard } from './components/Recruiters/JobCreate/Components/Steps/StepGaurd'
+import ScrollToTop from './components/Recruiters/ScrollToTop'
 
 function App() {
   return (
     <Router>
+      {/* Scrolls to top when navigating between pages
+      Why?
+      common SPA behavior. In React (or any SPA), 
+      when you navigate between routes using react-router, 
+      the browser doesn’t automatically scroll to top like a full page reload would. 
+      So if you scroll halfway on Step 2, then navigate to Step 3, it keeps the same scroll position. */}
+      {/* <ScrollToTop /> */}
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="grow">
           <Routes>
-            
+
             {/*Applicants=================================================*/}
             <Route path="/" element={<LandingPage />} />
             <Route path="/DashboardSettings" element={<DashboardSettings />} />
@@ -54,15 +63,15 @@ function App() {
 
 
 
-            
+
             {/*( moaz )*/}
             <Route path="/dashboardSettings" element={<DashboardSettings />} />
 
-            
-              <Route path="applicant-profile/:id" element={<ApplicantProfile />}>
-                <Route index element={<Resume />} />
-                <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
-              </Route>{' '}
+
+            <Route path="applicant-profile/:id" element={<ApplicantProfile />}>
+              <Route index element={<Resume />} />
+              <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
+            </Route>{' '}
 
 
 
@@ -70,7 +79,6 @@ function App() {
 
             {/*( moaz )*/}
             <Route path="/DashboardRecruiterSettings" element={<DashboardRecruiterSettings />} />
-            
 
 
             {/*Ahmed*/}
@@ -85,11 +93,11 @@ function App() {
                   </JobCreateProvider>
                 }
               >
-                <Route index element={<Step1 />} />
-                <Route path="step-1" element={<Step1 />} />
-                <Route path="step-2" element={<Step2 />} />
-                <Route path="step-3" element={<Step3 />} />
-                <Route path="step-4" element={<Step4 />} />
+                <Route index element={<StepGuard step={1}><Step1 /></StepGuard>} />
+                <Route path="step-1" element={<StepGuard step={1}><Step1 /></StepGuard>} />
+                <Route path="step-2" element={<StepGuard step={2}><Step2 /></StepGuard>} />
+                <Route path="step-3" element={<StepGuard step={3}><Step3 /></StepGuard>} />
+                <Route path="step-4" element={<StepGuard step={4}><Step4 /></StepGuard>} />
               </Route>
             </Route>
 
