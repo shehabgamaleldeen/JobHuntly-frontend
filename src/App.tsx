@@ -27,7 +27,6 @@ import DashboardRecruiterSettings from "./components/Recruiters/DashboardSetting
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
 import ApplicantsTable from "./components/Recruiters/Applicants/ApplicantsTable";
 import './App.css'
-import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4'
 
 
 function App() {

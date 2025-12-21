@@ -16,7 +16,7 @@ const JobDescriptions = () => {
   async function getJop() {
     try {
       const res = await instance.get(`/jobs/${id}`)
-      setJob(res.data)
+      setJob(res.data.data)
     } catch (err) {
       console.log(err)
     }
