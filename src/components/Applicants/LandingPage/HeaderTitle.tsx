@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function HeaderTitle() {
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    navigate(`/find-jobs?title=${title}&location=${location}`);
+  };
+
   return (
     <section className="bg-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto ">
@@ -39,6 +48,8 @@ function HeaderTitle() {
                 type="text"
                 placeholder="Job title or keyword"
                 className="flex-1 outline-none text-gray-700 placeholder-gray-400"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
               />
             </div>
 
@@ -62,24 +73,29 @@ function HeaderTitle() {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              <select className="flex-1 outline-none text-gray-700 bg-transparent">
-                <option>Florence, Italy</option>
-                <option>Rome, Italy</option>
-                <option>Milan, Italy</option>
-              </select>
+              <input
+                type="text"
+                placeholder="Location (e.g. USA, Sweden)"
+                className="flex-1 outline-none text-gray-700 placeholder-gray-400 bg-transparent"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
             </div>
 
-            <button className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap">
+            <button 
+              onClick={handleSearch}
+              className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
+            >
               Search my job
             </button>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className="text-gray-600">Popular :</span>
-            <span className="text-gray-700">UI Designer,</span>
-            <span className="text-gray-700">UX Researcher,</span>
-            <span className="text-gray-700">Android,</span>
-            <span className="text-gray-700">Admin</span>
+            <span className="text-gray-700 cursor-pointer hover:text-blue-600" onClick={() => { setTitle("UI Designer"); }}>UI Designer,</span>
+            <span className="text-gray-700 cursor-pointer hover:text-blue-600" onClick={() => { setTitle("UX Researcher"); }}>UX Researcher,</span>
+            <span className="text-gray-700 cursor-pointer hover:text-blue-600" onClick={() => { setTitle("Android"); }}>Android,</span>
+            <span className="text-gray-700 cursor-pointer hover:text-blue-600" onClick={() => { setTitle("Admin"); }}>Admin</span>
           </div>
         </div>
       </div>
