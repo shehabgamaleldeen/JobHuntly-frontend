@@ -1,71 +1,89 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import {
+  emailValidation,
+  passwordValidation,
+} from "../../../features/auth/authValidation";
 
-type LoginErrors = {
-  email?: string;
-  password?: string;
+type CompanyLoginForm = {
+  email: string;
+  password: string;
 };
 
 export default function CompanyLogin() {
-  const [values, setValues] = useState({ email: "", password: "" });
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const navigate = useNavigate();
 
-  function validate() {
-    const newErrors: LoginErrors = {};
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CompanyLoginForm>();
 
-    if (!values.email) 
-      newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(values.email))
-      newErrors.email = "Invalid email format";
+  async function onSubmit(data:CompanyLoginForm) {
+  try {
+    const response = await fetch("http://localhost:3000/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+      }),
+    });
 
-    if (!values.password) 
-      newErrors.password = "Password is required";
-    else if (values.password.length < 8)
-      newErrors.password = "Password must be at least 8 characters";
+    const result = await response.json();
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (!response.ok) {
+      throw new Error(result.message || "Login failed");
+    }
+
+    console.log("Logged in user:", result.user);
+
+  navigate("/company");
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message);
+    } else {
+      console.error("Unexpected login error");
+    }
   }
+}
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (validate()) navigate("/find-jobs");
-  }
 
-   return (
-    <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
-
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <input
         type="email"
         placeholder="Enter company email"
-        className={`w-full border rounded-md p-3 text-gray-700 focus:outline-none ${
+        {...register("email", emailValidation)}
+        className={`border p-3 ${
           errors.email ? "border-red-500" : "border-gray-300"
         }`}
-        value={values.email}
-        onChange={(e) => setValues({ ...values, email: e.target.value })}
       />
-      {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+      {errors.email && (
+        <p className="text-red-500 text-sm">
+          {String(errors.email.message)}
+        </p>
+      )}
 
       <input
         type="password"
         placeholder="Enter password"
-        className={`w-full border rounded-md p-3 text-gray-700 focus:outline-none ${
+        {...register("password", passwordValidation)}
+        className={`border p-3 ${
           errors.password ? "border-red-500" : "border-gray-300"
         }`}
-        value={values.password}
-        onChange={(e) => setValues({ ...values, password: e.target.value })}
       />
-      {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+      {errors.password && (
+        <p className="text-red-500 text-sm">
+          {String(errors.password.message)}
+        </p>
+      )}
 
-      <button
-        type="submit"
-        className="w-full border border-gray-300 py-3 flex items-center justify-center rounded-md
-                   text-white bg-[#4640DE] hover:bg-[#3b35c5] transition duration-300"
-      >
+      <button type="submit" className="bg-[#4640DE] text-white py-3">
         Login
       </button>
-
     </form>
   );
 }
