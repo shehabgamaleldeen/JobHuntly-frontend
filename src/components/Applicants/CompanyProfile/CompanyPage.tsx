@@ -83,6 +83,13 @@ function CompanyPage({ company }: Props) {
           <div className="flex flex-col gap-10 lg:col-span-2">
             <CompanyProfileSection company={company} />
 
+            {/* About / Description */}
+            {company.about && (
+              <p className="max-w-[85%] text-gray-700 font-epilogue break-words">
+                {company.about}
+              </p>
+            )}
+
             {/* Images Section */}
             {company.images && company.images.length > 0 && (
               <CompanyImagesSection images={company.images} />
