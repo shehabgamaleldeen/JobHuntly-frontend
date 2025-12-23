@@ -1,4 +1,4 @@
-import ApplyButton from './ApplyButoon.tsx'
+import ApplyButton from './ApplyButton.tsx'
 import PerksBenefits from './PerksBenefits.tsx'
 import SimilarJops from './SimilarJops.tsx'
 import { useEffect, useState } from 'react'
@@ -51,7 +51,7 @@ const JobDescriptions = () => {
 
           <div className="flex items-center gap-16">
             <img className="w-8" src="/ShareIcon.png" alt="Share Icon" />
-            <ApplyButton questions={job?.questions} />
+            <ApplyButton jobId={id!} questions={job?.questions} />
           </div>
         </div>
       </section>
