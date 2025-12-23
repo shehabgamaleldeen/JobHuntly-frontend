@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CategoryCard from "./CategoryCard";
+import instance from "../../AxiosConfig/instance";
 import {
   DesignIcon,
   SalesIcon,
@@ -12,56 +13,41 @@ import {
 } from "./CategoryIcon";
 
 function CategoryCollection() {
-  const categories = [
-    {
-      icon: <DesignIcon />,
-      title: "Design",
-      jobsCount: 235,
-      isHighlighted: false,
-    },
-    {
-      icon: <SalesIcon />,
-      title: "Sales",
-      jobsCount: 756,
-      isHighlighted: false,
-    },
-    {
-      icon: <MarketingIcon />,
-      title: "Marketing",
-      jobsCount: 140,
-      isHighlighted: true,
-    },
-    {
-      icon: <FinanceIcon />,
-      title: "Finance",
-      jobsCount: 325,
-      isHighlighted: false,
-    },
-    {
-      icon: <TechnologyIcon />,
-      title: "Technology",
-      jobsCount: 436,
-      isHighlighted: false,
-    },
-    {
-      icon: <EngineeringIcon />,
-      title: "Engineering",
-      jobsCount: 542,
-      isHighlighted: false,
-    },
-    {
-      icon: <BusinessIcon />,
-      title: "Business",
-      jobsCount: 211,
-      isHighlighted: false,
-    },
-    {
-      icon: <HumanResourceIcon />,
-      title: "Human Resource",
-      jobsCount: 346,
-      isHighlighted: false,
-    },
-  ];
+  const [categories, setCategories] = useState<any[]>([]);
+
+  // الـ Icons mapping
+  const iconMap: { [key: string]: JSX.Element } = {
+    "Design": <DesignIcon />,
+    "Sales": <SalesIcon />,
+    "Marketing": <MarketingIcon />,
+    "Finance": <FinanceIcon />,
+    "Technology": <TechnologyIcon />,
+    "Engineering": <EngineeringIcon />,
+    "Business": <BusinessIcon />,
+    "Human Resource": <HumanResourceIcon />,
+  };
+
+  async function getCategories() {
+    try {
+      const res = await instance.get('/categories');
+      const data = res.data.data;
+      
+      const categoriesWithIcons = data.map((cat: any, index: number) => ({
+        icon: iconMap[cat.name] || <DesignIcon />,
+        title: cat.name,
+        jobsCount: cat.jobCount,
+        isHighlighted: index === 2, 
+      }));
+      
+      setCategories(categoriesWithIcons);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   return (
     <section className="w-full bg-white py-12 px-4 sm:px-6 lg:px-8">
