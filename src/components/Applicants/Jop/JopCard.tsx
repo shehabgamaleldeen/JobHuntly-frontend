@@ -1,4 +1,4 @@
-import ApplyButton from '../JobDescriptions/ApplyButoon'
+import ApplyButton from '../JobDescriptions/ApplyButton'
 import { Link } from 'react-router-dom'
 
 type JopCardProps = {
@@ -33,7 +33,7 @@ const JopCard = ({ jop }: JopCardProps) => {
           </div>
         </Link>
         <Link to={jop._id}>
-          <ApplyButton />
+          <ApplyButton jobId={jop?._id} questions={jop?.questions} />
         </Link>
       </article>
     </>
