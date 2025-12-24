@@ -28,6 +28,7 @@ import DashboardRecruiterSettings from "./components/Recruiters/DashboardSetting
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
 import ApplicantsTable from "./components/Recruiters/Applicants/ApplicantsTable";
 import './App.css'
+import Applicants from './components/Recruiters/Applicants/Applicants'
 
 
 function App() {
@@ -61,7 +62,7 @@ function App() {
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
             <Route path="/my-applications" element={<MyApplications />} />
             <Route path="/companies/:companyId/jobs" element={<JobListPage />} />
-            <Route path="/applicants/:jobId" element={<ApplicantsTable />} />
+            <Route path="/applicants/:jobId" element={<Applicants />} />
 
 
 

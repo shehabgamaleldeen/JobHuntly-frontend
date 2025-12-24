@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   rowsPerPage?: number;
@@ -15,6 +16,7 @@ interface BackendApplicant {
 
 const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
   const { jobId } = useParams<{ jobId: string }>();
+   const navigate = useNavigate();
   const [data, setData] = useState<BackendApplicant[]>([]);
   const [page, setPage] = useState(1);
 
@@ -96,7 +98,12 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
                     <td className="py-3 px-2 md:px-4 whitespace-nowrap">{app.fullName}</td>
                     <td className="py-3 px-2 md:px-4 whitespace-nowrap">{app.appliedDate}</td>
                     <td className="py-3 px-2 md:px-4 whitespace-nowrap">
-                      <button className="px-3 py-1 bg-[#E9EBFD] text-[#4640DE] border border-[#4640DE] text-sm hover:bg-purple-700 hover:text-white">
+                      <button
+                        onClick={() =>
+                          navigate(`/applicant-profile/${app._id}`)
+                        }
+                        className="px-3 py-1 bg-[#E9EBFD] text-[#4640DE] border border-[#4640DE] text-sm hover:bg-purple-700 hover:text-white"
+                      >
                         See Application
                       </button>
                     </td>
