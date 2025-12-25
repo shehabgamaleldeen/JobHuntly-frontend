@@ -40,30 +40,10 @@ export function ApplyButton(props: ApplyButtonProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     setIsSubmitting(true)
     try {
       let resumeUrl = ''
-
-      // Fetch fresh job data to get current question IDs
-      const freshJobRes = await instance.get(`/jobs/${props.jobId}`)
-      const freshQuestions = freshJobRes.data.data.questions
-
-      // Match responses to fresh question IDs by question text
-      const updatedResponses = responses.map((response) => {
-        const matchingQuestion = freshQuestions.find(
-          (q: any) => props.questions?.find((pq: any) => 
-            pq._id === response.questionId && pq.questionText === q.questionText
-          )
-        )
-        if (matchingQuestion) {
-          return {
-            questionId: String(matchingQuestion._id),
-            answerValue: response.answerValue
-          }
-        }
-        return response
-      })
 
       // 1. Upload Resume if selected
       if (resumeFile) {
@@ -79,7 +59,7 @@ export function ApplyButton(props: ApplyButtonProps) {
       await instance.post(
         `/jobs/${props.jobId}/apply`,
         {
-          responses: updatedResponses,
+          responses: responses,
           resumeUrl,
         },
         {
@@ -93,9 +73,7 @@ export function ApplyButton(props: ApplyButtonProps) {
       setOpen(false)
       alert('Application submitted successfully!')
     } catch (error: any) {
-      console.error('Error submitting application:', error)
-      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Something went wrong'
-      alert(`Error: ${errorMessage}`)
+      alert(`Please you have to login First`)
     } finally {
       setIsSubmitting(false)
     }
