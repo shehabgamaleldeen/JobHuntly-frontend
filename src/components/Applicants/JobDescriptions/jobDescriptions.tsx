@@ -5,8 +5,11 @@ import { useEffect, useState } from 'react'
 import instance from '../../AxiosConfig/instance.ts'
 import './style.css'
 import { useParams } from 'react-router-dom'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 const JobDescriptions = () => {
+  dayjs.extend(relativeTime)
   const { id } = useParams()
   type Job = {
     [key: string]: any
@@ -140,7 +143,7 @@ const JobDescriptions = () => {
                   Apply Before
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.about_this_role?.apply_before}
+                  {dayjs(job?.dueDate).format('MMMM D, YYYY')}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
@@ -148,7 +151,7 @@ const JobDescriptions = () => {
                   Job Posted On
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.about_this_role?.job_posted_on}
+                  {dayjs(job?.createdAt).format('MMMM D, YYYY')}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
