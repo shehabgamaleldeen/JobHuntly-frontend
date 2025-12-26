@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea'
 import instance from '@/components/AxiosConfig/instance'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
-import { AxiosError } from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 type Question = {
   _id: string
@@ -24,6 +24,7 @@ type Question = {
 type ApplyButtonProps = {
   questions?: Question[]
   jobId: string
+  onApplied: () => void
 }
 
 type FormValues = {
@@ -32,6 +33,7 @@ type FormValues = {
 }
 
 export function ApplyButton(props: ApplyButtonProps) {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const {
     register,
@@ -47,6 +49,58 @@ export function ApplyButton(props: ApplyButtonProps) {
   const resumeName =
     resumeFile && resumeFile.length > 0 ? resumeFile[0].name : null
 
+  // const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  //   try {
+  //     let resumeUrl = ''
+
+  //     // 1. Upload Resume
+  //     if (data.resume && data.resume[0]) {
+  //       const formData = new FormData()
+  //       formData.append('file', data.resume[0])
+  //       const uploadRes = await instance.post('/upload/resume', formData, {
+  //         headers: { 'Content-Type': 'multipart/form-data' },
+  //       })
+  //       resumeUrl = uploadRes.data.url
+  //     }
+
+  //     // 2. Format Responses
+  //     const formattedResponses = Object.entries(data.answers || {}).map(
+  //       ([questionId, answerValue]) => ({
+  //         questionId,
+  //         answerValue,
+  //       })
+  //     )
+
+  //     // 3. Submit Application
+  //     await instance.post(
+  //       `/jobs/${props.jobId}/apply`,
+  //       {
+  //         responses: formattedResponses,
+  //         resumeUrl,
+  //       },
+  //       {
+  //         headers: {
+  //           access_token: localStorage.getItem('token') || '',
+  //         },
+  //         withCredentials: true,
+  //       }
+  //     )
+
+  //     setOpen(false)
+  //     toast.success('Application submitted successfully!')
+  //     reset()
+  //   } catch (error: any) {
+  //     console.error(error)
+  //     if (error instanceof AxiosError && error.response?.status === 401) {
+  //       toast.error('You must be logged in to apply.')
+  //     } else {
+  //       toast.error(
+  //         error?.response?.data?.message ||
+  //           'Something went wrong. Please try again.'
+  //       )
+  //     }
+  //   }
+  // }
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       let resumeUrl = ''
@@ -69,35 +123,55 @@ export function ApplyButton(props: ApplyButtonProps) {
         })
       )
 
-      // 3. Submit Application
-      await instance.post(
-        `/jobs/${props.jobId}/apply`,
+      // 3. Submit Application with better toast handling
+      await toast.promise(
+        instance.post(
+          `/jobs/${props.jobId}/apply`,
+          { responses: formattedResponses, resumeUrl },
+          {
+            headers: {
+              access_token: localStorage.getItem('token') || '',
+            },
+            withCredentials: true,
+          }
+        ),
         {
-          responses: formattedResponses,
-          resumeUrl,
-        },
-        {
-          headers: {
-            access_token: localStorage.getItem('token') || '',
+          loading: 'Submitting your application...',
+          success: 'Application submitted successfully!',
+          error: (err: any) => {
+            if (err.response) {
+              if (err.response.status === 401) {
+                setTimeout(() => {
+                  navigate('/login')
+                }, 1500)
+                return 'Session expired. Please login again.'
+              }
+              if (err.response.status === 409)
+                return 'You have already applied to this job.'
+              if (err.response.status === 404)
+                return 'Job not found or invalid.'
+              if (err.response.status === 500) {
+                setTimeout(() => {
+                  navigate('/login')
+                }, 1500)
+                return 'Session expired. Please login again.'
+              }
+            }
+            return 'Network error. Please try again.'
           },
-          withCredentials: true,
         }
       )
+      props.onApplied()
 
       setOpen(false)
-      toast.success('Application submitted successfully!')
       reset()
-    } catch (error: any) {
-      console.error(error)
-      if (error instanceof AxiosError && error.response?.status === 401) {
-        toast.error('You must be logged in to apply.')
-      } else {
-        toast.error(
-          error?.response?.data?.message ||
-            'Something went wrong. Please try again.'
-        )
-      }
+    } catch (error) {
+      console.error('Unexpected error:', error)
+      toast.error('Unexpected error occurred. Please try again.')
     }
+  }
+  const isLoggedIn = () => {
+    return Boolean(localStorage.getItem('token'))
   }
 
   return (
@@ -106,6 +180,14 @@ export function ApplyButton(props: ApplyButtonProps) {
         <Button
           className="w-44 h-14 shrink font-semibold text-lg text-white bg-[#4640DE] hover:bg-[#3b36b5]"
           variant="outline"
+          onClick={() => {
+            if (!isLoggedIn()) {
+              toast.error('Please login to apply')
+              navigate('/login')
+              return
+            }
+            setOpen(true)
+          }}
         >
           Apply
         </Button>

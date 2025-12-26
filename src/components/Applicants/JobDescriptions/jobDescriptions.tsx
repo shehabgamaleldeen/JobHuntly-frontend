@@ -7,6 +7,7 @@ import './style.css'
 import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { Button } from '@/components/ui/button'
 
 const JobDescriptions = () => {
   dayjs.extend(relativeTime)
@@ -15,10 +16,15 @@ const JobDescriptions = () => {
     [key: string]: any
   }
   const [job, setJob] = useState<Job | null>(null)
+  const [hasApplied, setHasApplied] = useState<boolean>(false)
 
   async function getJop() {
     try {
-      const res = await instance.get(`/jobs/${id}`)
+      const res = await instance.get(`/jobs/${id}`, {
+        headers: {
+          access_token: localStorage.getItem('token') || '',
+        },
+      })
       setJob(res.data.data)
     } catch (err) {
       console.log(err)
@@ -28,6 +34,14 @@ const JobDescriptions = () => {
   useEffect(() => {
     getJop()
   }, [])
+
+  useEffect(() => {
+    if (job?.hasApplied) {
+      setHasApplied(true)
+    }
+  }, [job])
+
+  // for debbuging
   useEffect(() => {
     console.log(job)
   }, [job])
@@ -54,7 +68,20 @@ const JobDescriptions = () => {
 
           <div className="flex items-center gap-16">
             <img className="w-8" src="/ShareIcon.png" alt="Share Icon" />
-            <ApplyButton jobId={id!} questions={job?.questions} />
+            {hasApplied ? (
+              <Button
+                disabled
+                className="w-44 h-14 text-[#08ac80] bg-[#26b18c1a] font-semibold text-lg"
+              >
+                Applied
+              </Button>
+            ) : (
+              <ApplyButton
+                jobId={id!}
+                questions={job?.questions}
+                onApplied={() => setHasApplied(true)}
+              />
+            )}
           </div>
         </div>
       </section>
