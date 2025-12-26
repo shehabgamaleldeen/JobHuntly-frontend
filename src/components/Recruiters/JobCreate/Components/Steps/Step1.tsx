@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import ConfirmDeleteModal from "./ConfirmModal";
 import { isStep1Filled } from "./StepsFilledHelpers";
 
-
 type Option = {
     value: string;
     label: string;
@@ -47,6 +46,7 @@ const requiredSkillsOptions: Option[] = [
 export default function Step1() {
     const navigate = useNavigate();
     const { updateStep1, clearStep1, jobData } = useJobCreateContext();
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     const {
         register,
@@ -56,8 +56,7 @@ export default function Step1() {
         reset,
         formState: { errors }
     } = useForm<Step1Data>({
-        // Tell the form to look at Context first, then fallback to empty values
-        defaultValues: jobData.step1 ?? {
+        defaultValues: jobData.step1 || {
             jobTitle: "",
             jobType: "",
             workplaceModel: "",
@@ -70,34 +69,32 @@ export default function Step1() {
     });
 
     useEffect(() => {
-        // Only reset if step1 has data (like jobTitle) to avoid 
-        // resetting to empty values unnecessarily
-        if (jobData.step1 && Object.keys(jobData.step1).length > 0) {
+        if (jobData.step1) {
             reset(jobData.step1);
         }
     }, [jobData.step1, reset]);
 
     const onSubmit = (data: Step1Data) => {
-        console.log("FORM DATA:", data);
+        console.log("=== FORM SUBMISSION ===");
+        console.log("Form Data:", data);
+        console.log("Is Step1 Filled?", isStep1Filled(data));
+        
         updateStep1(data);
-        navigate("/company/job-create/step-2")
+        
+        // Small delay to ensure context updates
+        setTimeout(() => {
+            navigate("/company/job-create/step-2");
+        }, 100);
     };
 
-
-    const [confirmOpen, setConfirmOpen] = useState(false);
-
-
     const handleClearStep = () => {
-        // Prevent modal pop-up when no data is submitted
         if (!jobData.step1 || !isStep1Filled(jobData.step1)) {
-            return
+            return;
         }
         setConfirmOpen(true);
     };
 
     const confirmClear = () => {
-        // Clear local component state
-        // Reset RHF fields
         reset({
             jobTitle: "",
             jobType: "",
@@ -107,8 +104,6 @@ export default function Step1() {
             categories: [],
             skills: [],
         });
-
-        // Clear from context + localStorage
         clearStep1();
         setConfirmOpen(false);
     };
@@ -133,7 +128,6 @@ export default function Step1() {
                             text-[11px] sm:text-sm lg:text-base 
                             p-4 h-[35px] md:h-3/5 w-full sm:w-13/15 md:w-10/12 
                             border-2 ${errors.jobTitle ? "border-red-500" : "border-[#D6DDEB]"}`}
-
                         {...register("jobTitle", {
                             required: "Job title is required",
                             minLength: {
@@ -153,15 +147,15 @@ export default function Step1() {
 
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
-            {/* Job Type (Radio Group) */}
+            {/* Job Type - FIXED: Values now match TypeScript type */}
             <section className="flex mb-4 md:mb-8">
                 <InputTitle title="Job Type" description="Select the employment type" />
                 <div className="flex w-1/2 flex-col gap-2">
                     {[
-                        { id: "full-time", label: "Full-Time" },
-                        { id: "part-time", label: "Part-Time" },
-                        { id: "contract", label: "Contract" },
-                        { id: "internship", label: "Internship" }
+                        { id: "Full-Time", label: "Full-Time" },
+                        { id: "Part-Time", label: "Part-Time" },
+                        { id: "Contract", label: "Contract" },
+                        { id: "Internship", label: "Internship" }
                     ].map((type) => (
                         <div key={type.id} className="flex items-center">
                             <input
@@ -183,14 +177,14 @@ export default function Step1() {
 
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
-            {/* Workplace Model (Radio Group) */}
+            {/* Workplace Model - FIXED: Values now match TypeScript type */}
             <section className="flex mb-4 md:mb-8">
                 <InputTitle title="Workplace Model" description="Choose the physical environment where an employee performs their duties." />
                 <div className="flex w-1/2 flex-col gap-2">
                     {[
-                        { id: "on-site", label: "On-Site" },
-                        { id: "remote", label: "Remote" },
-                        { id: "hybrid", label: "Hybrid" }
+                        { id: "On-Site", label: "On-Site" },
+                        { id: "Remote", label: "Remote" },
+                        { id: "Hybrid", label: "Hybrid" }
                     ].map((model) => (
                         <div key={model.id} className="flex items-center">
                             <input
@@ -227,10 +221,12 @@ export default function Step1() {
                             w-[70px] sm:w-[100px] md:w-[150px] lg:w-[130px] 
                             h-7 md:h-10 p-3 sm:p-4 
                             border-2 rounded ${errors.salaryFrom ? "border-red-500" : "border-[#D6DDEB]"}`}
-
-                            {...register("salaryFrom", { required: "Required" })}
+                            {...register("salaryFrom", { 
+                                required: "Required",
+                                valueAsNumber: true,
+                                min: { value: 1, message: "Must be greater than 0" }
+                            })}
                         />
-
                         <p className="text-red-500 text-[11px] sm:text-xs md:text-sm">
                             {errors.salaryFrom ? errors.salaryFrom.message : "\u00A0"}
                         </p>
@@ -246,16 +242,15 @@ export default function Step1() {
                             w-[70px] sm:w-[100px] md:w-[100px] lg:w-[130px] 
                             h-7 md:h-10 p-3 sm:p-4 
                             border-2 rounded ${errors.salaryTo ? "border-red-500" : "border-[#D6DDEB]"}`}
-
                             {...register("salaryTo", {
                                 required: "Required",
+                                valueAsNumber: true,
                                 validate: (value) => {
                                     const from = getValues("salaryFrom");
                                     return Number(value) > Number(from) || "Must be greater than 'From'";
                                 },
                             })}
                         />
-
                         <p className="text-red-500 text-[11px] sm:text-xs md:text-sm">
                             {errors.salaryTo ? errors.salaryTo.message : "\u00A0"}
                         </p>
@@ -263,29 +258,24 @@ export default function Step1() {
                 </div>
             </section>
 
-
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
-            {/* Categories with React-Select */}
+            {/* Categories */}
             <section className="flex mb-4 md:mb-8">
                 <InputTitle
                     title="Categories"
                     description="You can select multiple job categories"
                 />
                 <div className="flex flex-col w-1/2">
-                    <label className="text-[#515B6F] text-base font-normal
-                            text-sm
-                            lg:text-base">
+                    <label className="text-[#515B6F] text-base font-normal text-sm lg:text-base">
                         Select Job Categories
                     </label>
-
                     <Controller
                         control={control}
                         name="categories"
-                        defaultValue={[]}
                         rules={{
                             validate: (value) =>
-                                value && value.length > 0 || "Select at least one category",
+                                (value && value.length > 0) || "Select at least one category",
                         }}
                         render={({ field }) => (
                             <Select<Option, true>
@@ -295,8 +285,6 @@ export default function Step1() {
                                 onChange={(val) => field.onChange(val)}
                                 placeholder="Select Job Categories"
                                 className="text-[10px] md:text-base lg:text-lg w-full sm:w-13/15 md:w-10/12"
-
-
                                 styles={{
                                     control: (base) => ({
                                         ...base,
@@ -306,17 +294,9 @@ export default function Step1() {
                                             borderColor: errors.categories ? "#ef4444" : base.borderColor,
                                         },
                                     }),
-                                    clearIndicator: (base) => ({
-                                        ...base,
-                                        padding: '2px',
-                                    }),
-                                    dropdownIndicator: (base) => ({
-                                        ...base,
-                                        padding: '2px',
-                                    }),
-
+                                    clearIndicator: (base) => ({ ...base, padding: '2px' }),
+                                    dropdownIndicator: (base) => ({ ...base, padding: '2px' }),
                                 }}
-
                                 classNames={{
                                     clearIndicator: () => `
                                         [&>svg]:w-3 sm:[&>svg]:h-3
@@ -341,25 +321,22 @@ export default function Step1() {
 
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
-            {/* Skills with React-Select */}
+            {/* Skills */}
             <section className="flex mb-4 md:mb-8">
                 <InputTitle
                     title="Required Skills"
                     description="You can select multiple skills"
                 />
                 <div className="flex flex-col w-1/2">
-                    <label className="text-[#515B6F] font-normal
-                            text-sm lg:text-base">
+                    <label className="text-[#515B6F] font-normal text-sm lg:text-base">
                         Select Required Skills
                     </label>
-
                     <Controller
                         control={control}
                         name="skills"
-                        defaultValue={[]}
                         rules={{
                             validate: (value) =>
-                                value && value.length > 0 || "Select at least one category",
+                                (value && value.length > 0) || "Select at least one skill",
                         }}
                         render={({ field }) => (
                             <Select<Option, true>
@@ -369,7 +346,6 @@ export default function Step1() {
                                 onChange={(val) => field.onChange(val)}
                                 placeholder="Select Required Skills"
                                 className="text-[10px] md:text-base lg:text-lg w-full sm:w-13/15 md:w-10/12"
-
                                 styles={{
                                     control: (base) => ({
                                         ...base,
@@ -379,16 +355,9 @@ export default function Step1() {
                                             borderColor: errors.skills ? "#ef4444" : base.borderColor,
                                         },
                                     }),
-                                    clearIndicator: (base) => ({
-                                        ...base,
-                                        padding: '2px',
-                                    }),
-                                    dropdownIndicator: (base) => ({
-                                        ...base,
-                                        padding: '2px',
-                                    }),
+                                    clearIndicator: (base) => ({ ...base, padding: '2px' }),
+                                    dropdownIndicator: (base) => ({ ...base, padding: '2px' }),
                                 }}
-
                                 classNames={{
                                     clearIndicator: () => `
                                         [&>svg]:w-3 sm:[&>svg]:h-3
@@ -416,7 +385,6 @@ export default function Step1() {
             {/* Submit */}
             <section className="flex justify-end">
                 <div className="flex gap-3">
-                    {/* Clear / Reset */}
                     <button
                         type="button"
                         onClick={handleClearStep}
@@ -436,7 +404,6 @@ export default function Step1() {
                         onConfirm={confirmClear}
                     />
 
-                    {/* Next Step */}
                     <button
                         type="submit"
                         className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
