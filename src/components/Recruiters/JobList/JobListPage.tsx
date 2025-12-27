@@ -14,11 +14,18 @@ export interface Job {
   applicantsCount: number;
 }
 
+
 export default function JobListPage() {
   const { companyId } = useParams<{ companyId: string }>();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState({
+  status: "",   
+  jobType: "",  
+  search: "",   
+});
+
   
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -28,34 +35,32 @@ export default function JobListPage() {
 
   const [totalPages, setTotalPages] = useState(1); 
 
-  useEffect(() => {
-    if (!companyId) return;
+ useEffect(() => {
+  if (!companyId) return;
 
-    const fetchJobs = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  const fetchJobs = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        const res = await axios.get(
-          `http://localhost:3000/companies/${companyId}/jobs?page=${page}&limit=${limit}`
-        );
+      const queryString = searchParams.toString();
+      const res = await axios.get(
+        `http://localhost:3000/companies/${companyId}/jobs?${queryString}`
+      );
 
-        setJobs(res.data.data.data);
+      setJobs(res.data.data.data);
+      setTotalPages(res.data.data.totalPages || 1);
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Failed to load job listings");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setTotalPages(res.data.data.totalPages || 1); 
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Failed to load job listings");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
+  fetchJobs();
+}, [companyId, searchParams]);
 
-    fetchJobs();
-  }, [companyId, page, limit]);
 
   const goToPage = (newPage: number) => {
     searchParams.set("page", newPage.toString());
@@ -80,6 +85,58 @@ export default function JobListPage() {
           <h2 className="font-bold text-[#25324B] text-2xl">Job Listings</h2>
         </div>
 
+        <div className="mb-4 flex items-end justify-end gap-4">
+          <select
+            value={filters.status}
+            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+            className="border px-2 py-1 rounded"
+          >
+            <option value="">All Status</option>
+            <option value="live">Live</option>
+            <option value="closed">Closed</option>
+          </select>
+
+          <select
+            value={filters.jobType}
+            onChange={(e) =>
+              setFilters({ ...filters, jobType: e.target.value })
+            }
+            className="border px-2 py-1 rounded"
+          >
+            <option value="">All Job Types</option>
+            <option value="Full-Time">Full-Time</option>
+            <option value="Part-Time">Part-Time</option>
+            <option value="Remote">Remote</option>
+            <option value="Internship">Internship</option>
+            <option value="Contract">Contract</option>
+          </select>
+
+          <input
+            type="text"
+            placeholder="Search title..."
+            value={filters.search}
+            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+            className="border px-2 py-1 rounded"
+          />
+
+          <button
+            onClick={() => {
+              Object.entries(filters).forEach(([key, value]) => {
+                if (value) searchParams.set(key, value);
+                else searchParams.delete(key);
+              });
+              searchParams.set("page", "1");
+              searchParams.set("limit", limit.toString());
+              navigate(
+                `/companies/${companyId}/jobs?${searchParams.toString()}`
+              );
+            }}
+            className="bg-purple-600 text-white px-3 py-1 rounded"
+          >
+            Filter
+          </button>
+        </div>
+
         <div className="w-full max-w-[1104px] mx-auto">
           <JobListTable data={jobs} />
 
@@ -97,7 +154,9 @@ export default function JobListPage() {
                 <button
                   key={p}
                   onClick={() => goToPage(p)}
-                  className={`px-3 py-1 border rounded ${p === page ? "bg-purple-300 text-white" : ""}`}
+                  className={`px-3 py-1 border rounded ${
+                    p === page ? "bg-purple-300 text-white" : ""
+                  }`}
                 >
                   {p}
                 </button>
