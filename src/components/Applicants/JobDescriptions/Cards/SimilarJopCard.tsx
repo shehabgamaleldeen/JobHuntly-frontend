@@ -1,10 +1,10 @@
 const SimilarJopCard = () => {
   return (
     <>
-      <article className="bg-[#FFFFFF] flex max-xl:flex-col max-lg:flex-col max-sm:flex-col p-6 gap-3">
+      <article className="group bg-[#FFFFFF] flex max-xl:flex-col max-lg:flex-col max-sm:flex-col p-6 gap-3 border-2 border-transparent hover:border-[#4640DE] hover:shadow-lg transition duration-200 ease-in-out">
         <img className="w-12 h-14" src="/SimilarJopIcon.png" alt="jopIcon" />
         <div>
-          <h3 className="text-xl text-[#25324B] font-semibold mb-2">
+          <h3 className="text-xl text-[#25324B] group-hover:text-[#4640DE] font-semibold mb-2">
             Social Media Assistant
           </h3>
           <span className=" text-[#515B6F] my-2">Nomad . Paris, France</span>
