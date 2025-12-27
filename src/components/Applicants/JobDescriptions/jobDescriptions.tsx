@@ -1,6 +1,6 @@
 import ApplyButton from './ApplyButton.tsx'
 import PerksBenefits from './PerksBenefits.tsx'
-import SimilarJops from './SimilarJops.tsx'
+import SimilarJobs from './SimilarJops.tsx'
 import { useEffect, useState } from 'react'
 import instance from '../../AxiosConfig/instance.ts'
 import './style.css'
@@ -18,7 +18,7 @@ const JobDescriptions = () => {
   const [job, setJob] = useState<Job | null>(null)
   const [hasApplied, setHasApplied] = useState<boolean>(false)
 
-  async function getJop() {
+  async function getJob() {
     try {
       const res = await instance.get(`/jobs/${id}`, {
         headers: {
@@ -32,8 +32,8 @@ const JobDescriptions = () => {
   }
 
   useEffect(() => {
-    getJop()
-  }, [])
+    getJob()
+  }, [id])
 
   useEffect(() => {
     if (job?.hasApplied) {
@@ -88,7 +88,7 @@ const JobDescriptions = () => {
 
       <section className="jobDescriptionsInfo bg-[#FFFFFF] w-screen h-1/4 flex justify-center">
         <div className="py-16 max-sm:py-10 w-4/5 grid grid-cols-[2fr_1fr] gap-16 max-sm:gap-8 max-md:grid-cols-1">
-          <div className="discription ">
+          <div className="description ">
             <div>
               <h2 className="text-[#25324B] text-3xl font-semibold">
                 Description
@@ -207,7 +207,7 @@ const JobDescriptions = () => {
                   {job?.categories?.[0]}
                 </span>
                 <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
-                  {job?.categories?.[0]}
+                  {job?.categories?.[1]}
                 </span>
               </div>
             </div>
@@ -221,7 +221,7 @@ const JobDescriptions = () => {
       </section>
       <PerksBenefits />
       <div className="bg-[#F8F8FD]">
-        <SimilarJops />
+        <SimilarJobs job={job} />
       </div>
     </>
   )
