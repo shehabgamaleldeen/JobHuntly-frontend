@@ -1,23 +1,53 @@
 import SimilarJopCard from './Cards/SimilarJopCard'
+import { useState, useEffect } from 'react'
+import instance from '../../AxiosConfig/instance.ts'
 
-const SimilarJops = () => {
+type similarJobProps = {
+  [key: string]: any
+}
+
+const SimilarJobs = ({ job }: similarJobProps) => {
+  type SimilarJobs = Array<{ [key: string]: any }>
+
+  const [similarJobs, setsimilarJobs] = useState<SimilarJobs | null>(null)
+  async function getSimilarJobs() {
+    try {
+      const res = await instance.get('/jobs/similar', {
+        params: {
+          categories: job?.categories, // Pass entire array
+          excludeJobId: job?._id,
+          limit: 6,
+        },
+      })
+      setsimilarJobs(res.data.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    if (job?.categories && job?._id) {
+      getSimilarJobs()
+    }
+  }, [job?.categories, job?._id])
+  useEffect(() => {
+    console.log(similarJobs)
+  }, [similarJobs])
+
   return (
     <>
-      <section className="similarJopsSection bg-[#F8F8FD] w-4/5 m-auto pt-3">
+      <section className="similarJopsSection bg-[#F8F8FD] w-4/5 m-auto py-3">
         <h2 className="text-[#25324B] text-3xl font-semibold mt-8 mb-12">
-          Similiar Jobs
+          Similar Jobs
         </h2>
         <div className="grid grid-cols-2 max-md:grid-cols-1 max-sm:grid-cols-1 gap-8 mb-8">
-          <SimilarJopCard />
-          <SimilarJopCard />
-          <SimilarJopCard />
-          <SimilarJopCard />
-          <SimilarJopCard />
-          <SimilarJopCard />
+          {similarJobs?.map((job) => (
+            <SimilarJopCard key={job._id} job={job} />
+          ))}
         </div>
       </section>
     </>
   )
 }
 
-export default SimilarJops
+export default SimilarJobs
