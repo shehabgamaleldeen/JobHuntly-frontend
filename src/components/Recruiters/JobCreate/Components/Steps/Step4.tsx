@@ -4,10 +4,14 @@ import { InputTitle } from "./InputTitle";
 import { useJobCreateContext } from "../../JobCreateContext";
 import type { Question, QuestionType } from "../../JobCreateContext";
 import ConfirmModal from "./ConfirmModal";
+import { postNewJob } from "@/services/jobService";
+import type { JobPostPayload } from "@/types/job";
 
 export default function Step4() {
     const navigate = useNavigate();
-    const { updateStep4, clearStep4, jobData } = useJobCreateContext();
+    const { updateStep4, clearStep4, jobData } = useJobCreateContext(); // Added clearAllData
+
+    const [isSubmitting, setIsSubmitting] = useState(false); // Add loading state
 
     const [questionType, setQuestionType] = useState<QuestionType>("YES_NO");
     const [questionText, setQuestionText] = useState("");
@@ -42,12 +46,61 @@ export default function Step4() {
         setConfirmJobOpen(true);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         updateStep4({ questions });
+        setIsSubmitting(true);
 
-        console.log("FINAL JOB DATA:", jobData);
+        try {
+            // By casting to 'JobPostPayload', TS will check if you missed anything
+            const payload: JobPostPayload = {
 
-        navigate("/company");
+                // GRABBED FROM TOKEN  -------------------------------------->
+                companyId: "6581a2b3c4d5e6f7a8b9c0d1",
+
+                // Use ! if you are 100% sure StepGuard prevents getting here without these values
+                // Otherwise use || "" to provide a safe fallback string
+                title: jobData.step1!.jobTitle!,
+                employmentType: jobData.step1!.jobType!,
+                workplaceModel: jobData.step1!.workplaceModel!,
+
+                salaryMin: Number(jobData.step1?.salaryFrom) || 0,
+                salaryMax: Number(jobData.step1?.salaryTo) || 1,
+                salaryCurrency: "EGP",
+
+                // Ensure these match the array requirement in your interface
+                categories: jobData.step1?.categories || [],
+                skillsIds: jobData.step1?.skills || [],
+
+                postDate: new Date(),
+
+                description: jobData.step2!.jobDescription!,
+                responsibilities: jobData.step2?.responsibilities || [],
+                whoYouAre: jobData.step2?.whoYouAre || [],
+                niceToHaves: jobData.step2?.niceToHaves || [],
+
+                benefits: jobData.step3?.benefits || [],
+                isLive: true,
+
+                // Map frontend 'text' to backend 'questionText'
+                // and match the 'TEXT' | 'YES_NO' type exactly
+                questions: questions.map(q => ({
+                    questionText: q.text,
+                    type: q.type
+                }))
+            };
+
+            const response = await postNewJob(payload);
+
+            if (response.status === 201 || response.status === 200) {
+                navigate("/company");
+            }
+        } catch (error: any) {
+            console.error("Post Job Error:", error.response?.data || error.message);
+            alert(error.response?.data?.message || "Failed to post job");
+        } finally {
+            setIsSubmitting(false);
+            setConfirmJobOpen(false);
+        }
     };
 
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
@@ -111,8 +164,8 @@ export default function Step4() {
                             border-2 border-[#D6DDEB] rounded
                         "
                     >
-                        <option value="yes_no">Yes / No Question</option>
-                        <option value="essay">Essay Question</option>
+                        <option value="YES_NO">Yes / No Question</option>
+                        <option value="TEXT">Essay Question</option>
                     </select>
 
                     {/* Question Text Input */}
@@ -239,11 +292,12 @@ export default function Step4() {
                     {/* Post Job Button */}
                     <button
                         onClick={handleConfirmJob}
+                        disabled={isSubmitting}
                         className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
                         text-sm sm:text-base md:text-lg font-medium text-white
-                        rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors"
+                        rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors disabled:bg-indigo-300"
                     >
-                        Post Job
+                        {isSubmitting ? "Posting..." : "Post Job"}
                     </button>
 
                     <ConfirmModal

@@ -3,12 +3,6 @@ import { createContext, useContext, useEffect, useState, useCallback } from "rea
 /* ------------------------------------------
    TYPES
 -------------------------------------------*/
-export interface Benefit {
-    id: number;
-    icon: string;
-    title: string;
-    description: string;
-}
 
 export type Step1Data = {
     jobTitle: string;
@@ -16,8 +10,8 @@ export type Step1Data = {
     workplaceModel: "On-Site" | "Remote" | "Hybrid" | "";
     salaryFrom: number;
     salaryTo: number;
-    categories: any[];
-    skills: any[];
+    categories: string[];
+    skills: string[];
 };
 
 export type Step2Data = {
@@ -26,6 +20,12 @@ export type Step2Data = {
     whoYouAre: string[];
     niceToHaves: string[];
 };
+export interface Benefit {
+    id: number;
+    icon: string;
+    title: string;
+    description: string;
+}
 
 export type Step3Data = {
     benefits: Benefit[];
@@ -75,7 +75,7 @@ export function JobCreateProvider({ children }: { children: React.ReactNode }) {
         // 1. Get Navigation Type (Reload, Back, Forward, or New Entry)
         const perfEntries = window.performance.getEntriesByType("navigation");
         let navType = "navigate"; // default
-        
+
         if (perfEntries.length > 0) {
             const navEntry = perfEntries[0] as PerformanceNavigationTiming;
             navType = navEntry.type;

@@ -6,44 +6,70 @@ import { useJobCreateContext, type Step1Data } from "../../JobCreateContext";
 import { useEffect, useState } from "react";
 import ConfirmDeleteModal from "./ConfirmModal";
 import { isStep1Filled } from "./StepsFilledHelpers";
+import { getSkills } from "@/services/jobService";
 
-type Option = {
+type categoryOption = {
     value: string;
     label: string;
 };
 
-const categoryOptions: Option[] = [
-    { value: "engineering", label: "Engineering" },
-    { value: "marketing", label: "Marketing" },
-    { value: "finance", label: "Finance" },
-    { value: "design", label: "Design" },
-    { value: "software development", label: "Software Development" },
-    { value: "information technology", label: "Information Technology" },
-    { value: "human resources", label: "Human Resources" },
-    { value: "teaching", label: "Teaching" },
+const categoryOptions: categoryOption[] = [
+    { value: 'Design', label: 'Design' },
+    { value: 'Sales', label: 'Sales' },
+    { value: 'Marketing', label: 'Marketing' },
+    { value: 'Business', label: 'Business' },
+    { value: 'Human Resource', label: 'Human Resource' },
+    { value: 'Engineering', label: 'Engineering' },
+    { value: 'Technology', label: 'Technology' },
 ];
 
-const requiredSkillsOptions: Option[] = [
-    { value: "javascript", label: "JavaScript" },
-    { value: "typescript", label: "TypeScript" },
-    { value: "react", label: "React" },
-    { value: "nodejs", label: "Node.js" },
-    { value: "express", label: "Express.js" },
-    { value: "mongodb", label: "MongoDB" },
-    { value: "sql", label: "SQL" },
-    { value: "git", label: "Git" },
-    { value: "problem_solving", label: "Problem Solving" },
-    { value: "communication", label: "Communication" },
-    { value: "teamwork", label: "Teamwork" },
-    { value: "time_management", label: "Time Management" },
-    { value: "testing", label: "Unit Testing" },
-    { value: "api_design", label: "API Design" },
-    { value: "debugging", label: "Debugging" },
-    { value: "docker", label: "Docker" },
-    { value: "linux", label: "Linux" }
+type skillOption = {
+    value: string; // This will store the _id
+    label: string; // This will store the name
+};
+
+// Place these right below your requiredSkillsOptions
+const jobTypes = [
+    { id: "Full-Time", label: "Full-Time" },
+    { id: "Part-Time", label: "Part-Time" },
+    { id: "Contract", label: "Contract" },
+    { id: "Internship", label: "Internship" }
+];
+
+const workplaceModels = [
+    { id: "On-Site", label: "On-Site" },
+    { id: "Remote", label: "Remote" },
+    { id: "Hybrid", label: "Hybrid" }
 ];
 
 export default function Step1() {
+    const [skillsOptions, setSkillsOptions] = useState<skillOption[]>([]);
+
+    // Fetch skills from your API
+    useEffect(() => {
+        const fetchSkills = async () => {
+            try {
+                const response = await getSkills();
+
+                // Axios puts the backend body in .data
+                // If your backend 'response' helper sends { status, data: [...] }, 
+                // then you access response.data.data
+                const skillsArray = response.data.data || response.data;
+
+                const formattedSkills = skillsArray.map((skill: { _id: string; name: string }) => ({
+                    value: skill._id,  // MongoDB ID
+                    label: skill.name  // Skill Name
+                }));
+
+                setSkillsOptions(formattedSkills);
+            } catch (error) {
+                console.error("Failed to fetch skills:", error);
+            }
+        };
+
+        fetchSkills();
+    }, []);
+
     const navigate = useNavigate();
     const { updateStep1, clearStep1, jobData } = useJobCreateContext();
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -58,8 +84,8 @@ export default function Step1() {
     } = useForm<Step1Data>({
         defaultValues: jobData.step1 || {
             jobTitle: "",
-            jobType: "",
-            workplaceModel: "",
+            jobType: "", // This will hold a single string
+            workplaceModel: "", // This will hold a single string
             salaryFrom: 0,
             salaryTo: 0,
             categories: [],
@@ -78,10 +104,9 @@ export default function Step1() {
         console.log("=== FORM SUBMISSION ===");
         console.log("Form Data:", data);
         console.log("Is Step1 Filled?", isStep1Filled(data));
-        
+
         updateStep1(data);
-        
-        // Small delay to ensure context updates
+
         setTimeout(() => {
             navigate("/company/job-create/step-2");
         }, 100);
@@ -147,16 +172,11 @@ export default function Step1() {
 
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
-            {/* Job Type - FIXED: Values now match TypeScript type */}
+            {/* Job Type - Radio Buttons */}
             <section className="flex mb-4 md:mb-8">
                 <InputTitle title="Job Type" description="Select the employment type" />
                 <div className="flex w-1/2 flex-col gap-2">
-                    {[
-                        { id: "Full-Time", label: "Full-Time" },
-                        { id: "Part-Time", label: "Part-Time" },
-                        { id: "Contract", label: "Contract" },
-                        { id: "Internship", label: "Internship" }
-                    ].map((type) => (
+                    {jobTypes.map((type) => (
                         <div key={type.id} className="flex items-center">
                             <input
                                 type="radio"
@@ -177,15 +197,11 @@ export default function Step1() {
 
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
-            {/* Workplace Model - FIXED: Values now match TypeScript type */}
+            {/* Workplace Model - Radio Buttons */}
             <section className="flex mb-4 md:mb-8">
                 <InputTitle title="Workplace Model" description="Choose the physical environment where an employee performs their duties." />
                 <div className="flex w-1/2 flex-col gap-2">
-                    {[
-                        { id: "On-Site", label: "On-Site" },
-                        { id: "Remote", label: "Remote" },
-                        { id: "Hybrid", label: "Hybrid" }
-                    ].map((model) => (
+                    {workplaceModels.map((model) => (
                         <div key={model.id} className="flex items-center">
                             <input
                                 type="radio"
@@ -221,7 +237,7 @@ export default function Step1() {
                             w-[70px] sm:w-[100px] md:w-[150px] lg:w-[130px] 
                             h-7 md:h-10 p-3 sm:p-4 
                             border-2 rounded ${errors.salaryFrom ? "border-red-500" : "border-[#D6DDEB]"}`}
-                            {...register("salaryFrom", { 
+                            {...register("salaryFrom", {
                                 required: "Required",
                                 valueAsNumber: true,
                                 min: { value: 1, message: "Must be greater than 0" }
@@ -260,7 +276,7 @@ export default function Step1() {
 
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
-            {/* Categories */}
+            {/* Categories Controller (Preserved) */}
             <section className="flex mb-4 md:mb-8">
                 <InputTitle
                     title="Categories"
@@ -278,11 +294,13 @@ export default function Step1() {
                                 (value && value.length > 0) || "Select at least one category",
                         }}
                         render={({ field }) => (
-                            <Select<Option, true>
+                            <Select<categoryOption, true>
                                 isMulti
-                                options={categoryOptions}
-                                value={field.value}
-                                onChange={(val) => field.onChange(val)}
+                                options={categoryOptions} // Using the Corrected Capitalized Options
+                                value={categoryOptions.filter(option =>
+                                    field.value?.includes(option.value)
+                                )}
+                                onChange={(val) => field.onChange(val.map(v => v.value))}
                                 placeholder="Select Job Categories"
                                 className="text-[10px] md:text-base lg:text-lg w-full sm:w-13/15 md:w-10/12"
                                 styles={{
@@ -299,15 +317,15 @@ export default function Step1() {
                                 }}
                                 classNames={{
                                     clearIndicator: () => `
-                                        [&>svg]:w-3 sm:[&>svg]:h-3
-                                        sm:[&>svg]:w-4 sm:[&>svg]:h-4
-                                        md:[&>svg]:w-6 md:[&>svg]:h-6
-                                    `,
+                                    [&>svg]:w-3 sm:[&>svg]:h-3
+                                    sm:[&>svg]:w-4 sm:[&>svg]:h-4
+                                    md:[&>svg]:w-6 md:[&>svg]:h-6
+                                `,
                                     dropdownIndicator: () => `
-                                        [&>svg]:w-3 sm:[&>svg]:h-3
-                                        sm:[&>svg]:w-4 sm:[&>svg]:h-4
-                                        md:[&>svg]:w-6 md:[&>svg]:h-6
-                                    `,
+                                    [&>svg]:w-3 sm:[&>svg]:h-3
+                                    sm:[&>svg]:w-4 sm:[&>svg]:h-4
+                                    md:[&>svg]:w-6 md:[&>svg]:h-6
+                                `,
                                 }}
                                 classNamePrefix="rs"
                             />
@@ -321,7 +339,7 @@ export default function Step1() {
 
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
-            {/* Skills */}
+            {/* Skills Controller (Preserved) */}
             <section className="flex mb-4 md:mb-8">
                 <InputTitle
                     title="Required Skills"
@@ -339,11 +357,13 @@ export default function Step1() {
                                 (value && value.length > 0) || "Select at least one skill",
                         }}
                         render={({ field }) => (
-                            <Select<Option, true>
+                            <Select<skillOption, true>
                                 isMulti
-                                options={requiredSkillsOptions}
-                                value={field.value}
-                                onChange={(val) => field.onChange(val)}
+                                options={skillsOptions}     // Use the dynamic state
+                                value={skillsOptions.filter(option =>
+                                    field.value?.includes(option.value)
+                                )}
+                                onChange={(val) => field.onChange(val.map(v => v.value))}
                                 placeholder="Select Required Skills"
                                 className="text-[10px] md:text-base lg:text-lg w-full sm:w-13/15 md:w-10/12"
                                 styles={{
@@ -360,15 +380,15 @@ export default function Step1() {
                                 }}
                                 classNames={{
                                     clearIndicator: () => `
-                                        [&>svg]:w-3 sm:[&>svg]:h-3
-                                        sm:[&>svg]:w-4 sm:[&>svg]:h-4
-                                        md:[&>svg]:w-6 md:[&>svg]:h-6
-                                    `,
+                                    [&>svg]:w-3 sm:[&>svg]:h-3
+                                    sm:[&>svg]:w-4 sm:[&>svg]:h-4
+                                    md:[&>svg]:w-6 md:[&>svg]:h-6
+                                `,
                                     dropdownIndicator: () => `
-                                        [&>svg]:w-3 sm:[&>svg]:h-3
-                                        sm:[&>svg]:w-4 sm:[&>svg]:h-4
-                                        md:[&>svg]:w-6 md:[&>svg]:h-6
-                                    `,
+                                    [&>svg]:w-3 sm:[&>svg]:h-3
+                                    sm:[&>svg]:w-4 sm:[&>svg]:h-4
+                                    md:[&>svg]:w-6 md:[&>svg]:h-6
+                                `,
                                 }}
                                 classNamePrefix="rs"
                             />
