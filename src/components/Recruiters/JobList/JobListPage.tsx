@@ -24,7 +24,7 @@ export default function JobListPage() {
   const navigate = useNavigate();
 
   const page = Number(searchParams.get("page") || 1);
-  const limit = Number(searchParams.get("limit") || 10);
+  const limit = Number(searchParams.get("limit") || 7);
 
   const [totalPages, setTotalPages] = useState(1); 
 
@@ -41,7 +41,8 @@ export default function JobListPage() {
         );
 
         setJobs(res.data.data.data);
-        setTotalPages(res.data.totalPages || 1); 
+
+        setTotalPages(res.data.data.totalPages || 1); 
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
