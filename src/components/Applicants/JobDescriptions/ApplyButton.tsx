@@ -144,7 +144,7 @@ export function ApplyButton(props: ApplyButtonProps) {
                 setTimeout(() => {
                   navigate('/login')
                 }, 1500)
-                return 'Session expired. Please login again.'
+                return 'Your session has expired. Please log in again to continue.'
               }
               if (err.response.status === 409)
                 return 'You have already applied to this job.'
@@ -154,7 +154,7 @@ export function ApplyButton(props: ApplyButtonProps) {
                 setTimeout(() => {
                   navigate('/login')
                 }, 1500)
-                return 'Session expired. Please login again.'
+                return 'Your session has expired. Please log in again to continue.'
               }
             }
             return 'Network error. Please try again.'
@@ -182,7 +182,7 @@ export function ApplyButton(props: ApplyButtonProps) {
           variant="outline"
           onClick={() => {
             if (!isLoggedIn()) {
-              toast.error('Please login to apply')
+              toast.warning('Please login to apply')
               navigate('/login')
               return
             }
