@@ -26,7 +26,6 @@ import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
 import DashboardRecruiterSettings from "./components/Recruiters/DashboardSettings/DashboardRecruiterSettings";
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
-import ApplicantsTable from "./components/Recruiters/Applicants/ApplicantsTable";
 import './App.css'
 import Applicants from './components/Recruiters/Applicants/Applicants'
 
