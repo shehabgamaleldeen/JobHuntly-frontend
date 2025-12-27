@@ -57,7 +57,7 @@ const JobDescriptions = () => {
               alt="Company Logo"
             />
             <div className="m-6 max-sm:my-4 max-sm:mx-0">
-              <h1 className="text-[#25324B] text-3xl font-semibold">
+              <h1 className="text-[#25324B] text-3xl font-semibold mb-2">
                 {job?.title}
               </h1>
               <p className="text-[#515B6F] font-normal">
