@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { Toaster } from '@/components/ui/sonner'
 import Navbar from './components/Basic/Navbar/Navbar'
 import Footer from './components/Basic/footer/footer'
 import LandingPage from './components/Applicants/LandingPage/LandingPage'
@@ -10,17 +11,16 @@ import NotFoundPage from './components/Basic/NotFoundPage'
 import JobDescriptions from './components/Applicants/JobDescriptions/jobDescriptions'
 import CompanyPageWrapper from './components/Applicants/CompanyProfile/CompanyPageWrapper'
 import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings'
-import CompanyLayout from './components/Recruiters/CompanyLayout';
-import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';
-import JobCreateLayout from './components/Recruiters/JobCreate/JobCreateLayout';
-import { JobCreateProvider } from "./components/Recruiters/JobCreate/JobCreateContext";
-import Step1 from './components/Recruiters/JobCreate/Components/Steps/Step1';
-import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2';
-import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3';
-import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4';
-import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile';
-import MyApplications from './components/Applicants/MyApplications/MyApplications';
-// import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile'
+import CompanyLayout from './components/Recruiters/CompanyLayout'
+import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard'
+import JobCreateLayout from './components/Recruiters/JobCreate/JobCreateLayout'
+import { JobCreateProvider } from './components/Recruiters/JobCreate/JobCreateContext'
+import Step1 from './components/Recruiters/JobCreate/Components/Steps/Step1'
+import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2'
+import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3'
+import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4'
+import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile'
+import MyApplications from './components/Applicants/MyApplications/MyApplications'
 import ApplicantProfile from './components/Recruiters/ApplicantProfile/ApplicantProfile'
 import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
@@ -28,22 +28,20 @@ import DashboardRecruiterSettings from "./components/Recruiters/DashboardSetting
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
 import './App.css'
 import Applicants from './components/Recruiters/Applicants/Applicants'
+import JobListPage from './components/Recruiters/JobList/JobListPage'
+import ApplicantsTable from './components/Recruiters/Applicants/ApplicantsTable'
 
 
 function App() {
-  const location = useLocation();
+  const location = useLocation()
 
   // Hide navbar on these routes
-  const hideNavbarRoutes = ["/"];
+  const hideNavbarRoutes = ['/']
 
-  const shouldShowNavbar = hideNavbarRoutes.includes(location.pathname);
-
-
+  const shouldShowNavbar = hideNavbarRoutes.includes(location.pathname)
 
   return (
-
-
-      <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
       {shouldShowNavbar && <Navbar />}
         <main className="grow">
           <Routes>
@@ -61,7 +59,7 @@ function App() {
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
             <Route path="/my-applications" element={<MyApplications />} />
             <Route path="/companies/:companyId/jobs" element={<JobListPage />} />
-            <Route path="/applicants/:jobId" element={<Applicants />} />
+            <Route path="/applicants/:jobId" element={<ApplicantsTable />} />
 
 
 
@@ -104,12 +102,13 @@ function App() {
                 <Route path="step-4" element={<Step4 />} />
               </Route>
             </Route>
+          </Route>
+        </Routes>
+      </main>
 
-
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <Footer />
+      <Toaster />
+    </div>
   )
 }
 
