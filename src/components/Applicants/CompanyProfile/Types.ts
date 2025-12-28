@@ -18,7 +18,7 @@ export interface Company {
   locations: Location[]; 
   website: string;
   industry: string;
-  description: string;
+  about: string;
   founded: string;
   employees: string;
   linkedin: string;

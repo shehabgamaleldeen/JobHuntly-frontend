@@ -45,7 +45,7 @@ function Signup() {
             </button>
           </div>
 
-          <h2 className="text-4xl font-bold w-full whitespace-nowrap text-center">
+          <h2 className="text-4xl font-bold w-full whitespace-nowrap text-center overflow-hidden">
             Get more opportunities
           </h2>
 

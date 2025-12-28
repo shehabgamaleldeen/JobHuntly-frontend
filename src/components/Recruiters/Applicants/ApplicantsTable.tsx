@@ -1,19 +1,53 @@
-import React, { useState } from "react";
-import { sampleApplicants } from "./SampleData"; 
-import type{ Applicant} from "./SampleData"; 
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
-import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
-
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   rowsPerPage?: number;
 }
 
+interface BackendApplicant {
+  _id: string;
+  fullName: string;
+  score: number;
+  appliedAt: string;    
+  appliedDate?: string; 
+}
+
 const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
-  const [data] = useState<Applicant[]>(sampleApplicants);
+  const { jobId } = useParams<{ jobId: string }>();
+   const navigate = useNavigate();
+  const [data, setData] = useState<BackendApplicant[]>([]);
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    if (!jobId) return;
+
+    const fetchApplicants = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/company/jobs/${jobId}/applications`);
+        if (!response.ok) throw new Error("Failed to fetch applicants");
+
+        const result = await response.json();
+
+        if (!Array.isArray(result.data)) {
+          console.error("Backend returned invalid data:", result);
+          return;
+        }
+
+        const formatted = result.data.map((app: BackendApplicant) => ({
+          ...app,
+          appliedDate: new Date(app.appliedAt).toLocaleDateString("en-GB"),
+        }));
+
+        setData(formatted);
+      } catch (error) {
+        console.error("Error fetching applicants:", error);
+      }
+    };
+
+    fetchApplicants();
+  }, [jobId]);
 
   const totalPages = Math.ceil(data.length / rowsPerPage);
   const paginatedData = data.slice((page - 1) * rowsPerPage, page * rowsPerPage);
@@ -39,32 +73,10 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
 
   const pageNumbers = getPageNumbers();
 
-  const renderStars = (score: number) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <FontAwesomeIcon
-          key={i}
-          icon={i <= score ? solidStar : regularStar}
-          className="text-yellow-400"
-        />
-      );
-    }
-    return (
-      <span className="flex items-center gap-1">
-        {stars} <span className="text-sm text-gray-600">{score}</span>
-      </span>
-    );
-  };
-
   return (
     <div className="flex min-h-screen bg-white">
       <div className="w-[272px] min-h-full bg-gray-50">Side bar</div>
       <div className="flex-1 w-full px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-8">
-        <div className="mb-6">
-          <h2 className="font-bold text-[#25324B] text-2xl">Applicants</h2>
-        </div>
-
         <div className="w-full max-w-[1104px] mx-auto">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px]">
@@ -72,7 +84,6 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
                 <tr className="text-[#7C8493] text-sm">
                   <th className="py-3 px-2 md:px-4 text-left whitespace-nowrap">#</th>
                   <th className="py-3 px-2 md:px-4 text-left whitespace-nowrap">Full Name</th>
-                  <th className="py-3 px-2 md:px-4 text-left whitespace-nowrap">Score</th>
                   <th className="py-3 px-2 md:px-4 text-left whitespace-nowrap">Applied Date</th>
                   <th className="py-3 px-2 md:px-4 text-left whitespace-nowrap">Action</th>
                 </tr>
@@ -80,13 +91,20 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
 
               <tbody>
                 {paginatedData.map((app, index) => (
-                  <tr key={app.id} className={`text-sm ${index % 2 === 0 ? "bg-white" : "bg-[#F4F4FD]"}`}>
-                    <td className="py-3 px-2 md:px-4">{app.id}</td>
+                  <tr
+                    key={app._id}
+                    className={`text-sm ${index % 2 === 0 ? "bg-white" : "bg-[#F4F4FD]"}`}
+                  >
+                    <td className="py-3 px-2 md:px-4">{index + 1}</td>
                     <td className="py-3 px-2 md:px-4 whitespace-nowrap">{app.fullName}</td>
-                    <td className="py-3 px-2 md:px-4 whitespace-nowrap">{renderStars(app.score)}</td>
                     <td className="py-3 px-2 md:px-4 whitespace-nowrap">{app.appliedDate}</td>
                     <td className="py-3 px-2 md:px-4 whitespace-nowrap">
-                <button className="px-3 py-1 bg-[#E9EBFD] text-[#4640DE] border border-[#4640DE] text-sm hover:bg-purple-700 hover:text-white">
+                      <button
+                        onClick={() =>
+                          navigate(`/applicant-profile/${app._id}`)
+                        }
+                        className="px-3 py-1 bg-[#E9EBFD] text-[#4640DE] border border-[#4640DE] text-sm hover:bg-purple-700 hover:text-white"
+                      >
                         See Application
                       </button>
                     </td>
@@ -109,12 +127,16 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
               <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
                 {pageNumbers.map((n, i) =>
                   n === "..." ? (
-                    <span key={i} className="px-2 text-gray-500">...</span>
+                    <span key={i} className="px-2 text-gray-500">
+                      ...
+                    </span>
                   ) : (
                     <button
                       key={n}
                       onClick={() => setPage(n as number)}
-                      className={`px-2 md:px-3 py-1 rounded min-w-7 ${page === n ? "bg-purple-300 text-white" : "border hover:bg-gray-50"}`}
+                      className={`px-2 md:px-3 py-1 rounded min-w-7 ${
+                        page === n ? "bg-purple-300 text-white" : "border hover:bg-gray-50"
+                      }`}
                     >
                       {n}
                     </button>
@@ -123,7 +145,7 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
               </div>
 
               <button
-                disabled={page === totalPages}
+                disabled={page===totalPages}
                 onClick={() => setPage(page + 1)}
                 className="px-2 md:px-3 py-1 border rounded hover:bg-[#F8F8FD] disabled:opacity-50"
               >
@@ -140,4 +162,3 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
 };
 
 export default ApplicantsTable;
-
