@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { Toaster } from '@/components/ui/sonner'
 import Navbar from './components/Basic/Navbar/Navbar'
 import Footer from './components/Basic/footer/footer'
 import LandingPage from './components/Applicants/LandingPage/LandingPage'
@@ -10,36 +11,41 @@ import NotFoundPage from './components/Basic/NotFoundPage'
 import JobDescriptions from './components/Applicants/JobDescriptions/jobDescriptions'
 import CompanyPageWrapper from './components/Applicants/CompanyProfile/CompanyPageWrapper'
 import DashboardSettings from './components/Applicants/DashboardSettings/DashboardSettings'
-import CompanyLayout from './components/Recruiters/CompanyLayout';
-import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard';
-import JobCreateLayout from './components/Recruiters/JobCreate/JobCreateLayout';
-import { JobCreateProvider } from "./components/Recruiters/JobCreate/JobCreateContext";
-import Step1 from './components/Recruiters/JobCreate/Components/Steps/Step1';
-import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2';
-import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3';
-import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4';
-import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile';
-import MyApplications from './components/Applicants/MyApplications/MyApplications';
+import CompanyLayout from './components/Recruiters/CompanyLayout'
+import CompanyDashboard from './components/Recruiters/Dashboard/Dashboard'
+import JobCreateLayout from './components/Recruiters/JobCreate/JobCreateLayout'
+import { JobCreateProvider } from './components/Recruiters/JobCreate/JobCreateContext'
+import Step1 from './components/Recruiters/JobCreate/Components/Steps/Step1'
+import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2'
+import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3'
+import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4'
+import MyApplications from './components/Applicants/MyApplications/MyApplications'
 import ApplicantProfile from './components/Recruiters/ApplicantProfile/ApplicantProfile'
 import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
 import DashboardRecruiterSettings from "./components/Recruiters/DashboardSettings/DashboardRecruiterSettings";
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
-import ApplicantsTable from "./components/Recruiters/Applicants/ApplicantsTable";
+import ApplicantsTable from './components/Recruiters/Applicants/ApplicantsTable'
 import './App.css'
 import { StepGuard } from './components/Recruiters/JobCreate/Components/Steps/StepGaurd'
 import ScrollToTop from './components/Recruiters/ScrollToTop'
 
 function App() {
+  const location = useLocation()
+
+  // Hide navbar on these routes
+  const hideNavbarRoutes = ['/']
+
+  const shouldShowNavbar = hideNavbarRoutes.includes(location.pathname)
+
   return (
-    <Router>
-      {/* Scrolls to top when navigating between pages
-      Why?
-      common SPA behavior. In React (or any SPA), 
-      when you navigate between routes using react-router, 
-      the browser doesn’t automatically scroll to top like a full page reload would. 
-      So if you scroll halfway on Step 2, then navigate to Step 3, it keeps the same scroll position. */}
-      {/* <ScrollToTop /> */}
+      // Scrolls to top when navigating between pages
+      // Why?
+      // common SPA behavior. In React (or any SPA), 
+      // when you navigate between routes using react-router, 
+      // the browser doesn’t automatically scroll to top like a full page reload would. 
+      // So if you scroll halfway on Step 2, then navigate to Step 3, it keeps the same scroll position.
+      // <ScrollToTop />
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="grow">
@@ -55,10 +61,9 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="*" element={<NotFoundPage />} />
             {/*mariz*/}
-            <Route path="/companies" element={<CompanyPageWrapper />} />
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
             <Route path="/my-applications" element={<MyApplications />} />
-            <Route path="/job-lists" element={<JobListPage />} />
+            <Route path="/companies/:companyId/jobs" element={<JobListPage />} />
             <Route path="/applicants/:jobId" element={<ApplicantsTable />} />
 
 
@@ -99,14 +104,13 @@ function App() {
                 <Route path="step-3" element={<StepGuard step={3}><Step3 /></StepGuard>} />
                 <Route path="step-4" element={<StepGuard step={4}><Step4 /></StepGuard>} />
               </Route>
-            </Route>
+          </Route>
+        </Routes>
+      </main>
 
-
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+      <Footer />
+      <Toaster />
+    </div>
   )
 }
 

@@ -18,11 +18,12 @@ function CompanyPageWrapper() {
         
         const companyId = id || '1';
         
-        const response = await axios.get<Company>(
-          `http://localhost:3000/companies/${companyId}`
-        );
+       const response = await axios.get(
+         `http://localhost:3000/companies/${companyId}`
+       );
+
         
-        setCompany(response.data);
+        setCompany(response.data.data);
       } catch (err) {
         if (axios.isAxiosError(err)) {
           setError(err.response?.data?.message || 'Failed to fetch company');

@@ -41,8 +41,7 @@ function Login() {
             </button>
           </div>
 
-         <h2 className="text-4xl font-bold w-full whitespace-nowrap text-center
-">
+         <h2 className="text-4xl font-bold w-full whitespace-nowrap text-center overflow-hidden">
             {selected === "job" ? "Welcome Back, Dude" : "Welcome Back"}
           </h2>
 

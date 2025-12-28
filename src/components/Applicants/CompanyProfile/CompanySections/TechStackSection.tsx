@@ -11,8 +11,8 @@ function TechStackSection({ tech }: Props) {
   const startIndex = page * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
 
-  const visibleTech = tech.slice(startIndex, endIndex);
-  const hasNextPage = endIndex < tech.length;
+  const visibleTech = tech?.slice(startIndex, endIndex) || [];
+  const hasNextPage = endIndex < (tech?.length || 0);
   const hasPrevPage = page > 0;
 
   return (
