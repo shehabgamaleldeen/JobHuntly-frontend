@@ -21,15 +21,16 @@ import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3'
 import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4'
 import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile'
 import MyApplications from './components/Applicants/MyApplications/MyApplications'
-// import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile'
 import ApplicantProfile from './components/Recruiters/ApplicantProfile/ApplicantProfile'
 import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
-import DashboardRecruiterSettings from './components/Recruiters/DashboardSettings/DashboardRecruiterSettings'
+import DashboardRecruiterSettings from "./components/Recruiters/DashboardSettings/DashboardRecruiterSettings";
+import JobListPage from "./components/Recruiters/JobList/JobListPage";
+import './App.css'
+import Applicants from './components/Recruiters/Applicants/Applicants'
 import JobListPage from './components/Recruiters/JobList/JobListPage'
 import ApplicantsTable from './components/Recruiters/Applicants/ApplicantsTable'
-import './App.css'
-// import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4'
+
 
 function App() {
   const location = useLocation()
@@ -42,55 +43,64 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       {shouldShowNavbar && <Navbar />}
-      <main className="grow">
-        <Routes>
-          {/*Applicants=================================================*/}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/DashboardSettings" element={<DashboardSettings />} />
-          <Route path="/find-jobs" element={<FindJobs />} />
-          <Route path="/find-jobs/:id" element={<JobDescriptions />} />
-          <Route path="/browse-companies" element={<SearchCompanies />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="*" element={<NotFoundPage />} />
-          {/*mariz*/}
-          <Route path="/companies/:id" element={<CompanyPageWrapper />} />
-          <Route path="/my-applications" element={<MyApplications />} />
-          <Route path="/companies/:companyId/jobs" element={<JobListPage />} />
-          <Route path="/applicants/:jobId" element={<ApplicantsTable />} />
-          {/*( moaz )*/}
-          <Route path="/dashboardSettings" element={<DashboardSettings />} />
-          {/*( shuab )*/}
-          <Route
-            path="/applications/:applicationId"
-            element={<ApplicantProfile />}
-          >
-            <Route index element={<Resume />} />
-            <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
-          </Route>{' '}
-          {/*Recruiters===============================================*/}
-          {/*( moaz )*/}
-          <Route
-            path="/DashboardRecruiterSettings"
-            element={<DashboardRecruiterSettings />}
-          />
-          {/*Ahmed*/}
-          <Route path="/company" element={<CompanyLayout />}>
-            <Route index element={<CompanyDashboard />} />
+        <main className="grow">
+          <Routes>
+            
+            {/*Applicants=================================================*/}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/DashboardSettings" element={<DashboardSettings />} />
+            <Route path="/find-jobs" element={<FindJobs />} />
+            <Route path="/find-jobs/:id" element={<JobDescriptions />} />
+            <Route path="/browse-companies" element={<SearchCompanies />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="*" element={<NotFoundPage />} />
+            {/*mariz*/}
+            <Route path="/companies/:id" element={<CompanyPageWrapper />} />
+            <Route path="/my-applications" element={<MyApplications />} />
+            <Route path="/companies/:companyId/jobs" element={<JobListPage />} />
+            <Route path="/applicants/:jobId" element={<ApplicantsTable />} />
 
-            <Route
-              path="job-create"
-              element={
-                <JobCreateProvider>
-                  <JobCreateLayout />
-                </JobCreateProvider>
-              }
-            >
-              <Route index element={<Step1 />} />
-              <Route path="step-1" element={<Step1 />} />
-              <Route path="step-2" element={<Step2 />} />
-              <Route path="step-3" element={<Step3 />} />
-              <Route path="step-4" element={<Step4 />} />
+
+
+            
+            {/*( moaz )*/}
+            <Route path="/dashboardSettings" element={<DashboardSettings />} />
+
+            
+            {/*( shuab )*/}
+              <Route path="applicant-profile/:id" element={<ApplicantProfile />}>
+                <Route index element={<Resume />} />
+                <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
+              </Route>{' '}
+
+
+
+            {/*Recruiters===============================================*/}
+
+            {/*( moaz )*/}
+            <Route path="/DashboardRecruiterSettings" element={<DashboardRecruiterSettings />} />
+            
+
+
+            {/*Ahmed*/}
+            <Route path="/company" element={<CompanyLayout />}>
+              <Route index element={<CompanyDashboard />} />
+
+              <Route
+                path="job-create"
+                element={
+                  <JobCreateProvider>
+                    <JobCreateLayout />
+                  </JobCreateProvider>
+                }
+              >
+                <Route index element={<Step1 />} />
+                <Route path="step-1" element={<Step1 />} />
+                <Route path="step-2" element={<Step2 />} />
+                <Route path="step-3" element={<Step3 />} />
+                <Route path="step-4" element={<Step4 />} />
+              </Route>
             </Route>
           </Route>
         </Routes>
