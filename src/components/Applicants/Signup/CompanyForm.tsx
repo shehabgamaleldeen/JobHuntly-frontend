@@ -1,122 +1,108 @@
-import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { companyNameValidation, emailValidation, passwordValidation, confirmPasswordValidation } from "../../../features/auth/authValidation";
 
-type CompanyErrors = {
-  companyName?: string;
-  email?: string;
-  password?: string;
+type CompanySignupForm = {
+  companyName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
 };
 
 function CompanyForm() {
-  const [form, setForm] = useState({
-    companyName: "",
-    email: "",
-    password: "",
-  });
-
-  const [errors, setErrors] = useState<CompanyErrors>({});
-
-  const passwordPattern =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
   const navigate = useNavigate();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<CompanySignupForm>();
+  const password = watch("password");
 
+ const onSubmit = async (data: CompanySignupForm) => {
+  try {
+    const response = await fetch("http://localhost:3000/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...data, role: "company" }), // Pass role here
+    });
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
+    const result = await response.json();
 
-  function validate() {
-    const newErrors: CompanyErrors = {};
-
-    if (!form.companyName.trim()) {
-      newErrors.companyName = "Company name is required";
+    if (!response.ok) {
+      throw new Error(result.message || "Registration failed");
     }
 
-    if (!form.email.includes("@")) {
-      newErrors.email = "Email must contain '@'";
+    console.log(result);
+    navigate("/company");
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message);
+    } else {
+      console.error("An unexpected error occurred");
     }
-
-    if (!passwordPattern.test(form.password)) {
-      newErrors.password =
-        "Password must be 8+ chars, include uppercase, lowercase, number & special character.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length===0;
   }
+};
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!validate()) return;
-    navigate("/find-jobs");
-
-  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 ">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      {/* Company Name */}
       <div>
-        <label className="text-base font-epilogue text-[#515B6F] font-semibold block mb-1">
-          Company Name
-        </label>
+        <label className="text-base font-epilogue text-[#515B6F] font-semibold block mb-1">Company Name</label>
         <input
           type="text"
-          name="companyName"
-          value={form.companyName}
-          onChange={handleChange}
           placeholder="Enter your company name"
-          className="w-full border px-4 py-3 
-                     focus:ring-2 focus:ring-purple-300 outline-none border-gray-300"
+          className={`w-full border px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300
+            ${errors.companyName ? "border-red-600" : "border-gray-300"}`}
+          {...register("companyName", companyNameValidation)}
         />
-        {errors.companyName && (
-          <p className="text-red-500 text-sm mt-1">{errors.companyName}</p>
-        )}
+        {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>}
       </div>
 
+      {/* Email */}
       <div>
-        <label className="text-base font-epilogue text-[#515B6F] font-semibold block mb-1">
-          Email Address
-        </label>
+        <label className="text-base font-epilogue text-[#515B6F] font-semibold block mb-1">Email Address</label>
         <input
           type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
           placeholder="Enter email address"
-          className="w-full border px-4 py-3 
-                     focus:ring-2 focus:ring-purple-300 outline-none border-gray-300"
+          className={`w-full border px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300
+            ${errors.email ? "border-red-600" : "border-gray-300"}`}
+          {...register("email", emailValidation)}
         />
-        {errors.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-        )}
+        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
       </div>
 
+      {/* Password */}
       <div>
-        <label className="text-base font-epilogue text-[#515B6F] font-semibold block mb-1">
-          Password
-        </label>
+        <label className="text-base font-epilogue text-[#515B6F] font-semibold block mb-1">Password</label>
         <input
           type="password"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
           placeholder="Enter password"
-          className="w-full border px-4 py-3 
-                     focus:ring-2 focus:ring-purple-300 outline-none border-gray-300"
+          className={`w-full border px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300
+            ${errors.password ? "border-red-600" : "border-gray-300"}`}
+          {...register("password", passwordValidation)}
         />
-        {errors.password && (
-          <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-        )}
+        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+      </div>
+
+      {/* Confirm Password */}
+      <div>
+        <label className="text-base font-epilogue text-[#515B6F] font-semibold block mb-1">Confirm Password</label>
+        <input
+          type="password"
+          placeholder="Confirm password"
+          className={`w-full border px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300
+            ${errors.confirmPassword ? "border-red-600" : "border-gray-300"}`}
+          {...register("confirmPassword", confirmPasswordValidation(password))}
+        />
+        {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
       </div>
 
       <button
         type="submit"
         className="w-full bg-[#4640DE] text-white py-3
-                   transition duration-300 ease-in-out hover:scale-[1.01] cursor-pointer"
+                   transition duration-300 ease-in-out hover:scale-[1.01]"
       >
         Continue
       </button>
     </form>
   );
 }
+
 export default CompanyForm;
