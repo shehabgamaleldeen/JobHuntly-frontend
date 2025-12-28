@@ -9,11 +9,12 @@ import App from './App.tsx'
 //   </ StrictMode >,
 // )
 
-
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from 'react-router-dom'
+import ScrollManager from './scroll/ScrollManager.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
+    <ScrollManager />
     <App />
   </BrowserRouter>
-);
+)

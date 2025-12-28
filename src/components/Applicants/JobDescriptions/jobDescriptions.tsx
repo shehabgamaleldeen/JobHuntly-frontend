@@ -1,21 +1,30 @@
-import ApplyButton from './ApplyButoon.tsx'
+import ApplyButton from './ApplyButton.tsx'
 import PerksBenefits from './PerksBenefits.tsx'
-import SimilarJops from './SimilarJops.tsx'
+import SimilarJobs from './SimilarJops.tsx'
 import { useEffect, useState } from 'react'
 import instance from '../../AxiosConfig/instance.ts'
 import './style.css'
 import { useParams } from 'react-router-dom'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import { Button } from '@/components/ui/button'
 
 const JobDescriptions = () => {
+  dayjs.extend(relativeTime)
   const { id } = useParams()
   type Job = {
     [key: string]: any
   }
   const [job, setJob] = useState<Job | null>(null)
+  const [hasApplied, setHasApplied] = useState<boolean>(false)
 
-  async function getJop() {
+  async function getJob() {
     try {
-      const res = await instance.get(`/jobs/${id}`)
+      const res = await instance.get(`/jobs/${id}`, {
+        headers: {
+          access_token: localStorage.getItem('token') || '',
+        },
+      })
       setJob(res.data.data)
     } catch (err) {
       console.log(err)
@@ -23,39 +32,63 @@ const JobDescriptions = () => {
   }
 
   useEffect(() => {
-    getJop()
-  }, [])
+    getJob()
+  }, [id])
+
+  useEffect(() => {
+    if (job?.hasApplied) {
+      setHasApplied(true)
+    }
+  }, [job])
+
+  // for debbuging
+  useEffect(() => {
+    console.log(job)
+  }, [job])
 
   return (
     <>
-      <section className="jobDescriptionsCard bg-[#F8F8FD] my-14 w-screen flex justify-center">
+      <section className="jobDescriptionsCard bg-[#F8F8FD] py-14 w-screen flex justify-center">
         <div className="bg-[#FFFFFF] w-4/5 m-auto p-6 flex max-sm:flex-col justify-between border border-[#D6DDEB]">
           <div className="flex max-sm:flex-col items-center  max-sm:place-items-start">
             <img
               className="w-24 max-sm:w-16"
-              src={job?.image}
+              src={job?.logoUrl}
               alt="Company Logo"
             />
             <div className="m-6 max-sm:my-4 max-sm:mx-0">
-              <h1 className="text-[#25324B] text-3xl font-semibold">
+              <h1 className="text-[#25324B] text-3xl font-semibold mb-2">
                 {job?.title}
               </h1>
               <p className="text-[#515B6F] font-normal">
-                {job?.company + job?.location + job?.employment_type}
+                {job?.companyId?.name}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-16">
             <img className="w-8" src="/ShareIcon.png" alt="Share Icon" />
-            <ApplyButton />
+            {hasApplied ? (
+              <Button
+                disabled
+                className="w-44 h-14 text-[#08ac80] bg-[#26b18c1a] font-semibold text-lg"
+              >
+                Applied
+              </Button>
+            ) : (
+              <ApplyButton
+                jobId={id!}
+                questions={job?.questions}
+                onApplied={() => setHasApplied(true)}
+              />
+            )}
           </div>
         </div>
       </section>
 
       <section className="jobDescriptionsInfo bg-[#FFFFFF] w-screen h-1/4 flex justify-center">
         <div className="py-16 max-sm:py-10 w-4/5 grid grid-cols-[2fr_1fr] gap-16 max-sm:gap-8 max-md:grid-cols-1">
-          <div className="discription ">
+          <div className="description ">
             <div>
               <h2 className="text-[#25324B] text-3xl font-semibold">
                 Description
@@ -64,32 +97,66 @@ const JobDescriptions = () => {
             </div>
 
             <div className="job-needs">
-              {job?.job_needs?.map((item: any, index: any) => {
-                const key = Object.keys(item)[0] // "responsibilities", "Who You Are", "Nice To Haves".
-                const list = item[key] // array of strings
-
-                return (
-                  <div key={index} className="mb-8">
-                    <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
-                      {key}
-                    </h2>
-
-                    {list.map((line: any, i: any) => (
-                      <div
-                        key={i}
-                        className="flex items-center max-sm:items-start text-[#515B6F] my-2"
-                      >
-                        <img
-                          className="mr-1"
-                          src="/checkIcon.png"
-                          alt="check Icon"
-                        />
-                        {line}
-                      </div>
-                    ))}
-                  </div>
-                )
-              })}
+              <div className="mb-5">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                  Responsibilities
+                </h2>
+                <div className="mt-2">
+                  {job?.responsibilities?.map((item: any, index: any) => (
+                    <div
+                      key={index}
+                      className="flex items-center max-sm:items-start text-[#515B6F] my-2"
+                    >
+                      <img
+                        className="mr-1 w-5 h-5"
+                        src="/checkIcon.png"
+                        alt="check Icon"
+                      />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-5">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                  Who You Are
+                </h2>
+                <div className="mt-2">
+                  {job?.whoYouAre?.map((item: any, index: any) => (
+                    <div
+                      key={index}
+                      className="flex items-center max-sm:items-start text-[#515B6F] my-2"
+                    >
+                      <img
+                        className="mr-1 w-5 h-5"
+                        src="/checkIcon.png"
+                        alt="check Icon"
+                      />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-5">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                  Nice-To-Haves
+                </h2>
+                <div className="mt-2">
+                  {job?.niceToHaves?.map((item: any, index: any) => (
+                    <div
+                      key={index}
+                      className="flex items-center max-sm:items-start text-[#515B6F] my-2"
+                    >
+                      <img
+                        className="mr-1 w-5 h-5"
+                        src="/checkIcon.png"
+                        alt="check Icon"
+                      />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -103,7 +170,7 @@ const JobDescriptions = () => {
                   Apply Before
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.about_this_role?.apply_before}
+                  {dayjs(job?.dueDate).format('MMMM D, YYYY')}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
@@ -111,7 +178,7 @@ const JobDescriptions = () => {
                   Job Posted On
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.about_this_role?.job_posted_on}
+                  {dayjs(job?.createdAt).format('MMMM D, YYYY')}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
@@ -119,7 +186,7 @@ const JobDescriptions = () => {
                   Job Type
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.about_this_role?.job_type}
+                  {job?.employmentTypes?.[0]}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
@@ -127,7 +194,7 @@ const JobDescriptions = () => {
                   Salary
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.about_this_role?.salary}
+                  {job?.salaryMin} - {job?.salaryMax} {job?.salaryCurrency}
                 </span>
               </div>
             </div>
@@ -136,11 +203,11 @@ const JobDescriptions = () => {
                 Categories
               </h2>
               <div>
-                <span className="text-[#FFB836] bg-[#EB85331A] w-24 inline-block text-base font-semibold rounded-3xl text-center my-4 mr-4">
-                  Marketing
+                <span className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
+                  {job?.categories?.[0]}
                 </span>
-                <span className="text-[#56CDAD] bg-[#56CDAD1A] w-24 inline-block text-base font-semibold rounded-3xl text-center my-4 mr-4">
-                  Design
+                <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
+                  {job?.categories?.[1]}
                 </span>
               </div>
             </div>
@@ -148,24 +215,14 @@ const JobDescriptions = () => {
               <h2 className="text-[#25324B] text-3xl font-semibold">
                 Required Skills
               </h2>
-              <div className="flex flex-wrap">
-                {job?.required_skills.map((item: any, index: any) => {
-                  return (
-                    <span
-                      key={index}
-                      className="text-[#4640DE] p-2 bg-[#F8F8FD] w-fit inline-block text-base font-semibold rounded-3xl text-center my-1 mr-4"
-                    >
-                      {item}
-                    </span>
-                  )
-                })}
-              </div>
             </div>
           </div>
         </div>
       </section>
       <PerksBenefits />
-      <SimilarJops />
+      <div className="bg-[#F8F8FD]">
+        <SimilarJobs job={job} />
+      </div>
     </>
   )
 }

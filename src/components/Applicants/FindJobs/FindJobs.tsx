@@ -74,6 +74,10 @@ function FindJobs() {
     setSearchParams({})
   }
 
+  useEffect(() => {
+    console.log(jops)
+  }, [jops])
+
   return (
     <>
       <FindJobContent

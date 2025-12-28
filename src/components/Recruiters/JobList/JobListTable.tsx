@@ -30,7 +30,18 @@ const JobTable: React.FC<Props> = ({ data }) => {
               >
                 <td className="py-3 px-4">{index + 1}</td>
                 <td className="py-3 px-4">{job.title}</td>
-                <td className="py-3 px-4">{job.status}</td>
+                <td className="py-3 px-4">
+                  <span
+                    className={`inline-flex items-center justify-center w-20 py-1 rounded text-sm font-medium ${
+                      job.status === "closed"
+                        ? "bg-red-100 text-red-600"
+                        : "bg-green-100 text-green-600"
+                    }`}
+                  >
+                    {job.status ?? "live"}
+                  </span>
+                </td>
+
                 <td className="py-3 px-4">
                   {new Date(job.createdAt).toLocaleDateString()}
                 </td>
