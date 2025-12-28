@@ -100,7 +100,6 @@ function App() {
                 <Route path="step-3" element={<Step3 />} />
                 <Route path="step-4" element={<Step4 />} />
               </Route>
-            </Route>
           </Route>
         </Routes>
       </main>
