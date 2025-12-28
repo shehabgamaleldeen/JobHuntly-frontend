@@ -13,7 +13,7 @@ type JobSeekerLoginForm = {
 
 export default function JobSeekerLogin() {
   const navigate = useNavigate();
-  const [errorMsg, setErrorMsg] = useState<string>(""); // for backend errors
+  const [errorMsg, setErrorMsg] = useState<string>(""); 
 
   const {
     register,
@@ -23,7 +23,7 @@ export default function JobSeekerLogin() {
 
   async function onSubmit(data: JobSeekerLoginForm) {
     try {
-      setErrorMsg(""); // reset previous error
+      setErrorMsg(""); 
       console.log("submitted data", data);
 
       const response = await fetch("http://localhost:3000/auth/login", {
@@ -35,7 +35,6 @@ export default function JobSeekerLogin() {
       const result = await response.json();
 
       if (!response.ok) {
-        // display error message returned from backend
         setErrorMsg(result.error || "Login failed");
         return;
       }
@@ -73,7 +72,6 @@ export default function JobSeekerLogin() {
         <p className="text-red-500 text-sm">{String(errors.password.message)}</p>
       )}
 
-      {/* Backend error message */}
       {errorMsg && <p className="text-red-600 text-sm text-center">{errorMsg}</p>}
 
       <button type="submit" className="bg-[#4640DE] text-white py-3">
