@@ -1,6 +1,10 @@
 import { NavLink, Outlet } from 'react-router-dom'
 
-const ApplicantProfileNavbar = () => {
+type ApplicationProps = {
+  [key: string]: any
+}
+
+const ApplicantProfileNavbar = ({ application }: ApplicationProps) => {
   const navLinkStyle = {
     active:
       'text-[#25324B] text-base font-semibold border-b-4 border-[#4640DE] pb-3',
@@ -24,10 +28,10 @@ const ApplicantProfileNavbar = () => {
           }
           to="Q&A"
         >
-          Question And Answers
+          Questions And Answers
         </NavLink>
       </nav>
-      <Outlet />
+      <Outlet context={application} />
     </>
   )
 }

@@ -1,8 +1,8 @@
 const PerksBenefitCard = () => {
   return (
     <>
-      <article className="mt-6">
-        <img src="/PerksIcon.png" alt="PerksImage"></img>
+      <article className="mt-4 p-4 hover:bg-slate-50">
+        <img className="mb-4" src="/PerksIcon.png" alt="PerksImage"></img>
         <h3 className="text-xl text-[#25324B] font-semibold mb-2">
           Full Healthcare
         </h3>
