@@ -19,14 +19,12 @@ import Step1 from './components/Recruiters/JobCreate/Components/Steps/Step1'
 import Step2 from './components/Recruiters/JobCreate/Components/Steps/Step2'
 import Step3 from './components/Recruiters/JobCreate/Components/Steps/Step3'
 import Step4 from './components/Recruiters/JobCreate/Components/Steps/Step4'
-import { DashboardPublicProfile } from './components/Applicants/DashboardPublicProfile/DashboardPublicProfile'
 import MyApplications from './components/Applicants/MyApplications/MyApplications'
 import ApplicantProfile from './components/Recruiters/ApplicantProfile/ApplicantProfile'
 import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
 import DashboardRecruiterSettings from "./components/Recruiters/DashboardSettings/DashboardRecruiterSettings";
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
-import Applicants from './components/Recruiters/Applicants/Applicants'
 import ApplicantsTable from './components/Recruiters/Applicants/ApplicantsTable'
 import './App.css'
 
