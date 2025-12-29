@@ -20,7 +20,7 @@ const JopCard = ({ jop }: JopCardProps) => {
               </span>
               <div>
                 <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
-                  {jop?.employmentTypes?.[0]}
+                  {jop?.employmentTypes}
                 </span>
                 <span className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
                   {jop?.categories?.[0]}
