@@ -24,7 +24,7 @@ type Question = {
 type ApplyButtonProps = {
   questions?: Question[]
   jobId: string
-  onApplied: () => void
+  onApplied?: () => void
 }
 
 type FormValues = {
@@ -138,7 +138,7 @@ export function ApplyButton(props: ApplyButtonProps) {
         {
           loading: 'Submitting your application...',
           success: () => {
-            props.onApplied()
+            props.onApplied?.()
             return 'Application submitted successfully!'
           },
           error: (err: any) => {
