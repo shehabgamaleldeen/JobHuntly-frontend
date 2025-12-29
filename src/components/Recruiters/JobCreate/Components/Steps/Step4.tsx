@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputTitle } from "./InputTitle";
 import { useJobCreateContext } from "../../JobCreateContext";
 import type { Question, QuestionType } from "../../JobCreateContext";
+import ConfirmModal from "./ConfirmModal";
 
 export default function Step4() {
     const navigate = useNavigate();
-    const { updateStep4, jobData } = useJobCreateContext();
+    const { updateStep4, clearStep4, jobData } = useJobCreateContext();
 
-    const [questionType, setQuestionType] = useState<QuestionType>("yesno");
+    const [questionType, setQuestionType] = useState<QuestionType>("YES_NO");
     const [questionText, setQuestionText] = useState("");
     const [questions, setQuestions] = useState<Question[]>([]);
 
@@ -32,12 +33,51 @@ export default function Step4() {
     };
 
     /* ------------------ Submit Step 4 ------------------ */
+    const [confirmJobOpen, setConfirmJobOpen] = useState(false);
+
+    const handleConfirmJob = () => {
+        if (questions.length === 0) {
+            return
+        }
+        setConfirmJobOpen(true);
+    };
+
     const handleSubmit = () => {
         updateStep4({ questions });
 
         console.log("FINAL JOB DATA:", jobData);
 
-        //navigate("/company/job-create/finish");
+        navigate("/company");
+    };
+
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+
+
+    const handleClearStep = () => {
+        if (questions.length === 0) {
+            return
+        }
+        setConfirmDeleteOpen(true);
+    };
+
+    const confirmClear = () => {
+        // Clear local component state
+        setQuestions([]);
+
+        // Clear context (localStorage updates automatically)
+        clearStep4();
+        setConfirmDeleteOpen(false);
+    };
+
+    // Clearing anywhere updates Step 4 UI automatically
+    // Context becomes the single source of truth
+    useEffect(() => {
+        setQuestions(jobData.step4?.questions || []);
+    }, [jobData.step4]);
+
+
+    const goToPreviousStep = () => {
+        navigate("/company/job-create/step-3");
     };
 
     return (
@@ -134,12 +174,12 @@ export default function Step4() {
                             "
                         >
                             {/* TYPE */}
-                            <p className="text-xs md:text-sm font-medium text-gray-600 break-words">
-                                {q.type === "yesno" ? "Yes / No" : "Essay"}
+                            <p className="text-xs md:text-sm font-medium text-gray-600 wrap-break-word">
+                                {q.type === "YES_NO" ? "Yes / No" : "Essay"}
                             </p>
 
                             {/* TEXT */}
-                            <p className="text-sm md:text-base text-gray-800 break-words leading-5">
+                            <p className="text-sm md:text-base text-gray-800 wrap-break-word leading-5">
                                 {q.text}
                             </p>
 
@@ -162,19 +202,60 @@ export default function Step4() {
                 </div>
             </section>
 
-            {/* POST JOB BUTTON */}
-            <section className="flex justify-end pt-4 md:pt-8">
+            <section className="flex justify-between pt-6">
+                {/* Previous Step */}
                 <button
-                    onClick={handleSubmit}
-                    className="
-                        px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8
-                        bg-indigo-600 hover:bg-indigo-700 
-                        text-white rounded-md font-medium text-sm
-                        transition-colors
-                    "
+                    type="button"
+                    onClick={goToPreviousStep}
+                    className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
+                    border border-gray-300
+                    text-sm sm:text-base md:text-lg font-medium text-gray-700
+                    rounded-md hover:bg-gray-50 transition-colors"
                 >
-                    Post Job
+                    Previous Step
                 </button>
+
+                <div className="flex gap-3">
+                    {/* Clear / Reset */}
+                    <button
+                        type="button"
+                        onClick={handleClearStep}
+                        className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
+                        text-sm sm:text-base md:text-lg font-medium text-white
+                        rounded-md bg-red-600 hover:bg-red-700 transition-colors"
+                    >
+                        Clear Step
+                    </button>
+
+                    <ConfirmModal
+                        open={confirmDeleteOpen}
+                        title="Clear Step 4"
+                        message="Are you sure you want to remove all questions? This action cannot be undone."
+                        confirmText="Clear"
+                        onCancel={() => setConfirmDeleteOpen(false)}
+                        onConfirm={confirmClear}
+                    />
+
+                    {/* Post Job Button */}
+                    <button
+                        onClick={handleConfirmJob}
+                        className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
+                        text-sm sm:text-base md:text-lg font-medium text-white
+                        rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors"
+                    >
+                        Post Job
+                    </button>
+
+                    <ConfirmModal
+                        open={confirmJobOpen}
+                        title="Confirm Job Post"
+                        message="Are you sure you want to Post the Job ?"
+                        confirmText="Confirm"
+                        confirmColor="indigo-600"
+                        onCancel={() => setConfirmJobOpen(false)}
+                        onConfirm={handleSubmit}
+                    />
+                </div>
             </section>
         </div>
     );

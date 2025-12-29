@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 /* ------------------------------------------
    TYPES
@@ -15,23 +15,20 @@ export interface Benefit {
 // Step 1 fields
 export type Step1Data = {
     jobTitle: string;
-    fullTime: boolean;
-    partTime: boolean;
-    remote: boolean;
-    internship: boolean;
-    contract: boolean;
-    salaryFrom: string;
-    salaryTo: string;
-    categories: any[]; // Replace with your Category type
-    skills: any[];     // Replace with your Skill type
+    jobType: "full-time" | "part-time" | "contract" | "internship" | "";
+    workplaceModel: "on-site" | "remote" | "hybrid" | "";
+    salaryFrom: number;
+    salaryTo: number;
+    categories: any[];
+    skills: any[];
 };
 
 // Step 2 fields
 export type Step2Data = {
     jobDescription: string;
-    responsibilities: string;
-    whoYouAre: string;
-    niceToHaves: string;
+    responsibilities: string[];
+    whoYouAre: string[];
+    niceToHaves: string[];
 };
 
 // Step 3 fields
@@ -40,7 +37,7 @@ export type Step3Data = {
 };
 
 // Step 4 fields - Application Questions
-export type QuestionType = "yesno" | "essay";
+export type QuestionType = "YES_NO" | "TEXT";
 export type Question = {
     id: number;
     type: QuestionType;
@@ -55,8 +52,8 @@ export type Step4Data = {
 export interface JobPostData {
     step1?: Step1Data;
     step2?: Step2Data;
-    step3: Step3Data; // Always initialized
-    step4: Step4Data; // Always initialized so it is never undefined
+    step3?: Step3Data;
+    step4?: Step4Data;
 }
 
 // Context value type
@@ -66,6 +63,10 @@ export interface JobCreateContextType {
     updateStep2: (data: Step2Data) => void;
     updateStep3: (data: Step3Data) => void;
     updateStep4: (data: Step4Data) => void;
+    clearStep1: () => void;
+    clearStep2: () => void;
+    clearStep3: () => void;
+    clearStep4: () => void;
 }
 
 /* ------------------------------------------
@@ -79,10 +80,26 @@ const JobCreateContext = createContext<JobCreateContextType | undefined>(
    PROVIDER
 -------------------------------------------*/
 export function JobCreateProvider({ children }: { children: React.ReactNode }) {
-    const [jobData, setJobData] = useState<JobPostData>({
-        step3: { benefits: [] },       // default to avoid undefined
-        step4: { questions: [] },      // default so step4 is never undefined
+    // 1. Initialize state from LocalStorage if it exists
+    const [jobData, setJobData] = useState<JobPostData>(() => {
+        const saved = localStorage.getItem("job_create_data");
+        return saved ? JSON.parse(saved) : {
+            step3: { benefits: [] },
+            step4: { questions: [] },
+        };
     });
+
+    // 2. Sync state to LocalStorage whenever jobData updates
+    useEffect(() => {
+        localStorage.setItem("job_create_data", JSON.stringify(jobData));
+
+        return () => {
+            // cleanup when provider unmounts
+            localStorage.removeItem("job_create_data");
+            setJobData({})
+        };
+    }, [jobData]);
+
 
     const updateStep1 = (data: Step1Data) =>
         setJobData((prev) => ({
@@ -108,6 +125,35 @@ export function JobCreateProvider({ children }: { children: React.ReactNode }) {
             step4: { ...data },
         }));
 
+    const clearStep1 = () =>
+        setJobData((prev) => {
+            const updated = { ...prev };
+            delete updated.step1;
+            return updated;
+        });
+
+    const clearStep2 = () =>
+        setJobData((prev) => {
+            const updated = { ...prev };
+            delete updated.step2;
+            return updated;
+        });
+
+    const clearStep3 = () =>
+        setJobData((prev) => {
+            const updated = { ...prev };
+            delete updated.step3;
+            return updated;
+        });
+
+    const clearStep4 = () =>
+        setJobData((prev) => {
+            const updated = { ...prev };
+            delete updated.step4;
+            return updated;
+        });
+
+
     return (
         <JobCreateContext.Provider
             value={{
@@ -116,6 +162,10 @@ export function JobCreateProvider({ children }: { children: React.ReactNode }) {
                 updateStep2,
                 updateStep3,
                 updateStep4,
+                clearStep1,
+                clearStep2,
+                clearStep3,
+                clearStep4
             }}
         >
             {children}
