@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PerksBenefitCard from "../PerksBenefitsCard";
 import { useJobCreateContext } from "../../JobCreateContext";
 import { useNavigate } from "react-router-dom";
 import { InputTitle } from "./InputTitle";
-import ConfirmDeleteModal from "./ConfirmModal";
-import { isStep3Filled } from "./StepsFilledHelpers";
 
 interface Benefit {
     id: number;
@@ -66,14 +64,13 @@ const staticBenefits: Benefit[] = [
 ];
 
 const Step3: React.FC = () => {
+    const { jobData, updateStep3 } = useJobCreateContext();
     const navigate = useNavigate();
-    const { updateStep3, clearStep3, jobData } = useJobCreateContext();
 
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedBenefits, setSelectedBenefits] = useState<Benefit[]>(
         jobData.step3?.benefits || []
     );
-
     const [error, setError] = useState("");
 
     const toggleBenefit = (benefit: Benefit) => {
@@ -108,37 +105,6 @@ const Step3: React.FC = () => {
         updateStep3({ benefits: selectedBenefits });
 
         navigate("/company/job-create/step-4");
-    };
-
-    const [confirmOpen, setConfirmOpen] = useState(false);
-
-
-    const handleClearStep = () => {
-        if (!jobData.step3 || !isStep3Filled(jobData.step3)) {
-            return
-        }
-        setConfirmOpen(true);
-    };
-
-    const confirmClear = () => {
-        // Clear local component state
-        setSelectedBenefits([]);
-        setError("");
-
-        // Clear context (localStorage updates automatically)
-        clearStep3();
-        setConfirmOpen(false);
-    };
-
-    // Clearing anywhere updates Step 3 UI automatically
-    // Context becomes the single source of truth
-    useEffect(() => {
-        setSelectedBenefits(jobData.step3?.benefits || []);
-    }, [jobData.step3]);
-
-
-    const goToPreviousStep = () => {
-        navigate("/company/job-create/step-2");
     };
 
     return (
@@ -193,11 +159,9 @@ const Step3: React.FC = () => {
                                 return (
                                     <div
                                         key={benefit.id}
-                                        className={`
-                                            cursor-pointer p-3 border rounded-md flex justify-between 
-                                            items-center ${selected
-                                                ? "border-indigo-600 bg-indigo-50"
-                                                : "border-gray-300"
+                                        className={`cursor-pointer p-3 border rounded-md flex justify-between items-center ${selected
+                                            ? "border-indigo-600 bg-indigo-50"
+                                            : "border-gray-300"
                                             }`}
                                         onClick={() => toggleBenefit(benefit)}
                                     >
@@ -225,51 +189,16 @@ const Step3: React.FC = () => {
                 </div>
             )}
 
-            <section className="flex justify-between pt-6">
-                {/* Previous Step */}
+            {/* Submit */}
+            <section className="flex justify-end">
                 <button
-                    type="button"
-                    onClick={goToPreviousStep}
-                    className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
-                    border border-gray-300
-                    text-sm sm:text-base md:text-lg font-medium text-gray-700
-                    rounded-md hover:bg-gray-50 transition-colors"
+                    type="submit"
+                    className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8
+                    self-end rounded-md font-medium text-white transition-colors text-sm
+                    bg-indigo-600 hover:bg-indigo-700"
                 >
-                    Previous Step
+                    Next Step
                 </button>
-
-                <div className="flex gap-3">
-                    {/* Clear / Reset */}
-                    <button
-                        type="button"
-                        onClick={handleClearStep}
-                        className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
-                        text-sm sm:text-base md:text-lg font-medium text-white
-                        rounded-md bg-red-600 hover:bg-red-700 transition-colors"
-                    >
-                        Clear Step
-                    </button>
-
-                    <ConfirmDeleteModal
-                        open={confirmOpen}
-                        title="Clear Step 3"
-                        message="Are you sure you want to remove all selected benefits? This action cannot be undone."
-                        confirmText="Clear"
-                        onCancel={() => setConfirmOpen(false)}
-                        onConfirm={confirmClear}
-                    />
-
-
-                    {/* Next Step */}
-                    <button
-                        type="submit"
-                        className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
-                        text-sm sm:text-base md:text-lg font-medium text-white
-                        rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors"
-                    >
-                        Next Step
-                    </button>
-                </div>
             </section>
         </form>
     );
