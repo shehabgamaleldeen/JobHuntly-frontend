@@ -9,7 +9,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
   useEffect(() => {
     if (query.trim() === "") {
-      onSearch(""); // reset
+      onSearch(""); 
     }
   }, [query, onSearch]);
 
