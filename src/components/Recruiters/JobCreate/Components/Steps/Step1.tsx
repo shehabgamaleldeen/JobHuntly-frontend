@@ -1,12 +1,13 @@
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { InputTitle } from "./InputTitle";
 import { useJobCreateContext, type Step1Data } from "../../JobCreateContext";
 import { useEffect, useState } from "react";
 import ConfirmDeleteModal from "./ConfirmModal";
 import { isStep1Filled } from "./StepsFilledHelpers";
 import { getSkills } from "@/services/jobService";
+import { type QuestionType } from "../../JobCreateContext";
 
 type categoryOption = {
     value: string;
@@ -44,6 +45,116 @@ const workplaceModels = [
 
 export default function Step1() {
     const [skillsOptions, setSkillsOptions] = useState<skillOption[]>([]);
+    const { jobId } = useParams(); // Get ID from URL
+    const {
+        jobData,
+        updateStep1,
+        updateStep2,
+        updateStep3,
+        updateStep4,
+        clearStep1,
+        setJobId
+    } = useJobCreateContext();
+
+    const navigate = useNavigate();
+    const [confirmOpen, setConfirmOpen] = useState(false);
+
+    // Fetch Job at     ---> EDIT MODE <---
+    useEffect(() => {
+        // Only fetch if:
+        // 1. We have a jobId in the URL
+        // 2. We haven't already loaded this specific job into context (prevents loops)
+        if (jobId && jobData._id !== jobId) {
+            const fetchJobForEdit = async () => {
+                try {
+                    // Call your backend API
+                    // const response = await getJobById(jobId);
+                    // const job = response.data; 
+
+                    // MOCK DATA for demonstration (Replace with actual API response)
+                    // You need to map Backend DB keys -> Frontend Context keys
+                    const job = {
+                        _id: jobId,
+                        jobTitle: "Senior React Dev",
+                        jobType: "Full-Time",
+                        workplaceModel: "On-Site",
+                        salaryFrom: 20,
+                        salaryTo: 500,
+                        categories: ["Design", "Sales"],
+                        skills: ["694eb7f29491b725b3b12501", "694eb8059491b725b3b12502"],
+                        jobDescription: "694eb7f29491b725b3b12501http:/aaaaaaaaaa3daaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                        responsibilities: ["Design11111111111111", "Sales1111111111111111"],
+                        whoYouAre: ["694eb7f29491b725b3b12501", "694eb7f29491b725b3b12501"],
+                        niceToHaves: ["694eb7f29491b725b3b12501", "694eb7f29491b725b3b12501"],
+                        benefits: [
+                            {
+                                id: 1,
+                                icon: "/public/images/Perks/PerksHealth.png",
+                                title: "Full Healthcare",
+                                description:
+                                    "We believe in thriving communities and that starts with our team being happy and healthy.",
+                            },
+                            {
+                                id: 2,
+                                icon: "/public/images/Perks/PerksVacation.png",
+                                title: "Unlimited Vacation",
+                                description:
+                                    "We believe you should have a flexible schedule that makes space for family, wellness, and fun.",
+                            },
+                        ],
+                        questions: [
+                            {
+                                id: 1,
+                                type: "YES_NO" as QuestionType,
+                                text: "Do you have +2 YOE in .NET ?"
+                            },
+                            {
+                                id: 2,
+                                type: "TEXT" as QuestionType,
+                                text: "Talk briefly about your latest experiences"
+                            }
+                        ]
+                    };
+
+                    console.log("Hydrating Context with Job Data...");
+
+                    // Update ID
+                    setJobId(job._id);
+
+                    // Update Step 1
+                    updateStep1({
+                        jobTitle: job.jobTitle,
+                        jobType: job.jobType,
+                        workplaceModel: job.workplaceModel, // Map DB field to Frontend field
+                        salaryFrom: job.salaryFrom,
+                        salaryTo: job.salaryTo,
+                        categories: job.categories,
+                        skills: job.skills // Assuming this is an array of IDs ["id1", "id2"],
+                    });
+
+                    // Update Step 2 (Even though we are on Step 1 page, we load ALL data)
+                    updateStep2({
+                        jobDescription: job.jobDescription,
+                        responsibilities: job.responsibilities,
+                        whoYouAre: job.whoYouAre,
+                        niceToHaves: job.niceToHaves
+                    });
+
+                    updateStep3({
+                        benefits: job.benefits
+                    });
+
+                    updateStep4({
+                        questions: job.questions
+                    });
+
+                } catch (error) {
+                    console.error("Failed to load job for editing", error);
+                }
+            };
+            fetchJobForEdit();
+        }
+    }, [jobId, jobData._id, setJobId, updateStep1, updateStep2]);
 
     // Fetch skills from your API
     useEffect(() => {
@@ -66,13 +177,9 @@ export default function Step1() {
                 console.error("Failed to fetch skills:", error);
             }
         };
-
         fetchSkills();
     }, []);
 
-    const navigate = useNavigate();
-    const { updateStep1, clearStep1, jobData } = useJobCreateContext();
-    const [confirmOpen, setConfirmOpen] = useState(false);
 
     const {
         register,

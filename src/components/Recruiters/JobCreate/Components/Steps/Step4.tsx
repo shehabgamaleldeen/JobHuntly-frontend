@@ -4,12 +4,12 @@ import { InputTitle } from "./InputTitle";
 import { useJobCreateContext } from "../../JobCreateContext";
 import type { Question, QuestionType } from "../../JobCreateContext";
 import ConfirmModal from "./ConfirmModal";
-import { postNewJob } from "@/services/jobService";
+import { postNewJob, updateJob } from "@/services/jobService";
 import type { JobPostPayload } from "@/types/job";
 
 export default function Step4() {
     const navigate = useNavigate();
-    const { updateStep4, clearStep4, jobData } = useJobCreateContext(); // Added clearAllData
+    const { updateStep4, clearStep4, clearAllData, jobData } = useJobCreateContext(); // Added clearAllData
 
     const [isSubmitting, setIsSubmitting] = useState(false); // Add loading state
 
@@ -53,6 +53,7 @@ export default function Step4() {
         try {
             // By casting to 'JobPostPayload', TS will check if you missed anything
             const payload: JobPostPayload = {
+                _id: jobData._id,
 
                 // GRABBED FROM TOKEN  -------------------------------------->
                 companyId: "6581a2b3c4d5e6f7a8b9c0d1",
@@ -89,11 +90,30 @@ export default function Step4() {
                 }))
             };
 
-            const response = await postNewJob(payload);
-
-            if (response.status === 201 || response.status === 200) {
-                navigate("/company");
+            if (jobData._id) {
+                const response = await updateJob(payload);
+                console.log("Job Updated Successfully");
+                if (response.status === 201 || response.status === 200) {
+                    // navigate first then clear local storage + context
+                    // because clearing steps data from context triggers re-rendering and causes
+                    // the firing of StepGuard between Step4 & 1
+                    navigate("/company");
+                    setTimeout(() => {
+                        clearAllData();
+                    }, 100);
+                }
+            } else {
+                const response = await postNewJob(payload);
+                console.log("Job Created Successfully");
+                if (response.status === 201 || response.status === 200) {
+                    navigate("/company");
+                    setTimeout(() => {
+                        clearAllData();
+                    }, 100);
+                }
             }
+
+
         } catch (error: any) {
             console.error("Post Job Error:", error.response?.data || error.message);
             alert(error.response?.data?.message || "Failed to post job");

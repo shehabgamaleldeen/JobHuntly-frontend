@@ -12,6 +12,7 @@ export interface JobBenefit {
 }
 
 export interface JobPostPayload {
+    _id?:string,
     companyId: string;
     title: string;
     employmentType: string;
