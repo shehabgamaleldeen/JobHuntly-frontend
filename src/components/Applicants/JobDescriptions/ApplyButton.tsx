@@ -137,7 +137,10 @@ export function ApplyButton(props: ApplyButtonProps) {
         ),
         {
           loading: 'Submitting your application...',
-          success: 'Application submitted successfully!',
+          success: () => {
+            props.onApplied()
+            return 'Application submitted successfully!'
+          },
           error: (err: any) => {
             if (err.response) {
               if (err.response.status === 401) {
@@ -161,8 +164,6 @@ export function ApplyButton(props: ApplyButtonProps) {
           },
         }
       )
-      props.onApplied()
-
       setOpen(false)
       reset()
     } catch (error) {
