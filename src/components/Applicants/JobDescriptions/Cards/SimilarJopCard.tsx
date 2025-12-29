@@ -17,7 +17,7 @@ const SimilarJopCard = ({ job }: SimilarJobCardProps) => {
             <span className=" text-[#515B6F] my-2">{job?.companyId?.name}</span>
             <div>
               <span className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
-                {job?.employmentTypes?.[0]}
+                {job?.employmentTypes}
               </span>
               <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
                 {job?.categories?.[0]}
