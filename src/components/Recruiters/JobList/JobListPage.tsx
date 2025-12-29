@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import JobListTable from "./JobListTable";
 import DashboardSidebarRecruiterComponent from "../Dashboard/DashboardSidebarRecruiterComponent";
+import instance from '@/components/AxiosConfig/instance'
 
 export interface Job {
   _id: string;
@@ -44,8 +45,7 @@ export default function JobListPage() {
       setError(null);
 
       const queryString = searchParams.toString();
-      const res = await axios.get(
-        `http://localhost:3000/companies/${companyId}/jobs?${queryString}`
+      const res = await instance.get(`/companies/${companyId}/jobs?${queryString}`
       );
 
       setJobs(res.data.data.data);
