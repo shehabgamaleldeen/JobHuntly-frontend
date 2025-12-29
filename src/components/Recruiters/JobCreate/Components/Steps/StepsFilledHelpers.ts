@@ -44,9 +44,8 @@ export const isStep2Filled = (step2: Step2Data | undefined): boolean => {
         whoYouAre: Array.isArray(step2.whoYouAre) &&
             step2.whoYouAre.length > 0 &&
             step2.whoYouAre.every(r => r?.trim() !== ""),
-        // niceToHaves is OPTIONAL - only check if not empty that all items are filled
-        niceToHaves: !Array.isArray(step2.niceToHaves) ||
-            step2.niceToHaves.length === 0 ||
+        niceToHaves: Array.isArray(step2.niceToHaves) &&
+            step2.niceToHaves.length > 0 &&
             step2.niceToHaves.every(r => r?.trim() !== "")
     };
 
