@@ -92,7 +92,7 @@ function App() {
               <Route index element={<CompanyDashboard />} />
 
               <Route
-                path="job-create"
+                path="jobs"
                 element={
                   <JobCreateProvider>
                     <JobCreateLayout />

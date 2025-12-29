@@ -150,11 +150,11 @@ export default function Step4() {
 
 
     const goToPreviousStep = () => {
-        navigate("/company/job-create/step-3");
+        navigate("/company/jobs/step-3");
     };
 
     return (
-        <div className="job-create-step4">
+        <div className="step4">
 
             {/* PAGE TITLE */}
             <section className="mb-6 md:mb-8">

@@ -215,7 +215,7 @@ export default function Step1() {
         updateStep1(data);
 
         setTimeout(() => {
-            navigate("/company/job-create/step-2");
+            navigate("/company/jobs/step-2");
         }, 100);
     };
 
@@ -241,7 +241,7 @@ export default function Step1() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="job-create-step1">
+        <form onSubmit={handleSubmit(onSubmit)} className="step1">
             {/* Basic Information */}
             <section className="mb-4 md:mb-8">
                 <InputTitle title="Basic Information" description="This information will be displayed publicly" />

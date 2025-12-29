@@ -107,7 +107,7 @@ const Step3: React.FC = () => {
         console.log("FORM DATA:", selectedBenefits);
         updateStep3({ benefits: selectedBenefits });
 
-        navigate("/company/job-create/step-4");
+        navigate("/company/jobs/step-4");
     };
 
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -138,11 +138,11 @@ const Step3: React.FC = () => {
 
 
     const goToPreviousStep = () => {
-        navigate("/company/job-create/step-2");
+        navigate("/company/jobs/step-2");
     };
 
     return (
-        <form onSubmit={handleSubmit} className="job-create-step3">
+        <form onSubmit={handleSubmit} className="step3">
             {/* Left section */}
             <section className="mb-4 md:mb-8">
                 <InputTitle
