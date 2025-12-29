@@ -1,30 +1,18 @@
-import axios from 'axios';
+// 1. Import the instance (default export) from your local file
+import instance from '@/components/AxiosConfig/instance';
 import { type JobPostPayload } from '../types/job';
 
-const API_BASE_URL = 'http://localhost:3000';
+// No need for API_BASE_URL here anymore as it's inside the instance
 
 export const postNewJob = async (payload: JobPostPayload): Promise<any> => {
-    // Replace with your actual auth logic
-    const token = localStorage.getItem('token'); 
-    
-    const response = await axios.post(`${API_BASE_URL}/jobs`, payload, {
-        headers: {
-            'Content-Type': 'application/json',
-            // Authorization: `Bearer ${token}`
-        }
-    });
+    // 2. Use axiosInstance instead of axios
+    // Notice we only use the relative path '/jobs'
+    const response = await instance.post('/jobs', payload);
     return response;
 };
 
 export const getSkills = async (): Promise<any> => {
-    // Replace with your actual auth logic
-    const token = localStorage.getItem('token'); 
-    
-    const response = await axios.get(`${API_BASE_URL}/company/job-create/step-1`, {
-        headers: {
-            'Content-Type': 'application/json',
-            // Authorization: `Bearer ${token}`
-        }
-    });
+    // 3. The instance already handles the baseURL
+    const response = await instance.get('/company/job-create/step-1');
     return response;
 };
