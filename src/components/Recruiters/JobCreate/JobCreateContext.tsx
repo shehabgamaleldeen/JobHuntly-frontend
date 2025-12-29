@@ -6,8 +6,8 @@ import { createContext, useContext, useEffect, useState, useCallback } from "rea
 
 export type Step1Data = {
     jobTitle: string;
-    jobType: "Full-Time" | "Part-Time" | "Contract" | "Internship" | "";
-    workplaceModel: "On-Site" | "Remote" | "Hybrid" | "";
+    jobType: string;
+    workplaceModel: string;
     salaryFrom: number;
     salaryTo: number;
     categories: string[];
@@ -43,6 +43,7 @@ export type Step4Data = {
 };
 
 export interface JobPostData {
+    _id?: string;
     step1?: Step1Data;
     step2?: Step2Data;
     step3?: Step3Data;
@@ -60,6 +61,7 @@ export interface JobCreateContextType {
     clearStep3: () => void;
     clearStep4: () => void;
     clearAllData: () => void;
+    setJobId: (id: string) => void;
 }
 
 /* ------------------------------------------
@@ -72,46 +74,26 @@ const JobCreateContext = createContext<JobCreateContextType | undefined>(undefin
 -------------------------------------------*/
 export function JobCreateProvider({ children }: { children: React.ReactNode }) {
     const [jobData, setJobData] = useState<JobPostData>(() => {
-        // 1. Get Navigation Type (Reload, Back, Forward, or New Entry)
-        const perfEntries = window.performance.getEntriesByType("navigation");
-        let navType = "navigate"; // default
 
-        if (perfEntries.length > 0) {
-            const navEntry = perfEntries[0] as PerformanceNavigationTiming;
-            navType = navEntry.type;
-        }
-
-        // ---------------------------------------------------------
-        // CASE A: Page Reload or History Traversal (Back/Forward)
-        // ---------------------------------------------------------
-        // Always keep data. The user is just refreshing or moving through history.
-        if (navType === "reload" || navType === "back_forward") {
-            console.log("🔄 Reload or History detected. Keeping data.");
-            const saved = localStorage.getItem("job_create_data");
-            return saved ? JSON.parse(saved) : {};
-        }
-
-        // ---------------------------------------------------------
-        // CASE B: Fresh Navigation (Link Click or Manual URL)
-        // ---------------------------------------------------------
-        const currentPath = window.location.pathname;
-
-        // If the user enters specifically at "Step 1", treat it as a NEW session.
-        // This solves the issue: clicking "Create Job" from Dashboard -> Step 1 -> Wipes Data.
-        if (currentPath.includes("/step-1")) {
-            console.log("🆕 New Entry at Step 1. Clearing old draft.");
-            localStorage.removeItem("job_create_data");
-            return {};
-        }
-
-        // If the user enters at Step 2, 3, or 4 directly (e.g., typed URL),
-        // we assume they are trying to RESUME an existing draft.
-        console.log("➡️ Deep link entry (Step 2+). Trying to restore draft.");
+        // check if there is a draft in progress.
         const saved = localStorage.getItem("job_create_data");
-        return saved ? JSON.parse(saved) : {};
+        if (saved) {
+            try {
+                console.log("➡️ Restoring existing job draft from storage.");
+                return JSON.parse(saved);
+            } catch (e) {
+                console.error("Failed to parse job draft:", e);
+                return {};
+            }
+        }
+        return {};
     });
 
-    // ... Rest of your useEffect and update functions ...
+    const setJobId = useCallback((id: string) => {
+        setJobData((prev) => ({ ...prev, _id: id }));
+    }, []);
+
+    // On any change on the jobData context
     useEffect(() => {
         if (Object.keys(jobData).length > 0) {
             localStorage.setItem("job_create_data", JSON.stringify(jobData));
@@ -159,6 +141,7 @@ export function JobCreateProvider({ children }: { children: React.ReactNode }) {
                 jobData,
                 updateStep1, updateStep2, updateStep3, updateStep4,
                 clearStep1, clearStep2, clearStep3, clearStep4,
+                setJobId,
                 clearAllData
             }}
         >

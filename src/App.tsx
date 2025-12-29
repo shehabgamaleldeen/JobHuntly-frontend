@@ -101,6 +101,7 @@ function App() {
               >
                 <Route index element={<StepGuard step={1}><Step1 /></StepGuard>} />
                 <Route path="step-1" element={<StepGuard step={1}><Step1 /></StepGuard>} />
+                <Route path="step-1/:jobId" element={<StepGuard step={1}><Step1 /></StepGuard>} />
                 <Route path="step-2" element={<StepGuard step={2}><Step2 /></StepGuard>} />
                 <Route path="step-3" element={<StepGuard step={3}><Step3 /></StepGuard>} />
                 <Route path="step-4" element={<StepGuard step={4}><Step4 /></StepGuard>} />
