@@ -189,7 +189,7 @@ export default function Step2() {
 
     const onSubmit = (data: Step2Data) => {
         updateStep2(data);
-        navigate("/company/job-create/step-3");
+        navigate("/company/jobs/step-3");
     };
 
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -219,12 +219,12 @@ export default function Step2() {
     };
 
     const goToPreviousStep = () => {
-        navigate("/company/job-create/step-1");
+        navigate("/company/jobs/step-1");
     };
 
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="job-create-step2">
+        <form onSubmit={handleSubmit(onSubmit)} className="step2">
             <InputTitle title="Details" description="Add the description and key requirements for this role" />
             <hr className="border-[#D6DDEB] my-6 md:my-8" />
 
