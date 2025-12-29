@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputTitle } from "./InputTitle";
 import { useJobCreateContext } from "../../JobCreateContext";
 import type { Question, QuestionType } from "../../JobCreateContext";
+import ConfirmModal from "./ConfirmModal";
+import { postNewJob } from "@/services/jobService";
+import type { JobPostPayload } from "@/types/job";
 
 export default function Step4() {
     const navigate = useNavigate();
-    const { updateStep4, jobData } = useJobCreateContext();
+    const { updateStep4, clearStep4, jobData } = useJobCreateContext(); // Added clearAllData
 
-    const [questionType, setQuestionType] = useState<QuestionType>("yesno");
+    const [isSubmitting, setIsSubmitting] = useState(false); // Add loading state
+
+    const [questionType, setQuestionType] = useState<QuestionType>("YES_NO");
     const [questionText, setQuestionText] = useState("");
     const [questions, setQuestions] = useState<Question[]>([]);
 
@@ -32,12 +37,100 @@ export default function Step4() {
     };
 
     /* ------------------ Submit Step 4 ------------------ */
-    const handleSubmit = () => {
+    const [confirmJobOpen, setConfirmJobOpen] = useState(false);
+
+    const handleConfirmJob = () => {
+        if (questions.length === 0) {
+            return
+        }
+        setConfirmJobOpen(true);
+    };
+
+    const handleSubmit = async () => {
         updateStep4({ questions });
+        setIsSubmitting(true);
 
-        console.log("FINAL JOB DATA:", jobData);
+        try {
+            // By casting to 'JobPostPayload', TS will check if you missed anything
+            const payload: JobPostPayload = {
 
-        //navigate("/company/job-create/finish");
+                // GRABBED FROM TOKEN  -------------------------------------->
+                companyId: "6581a2b3c4d5e6f7a8b9c0d1",
+
+                // Use ! if you are 100% sure StepGuard prevents getting here without these values
+                // Otherwise use || "" to provide a safe fallback string
+                title: jobData.step1!.jobTitle!,
+                employmentType: jobData.step1!.jobType!,
+                workplaceModel: jobData.step1!.workplaceModel!,
+
+                salaryMin: Number(jobData.step1?.salaryFrom) || 0,
+                salaryMax: Number(jobData.step1?.salaryTo) || 1,
+                salaryCurrency: "EGP",
+
+                // Ensure these match the array requirement in your interface
+                categories: jobData.step1?.categories || [],
+                skillsIds: jobData.step1?.skills || [],
+
+                postDate: new Date(),
+
+                description: jobData.step2!.jobDescription!,
+                responsibilities: jobData.step2?.responsibilities || [],
+                whoYouAre: jobData.step2?.whoYouAre || [],
+                niceToHaves: jobData.step2?.niceToHaves || [],
+
+                benefits: jobData.step3?.benefits || [],
+                isLive: true,
+
+                // Map frontend 'text' to backend 'questionText'
+                // and match the 'TEXT' | 'YES_NO' type exactly
+                questions: questions.map(q => ({
+                    questionText: q.text,
+                    type: q.type
+                }))
+            };
+
+            const response = await postNewJob(payload);
+
+            if (response.status === 201 || response.status === 200) {
+                navigate("/company");
+            }
+        } catch (error: any) {
+            console.error("Post Job Error:", error.response?.data || error.message);
+            alert(error.response?.data?.message || "Failed to post job");
+        } finally {
+            setIsSubmitting(false);
+            setConfirmJobOpen(false);
+        }
+    };
+
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+
+
+    const handleClearStep = () => {
+        if (questions.length === 0) {
+            return
+        }
+        setConfirmDeleteOpen(true);
+    };
+
+    const confirmClear = () => {
+        // Clear local component state
+        setQuestions([]);
+
+        // Clear context (localStorage updates automatically)
+        clearStep4();
+        setConfirmDeleteOpen(false);
+    };
+
+    // Clearing anywhere updates Step 4 UI automatically
+    // Context becomes the single source of truth
+    useEffect(() => {
+        setQuestions(jobData.step4?.questions || []);
+    }, [jobData.step4]);
+
+
+    const goToPreviousStep = () => {
+        navigate("/company/job-create/step-3");
     };
 
     return (
@@ -60,18 +153,19 @@ export default function Step4() {
                     description="Choose a type and write the question text"
                 />
 
-                <div className="w-2/3 space-y-3 mt-3">
+                <div className="flex flex-col space-y-8 mt-3">
                     {/* Question Type */}
                     <select
                         value={questionType}
                         onChange={(e) => setQuestionType(e.target.value as QuestionType)}
                         className="
-                            w-full text-xs lg:text-base p-3 
+                            w-[150px]
+                            text-xs lg:text-base p-3 
                             border-2 border-[#D6DDEB] rounded
                         "
                     >
-                        <option value="yes_no">Yes / No Question</option>
-                        <option value="essay">Essay Question</option>
+                        <option value="YES_NO">Yes / No Question</option>
+                        <option value="TEXT">Essay Question</option>
                     </select>
 
                     {/* Question Text Input */}
@@ -80,7 +174,7 @@ export default function Step4() {
                         onChange={(e) => setQuestionText(e.target.value)}
                         placeholder="Write your question here..."
                         className="
-                            w-full text-xs lg:text-base p-4 
+                            w-14/16 text-xs lg:text-base p-4 
                             h-[90px] md:h-[120px]
                             border-2 border-[#D6DDEB] rounded resize-none
                         "
@@ -91,6 +185,7 @@ export default function Step4() {
                         onClick={handleAddQuestion}
                         type="button"
                         className="
+                            w-[150px]
                             px-4 py-2 md:px-6 md:py-3 
                             bg-indigo-600 hover:bg-indigo-700
                             text-white rounded-md text-sm font-medium
@@ -132,12 +227,12 @@ export default function Step4() {
                             "
                         >
                             {/* TYPE */}
-                            <p className="text-xs md:text-sm font-medium text-gray-600 break-words">
-                                {q.type === "yesno" ? "Yes / No" : "Essay"}
+                            <p className="text-xs md:text-sm font-medium text-gray-600 wrap-break-word">
+                                {q.type === "YES_NO" ? "Yes / No" : "Essay"}
                             </p>
 
                             {/* TEXT */}
-                            <p className="text-sm md:text-base text-gray-800 break-words leading-5">
+                            <p className="text-sm md:text-base text-gray-800 wrap-break-word leading-5">
                                 {q.text}
                             </p>
 
@@ -160,19 +255,61 @@ export default function Step4() {
                 </div>
             </section>
 
-            {/* POST JOB BUTTON */}
-            <section className="flex justify-end pt-4 md:pt-8">
+            <section className="flex justify-between pt-6">
+                {/* Previous Step */}
                 <button
-                    onClick={handleSubmit}
-                    className="
-                        px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8
-                        bg-indigo-600 hover:bg-indigo-700 
-                        text-white rounded-md font-medium text-sm
-                        transition-colors
-                    "
+                    type="button"
+                    onClick={goToPreviousStep}
+                    className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
+                    border border-gray-300
+                    text-sm sm:text-base md:text-lg font-medium text-gray-700
+                    rounded-md hover:bg-gray-50 transition-colors"
                 >
-                    Post Job
+                    Previous Step
                 </button>
+
+                <div className="flex gap-3">
+                    {/* Clear / Reset */}
+                    <button
+                        type="button"
+                        onClick={handleClearStep}
+                        className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
+                        text-sm sm:text-base md:text-lg font-medium text-white
+                        rounded-md bg-red-600 hover:bg-red-700 transition-colors"
+                    >
+                        Clear Step
+                    </button>
+
+                    <ConfirmModal
+                        open={confirmDeleteOpen}
+                        title="Clear Step 4"
+                        message="Are you sure you want to remove all questions? This action cannot be undone."
+                        confirmText="Clear"
+                        onCancel={() => setConfirmDeleteOpen(false)}
+                        onConfirm={confirmClear}
+                    />
+
+                    {/* Post Job Button */}
+                    <button
+                        onClick={handleConfirmJob}
+                        disabled={isSubmitting}
+                        className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
+                        text-sm sm:text-base md:text-lg font-medium text-white
+                        rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors disabled:bg-indigo-300"
+                    >
+                        {isSubmitting ? "Posting..." : "Post Job"}
+                    </button>
+
+                    <ConfirmModal
+                        open={confirmJobOpen}
+                        title="Confirm Job Post"
+                        message="Are you sure you want to Post the Job ?"
+                        confirmText="Confirm"
+                        confirmColor="indigo-600"
+                        onCancel={() => setConfirmJobOpen(false)}
+                        onConfirm={handleSubmit}
+                    />
+                </div>
             </section>
         </div>
     );
