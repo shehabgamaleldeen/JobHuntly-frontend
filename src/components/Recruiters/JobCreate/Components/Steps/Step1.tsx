@@ -188,7 +188,7 @@ export default function Step1() {
                             type="number"
                             placeholder="From"
                             className="text-[11px] lg:text-base 
-                            w-[70px] sm:w-[120px] md:w-[150px] lg:w-[130px] h-7 md:h-10 p-3 sm:p-4 border-2 border-[#D6DDEB] rounded"
+                            w-[70px] sm:w-[100px] md:w-[150px] lg:w-[130px] h-7 md:h-10 p-3 sm:p-4 border-2 border-[#D6DDEB] rounded"
                             {...register("salaryFrom", { required: "Required" })}
                         />
                         {/* reserved error space: show message or a non-breaking space so height stays same */}
@@ -249,15 +249,21 @@ export default function Step1() {
                                 value={field.value}
                                 onChange={(val) => field.onChange(val)}
                                 placeholder="Select Job Categories"
-                                className="text-[8px] sm:text-xs lg:text-base w-10/11 sm:w-12/15 md:w-2/3"
+                                className="text-[12px] sm:text-sm lg:text-base w-10/11 sm:w-12/15 md:w-2/3"
                                 classNames={{
-                                    // 1. Force the value container to have specific padding
-                                    valueContainer: () => "px-[2px] md:px-[4px]",
+                                    // 1. Keep your value container padding
+                                    valueContainer: () => "px-[0px] md:px-[2px] mx-[0px] md:mx-[2px]",
 
-                                    // 2. Make indicators responsive using Tailwind prefixes
-                                    // Example: very small padding on mobile, slightly larger on desktop
-                                    dropdownIndicator: () => "p-0 sm:p-1 lg:p-2",
-                                    clearIndicator: () => "p-0 sm:p-1 lg:p-2"
+                                    // 2. Resize the "X" button (Clear Indicator)
+                                    // p-0 removes extra space.
+                                    // [&>svg]:w-3 forces the icon to be tiny (12px) on mobile.
+                                    // md:[&>svg]:w-5 brings it back to normal (20px) on desktop.
+                                    clearIndicator: () =>
+                                        "p-1 md:p-2 [&>svg]:w-3 [&>svg]:h-3 md:[&>svg]:w-5 md:[&>svg]:h-5",
+
+                                    // 3. Resize the "Down Arrow" button (Dropdown Indicator)
+                                    dropdownIndicator: () =>
+                                        "p-1 md:p-2 [&>svg]:w-3 [&>svg]:h-3 md:[&>svg]:w-5 md:[&>svg]:h-5"
                                 }}
                                 classNamePrefix="rs"
                             />
@@ -294,7 +300,7 @@ export default function Step1() {
                                 value={field.value}
                                 onChange={(val) => field.onChange(val)}
                                 placeholder="Select Required Skills"
-                                className="text-[10px] sm:text-xs lg:text-base w-14/15 sm:w-12/15 md:w-2/3"
+                                className="text-[8px] sm:text-xs lg:text-base w-14/15 sm:w-12/15 md:w-2/3"
                                 classNamePrefix="rs"
                             />
                         )}
