@@ -36,9 +36,7 @@ const JobDescriptions = () => {
   }, [id])
 
   useEffect(() => {
-    if (job?.hasApplied) {
-      setHasApplied(true)
-    }
+    setHasApplied(Boolean(job?.hasApplied))
   }, [job])
 
   // for debbuging
