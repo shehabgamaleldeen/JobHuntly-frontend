@@ -27,7 +27,7 @@ import DashboardRecruiterSettings from "./components/Recruiters/DashboardSetting
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
 import ApplicantsTable from './components/Recruiters/Applicants/ApplicantsTable'
 import './App.css'
-import { StepGuard } from './components/Recruiters/JobCreate/Components/Steps/StepGaurd'
+import { StepGuard } from './components/Recruiters/JobCreate/Components/Steps/StepGuard'
 import ScrollToTop from './components/Recruiters/ScrollToTop'
 
 function App() {
