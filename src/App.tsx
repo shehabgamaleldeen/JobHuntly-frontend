@@ -84,15 +84,6 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
 
-            {/* ( shuab ) */}
-              {/* <Route path="applicant-profile/:applicationId" element={<ApplicantProfile />}>
-                <Route index element={<Resume />} />
-                <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
-              </Route>{' '} */}
-
-
-
-
             {/*( moaz )*/}
             <Route path="/dashboard" element={<DashboardSettings />}>
               <Route index element={<div className="text-lg p-4">Dashboard</div>} />
