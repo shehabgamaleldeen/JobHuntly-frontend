@@ -15,6 +15,10 @@ export default function JobCreateHeader() {
             </header>
 
             <nav className="pb-4 sm:pb-2 md:pb-4 lg:pb-8">
+                {/* 1. Default (mobile): flex-col (one column/4 rows)
+                  2. sm (640px) to before md (768px): grid grid-cols-2 (two columns/2 rows)
+                  3. md (768px) and up: flex-row justify-evenly (one row/4 columns)
+                */}
                 <ul className="flex flex-col items-center 
                   sm:grid sm:grid-cols-2 sm:gap-2 sm:p-2 sm:border sm:border-[#D6DDEB] sm:rounded
                   md:flex md:flex-row md:justify-evenly md:gap-0 md:p-0">

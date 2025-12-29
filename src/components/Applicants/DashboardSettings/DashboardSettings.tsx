@@ -6,6 +6,7 @@ import { DashboardUpdateProfile } from './DashboardUpdataProfile';
 import { DashboardPublicProfile } from "../DashboardPublicProfile/DashboardPublicProfile";
 import NotFoundPage from "../../Basic/NotFoundPage";
 import DashboardHelpCenter from "./HelpCenter";
+import MyApplications from "../MyApplications/MyApplications";
 
 
 export default function DashboardSettings(): JSX.Element {
@@ -23,7 +24,7 @@ export default function DashboardSettings(): JSX.Element {
         return <DashboardPublicProfile />;
 
       case "applications":
-        return <div className="text-lg p-4">My Applications Page</div>;
+        return <MyApplications/>
 
       case "help":
         return < DashboardHelpCenter/>

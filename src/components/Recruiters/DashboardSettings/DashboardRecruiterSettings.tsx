@@ -5,8 +5,11 @@ import NotFoundPage from "../../Basic/NotFoundPage";
 import DashboardHelpCenterRecruiter from "./HelpCenterRecruiter";
 import { DashboardUpdateCompanyProfile  } from "./DashboardUpdataCompanyProfile";
 import { DashboardSidebarRecruiterComponent ,type PageKey } from "../Dashboard/DashboardSidebarRecruiterComponent";
-import DashboardCompanyProfile from "../DashboardCompanyProfile/DashboardCompanyProfile";
 import Dashboard from "../Dashboard/Dashboard";
+import CompanyPageRecruiterWrapper from "../DashboardCompanyProfile/CompanyPageRecruiterWrapper";
+import { CompanyHeader } from "./headParts/addPostNav";
+import CompanyLogo  from "../../../assets/images/twiteer.jpg";
+import { JobListing } from "../JobListing/JobListing";
 
 
 export default function DashboardRecruiterSettings(): JSX.Element {
@@ -15,16 +18,16 @@ export default function DashboardRecruiterSettings(): JSX.Element {
   function renderPage(p: PageKey) {
     switch (p) {
       case "dashboard":
-        return <Dashboard/>;
+        return   <Dashboard/>;
 
       case "settings":
         return <DashboardUpdateCompanyProfile />;
 
       case "CompanyProfile":
-        return <DashboardCompanyProfile />;
+        return <CompanyPageRecruiterWrapper />;
 
       case "JobListing":
-        return <div className="text-lg p-4">Job Listing</div>;
+        return  <JobListing/>
 
       case "help":
         return < DashboardHelpCenterRecruiter/>
@@ -40,7 +43,12 @@ export default function DashboardRecruiterSettings(): JSX.Element {
       <DashboardSidebarRecruiterComponent active={page} onNavigate={setPage} />
 
       {/* Main content */}
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-2">
+          <CompanyHeader
+          logo={CompanyLogo}
+          companyName="Nomad"
+          buttonText="Post a job"
+          buttonLink="/company/job-create"/>
         <div className="max-w-6xl mx-auto">{renderPage(page)}</div>
       </main>
     </div>
