@@ -44,6 +44,7 @@ export type Step4Data = {
 
 export interface JobPostData {
     _id?: string;
+    companyId?: string;
     step1?: Step1Data;
     step2?: Step2Data;
     step3?: Step3Data;
@@ -62,6 +63,7 @@ export interface JobCreateContextType {
     clearStep4: () => void;
     clearAllData: () => void;
     setJobId: (id: string) => void;
+    setCompanyId: (id: string) => void;
 }
 
 /* ------------------------------------------
@@ -91,6 +93,10 @@ export function JobCreateProvider({ children }: { children: React.ReactNode }) {
 
     const setJobId = useCallback((id: string) => {
         setJobData((prev) => ({ ...prev, _id: id }));
+    }, []);
+
+    const setCompanyId = useCallback((id: string) => {
+        setJobData((prev) => ({ ...prev, companyId: id }));
     }, []);
 
     // On any change on the jobData context
@@ -141,7 +147,7 @@ export function JobCreateProvider({ children }: { children: React.ReactNode }) {
                 jobData,
                 updateStep1, updateStep2, updateStep3, updateStep4,
                 clearStep1, clearStep2, clearStep3, clearStep4,
-                setJobId,
+                setJobId, setCompanyId,
                 clearAllData
             }}
         >
