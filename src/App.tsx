@@ -23,20 +23,39 @@ import MyApplications from './components/Applicants/MyApplications/MyApplication
 import ApplicantProfile from './components/Recruiters/ApplicantProfile/ApplicantProfile'
 import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
-import DashboardRecruiterSettings from "./components/Recruiters/DashboardSettings/DashboardRecruiterSettings";
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
 import './App.css'
 import ApplicantsPage from './components/Recruiters/Applicants/Applicants'
-import { StepGuard } from './components/Recruiters/JobCreate/Components/Steps/StepGaurd'
-import ScrollToTop from './components/Recruiters/ScrollToTop'
+import { StepGuard } from './components/Recruiters/JobCreate/Components/Steps/StepGuard'
+// import ScrollToTop from './components/Recruiters/ScrollToTop'
+import DashboardPublicProfile from "./components/Applicants/DashboardPublicProfile/DashboardPublicProfile";
+import DashboardHelpCenter from "./components/Applicants/DashboardSettings/HelpCenter";
+import { DashboardUpdateProfile } from './components/Applicants/DashboardSettings/DashboardUpdataProfile'
+import Dashboard from './components/Recruiters/Dashboard/Dashboard'
+import DashboardUpdateCompanyProfile from './components/Recruiters/DashboardSettings/DashboardUpdataCompanyProfile'
+import CompanyPageRecruiterWrapper from './components/Recruiters/DashboardCompanyProfile/CompanyPageRecruiterWrapper'
+import { JobListing } from './components/Recruiters/JobListing/JobListing'
+import DashboardHelpCenterRecruiter from './components/Recruiters/DashboardSettings/HelpCenterRecruiter'
+import DashboardRecruiter from './components/Recruiters/DashboardSettings/DashboardRecruiterSettings'
+import ProfileSettingsTab from './components/Applicants/DashboardSettings/ProfileSettings'
+import LoginSettingsTab from './components/Applicants/DashboardSettings/LoginSettings'
+import CompanyOverviewTab from './components/Recruiters/DashboardSettings/CompanyOverview'
+import CompanySocialLinksTab from './components/Recruiters/DashboardSettings/CompanySocialLinks'
+import JobDetailsTab from './components/Recruiters/JobListing/JobDetails'
+import ApplicantsPage from './components/Recruiters/Applicants/Applicants'
+import LoginCompanySettingsTab from './components/Recruiters/DashboardSettings/LoginCompanySettings'
+import SocialLinksTab from './components/Applicants/DashboardSettings/SocialLinks'
+import ProfileCareerTab from './components/Applicants/DashboardSettings/ProfileCareerTab'
+
+
+
 
 function App() {
-  const location = useLocation()
+ const location = useLocation()
 
-  // Hide navbar on these routes
-  const hideNavbarRoutes = ['/']
+  const showNavbarRoutes = ['/', '/find-jobs', '/browse-companies']
 
-  const shouldShowNavbar = hideNavbarRoutes.includes(location.pathname)
+  const shouldShowNavbar = showNavbarRoutes.includes(location.pathname)
 
   return (
       // Scrolls to top when navigating between pages
@@ -53,7 +72,6 @@ function App() {
 
             {/*Applicants=================================================*/}
             <Route path="/" element={<LandingPage />} />
-            <Route path="/DashboardSettings" element={<DashboardSettings />} />
             <Route path="/find-jobs" element={<FindJobs />} />
             <Route path="/find-jobs/:id" element={<JobDescriptions />} />
             <Route path="/browse-companies" element={<SearchCompanies />} />
@@ -70,7 +88,22 @@ function App() {
 
 
             {/*( moaz )*/}
-            <Route path="/dashboardSettings" element={<DashboardSettings />} />
+            <Route path="/dashboard" element={<DashboardSettings />}>
+              <Route index element={<div className="text-lg p-4">Dashboard</div>} />
+
+              <Route path="settings" element={<DashboardUpdateProfile />}>
+                <Route index element={<ProfileSettingsTab />} />
+                <Route path="career" element={<ProfileCareerTab />} />
+                <Route path="social-links" element={<SocialLinksTab />} />
+                <Route path="login" element={<LoginSettingsTab />} />
+              </Route>
+
+              <Route path="public-profile" element={<DashboardPublicProfile />} />
+              <Route path="applications" element={<MyApplications />} />
+              <Route path="help" element={<DashboardHelpCenter />} />
+            </Route>
+
+
 
             
             {/*( shuab )*/}
@@ -84,7 +117,23 @@ function App() {
             {/*Recruiters===============================================*/}
 
             {/*( moaz )*/}
-            <Route path="/DashboardRecruiterSettings" element={<DashboardRecruiterSettings />} />
+             <Route path="/DashboardRecruiter" element={<DashboardRecruiter/>}>
+                <Route index element={<Dashboard />} />
+ 
+              <Route path="job-listing" element={<JobListing />}>
+                <Route index element={<ApplicantsPage />} />
+                <Route path="job-details" element={<JobDetailsTab />} />
+              </Route>
+
+              <Route path="settings" element={<DashboardUpdateCompanyProfile />}>
+                <Route index element={<CompanyOverviewTab />} />
+                <Route path="social-links" element={<CompanySocialLinksTab />} />
+                <Route path="login-details" element={<LoginCompanySettingsTab />} />
+              </Route>
+
+                <Route path="company-profile" element={<CompanyPageRecruiterWrapper />} />
+                <Route path="help" element={<DashboardHelpCenterRecruiter />} />
+              </Route>
 
 
             {/*Ahmed*/}
@@ -92,7 +141,7 @@ function App() {
               <Route index element={<CompanyDashboard />} />
 
               <Route
-                path="job-create"
+                path="jobs"
                 element={
                   <JobCreateProvider>
                     <JobCreateLayout />

@@ -2,12 +2,13 @@ import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { InputTitle } from "./InputTitle";
-import { useJobCreateContext, type Step1Data } from "../../JobCreateContext";
+import { useJobCreateContext, type Benefit, type Question, type Step1Data } from "../../JobCreateContext";
 import { useEffect, useState } from "react";
 import ConfirmDeleteModal from "./ConfirmModal";
 import { isStep1Filled } from "./StepsFilledHelpers";
-import { getSkills } from "@/services/jobService";
+import { getJobById, getSkills } from "@/services/jobService";
 import { type QuestionType } from "../../JobCreateContext";
+import * as yup from "yup";
 
 type categoryOption = {
     value: string;
@@ -29,7 +30,6 @@ type skillOption = {
     label: string; // This will store the name
 };
 
-// Place these right below your requiredSkillsOptions
 const jobTypes = [
     { id: "Full-Time", label: "Full-Time" },
     { id: "Part-Time", label: "Part-Time" },
@@ -43,9 +43,17 @@ const workplaceModels = [
     { id: "Hybrid", label: "Hybrid" }
 ];
 
+const jobIdSchema = yup.string()
+    .matches(/^[0-9a-fA-F]{24}$/, "Invalid Job ID format")
+    .nullable(); // Id is nullable in Create Mode
+
 export default function Step1() {
     const [skillsOptions, setSkillsOptions] = useState<skillOption[]>([]);
     const { jobId } = useParams(); // Get ID from URL
+    const [idError, setIdError] = useState<string | null>(null);
+    const navigate = useNavigate();
+    const [confirmOpen, setConfirmOpen] = useState(false);
+
     const {
         jobData,
         updateStep1,
@@ -53,118 +61,150 @@ export default function Step1() {
         updateStep3,
         updateStep4,
         clearStep1,
-        setJobId
+        setJobId,
+        setCompanyId
     } = useJobCreateContext();
 
-    const navigate = useNavigate();
-    const [confirmOpen, setConfirmOpen] = useState(false);
-
-    // Fetch Job at     ---> EDIT MODE <---
     useEffect(() => {
-        // Only fetch if:
-        // 1. We have a jobId in the URL
-        // 2. We haven't already loaded this specific job into context (prevents loops)
-        if (jobId && jobData._id !== jobId) {
-            const fetchJobForEdit = async () => {
-                try {
-                    // Call your backend API
-                    // const response = await getJobById(jobId);
-                    // const job = response.data; 
+        const validateAndFetch = async () => {
+            // 1. Guard Clause: If no ID, stop immediately.
+            if (!jobId) return;
 
-                    // MOCK DATA for demonstration (Replace with actual API response)
-                    // You need to map Backend DB keys -> Frontend Context keys
+            // 2. Prevent Loop: If ID matches context, stop.
+            if (jobData._id === jobId) return;
+
+            try {
+                // 3. Validate ID Format
+                await jobIdSchema.validate(jobId);
+
+                // 5. Fetch Data (Proceeds only if validation passes)
+                try {
+                    // 1. API Checks Ownership of the recruiter/company to this Job
+                    const res = await getJobById(jobId);
+                    const jobFromDb = res.data.data
+
+                    if (!jobFromDb) {
+                        throw new Error("No Job Found");
+                    }
+
+                    // 2. Transform Benefits (Discard MongoDB _id, custom id)
+                    const mappedBenefits: [Benefit] = jobFromDb.benefits?.map((b: any) => ({
+                        id: b.id,
+                        icon: b.icon,
+                        title: b.title,
+                        description: b.description,
+                    })) || [];
+
+                    // 3. Transform Questions (Map questionText -> text and generate numeric id)
+                    const mappedQuestions: [Question] = jobFromDb.questions?.map((q: any, index: number) => ({
+                        id: index + 1, // id: 1, 2, 3...
+                        type: q.type as QuestionType,
+                        text: q.questionText,
+                    })) || [];
+
+                    // 4. Create the final clean object
                     const job = {
                         _id: jobId,
-                        jobTitle: "Senior React Dev",
-                        jobType: "Full-Time",
-                        workplaceModel: "On-Site",
-                        salaryFrom: 20,
-                        salaryTo: 500,
-                        categories: ["Design", "Sales"],
-                        skills: ["694eb7f29491b725b3b12501", "694eb8059491b725b3b12502"],
-                        jobDescription: "694eb7f29491b725b3b12501http:/aaaaaaaaaa3daaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                        responsibilities: ["Design11111111111111", "Sales1111111111111111"],
-                        whoYouAre: ["694eb7f29491b725b3b12501", "694eb7f29491b725b3b12501"],
-                        niceToHaves: ["694eb7f29491b725b3b12501", "694eb7f29491b725b3b12501"],
-                        benefits: [
-                            {
-                                id: 1,
-                                icon: "/public/images/Perks/PerksHealth.png",
-                                title: "Full Healthcare",
-                                description:
-                                    "We believe in thriving communities and that starts with our team being happy and healthy.",
-                            },
-                            {
-                                id: 2,
-                                icon: "/public/images/Perks/PerksVacation.png",
-                                title: "Unlimited Vacation",
-                                description:
-                                    "We believe you should have a flexible schedule that makes space for family, wellness, and fun.",
-                            },
-                        ],
-                        questions: [
-                            {
-                                id: 1,
-                                type: "YES_NO" as QuestionType,
-                                text: "Do you have +2 YOE in .NET ?"
-                            },
-                            {
-                                id: 2,
-                                type: "TEXT" as QuestionType,
-                                text: "Talk briefly about your latest experiences"
-                            }
-                        ]
+                        companyId: jobFromDb.companyId._id,
+                        jobTitle: jobFromDb.title,
+                        jobType: jobFromDb.employmentType,
+                        workplaceModel: jobFromDb.workplaceModel,
+                        salaryFrom: jobFromDb.salaryMin,
+                        salaryTo: jobFromDb.salaryMax,
+                        categories: jobFromDb.categories || [],
+                        skills: jobFromDb.skillsIds,
+                        jobDescription: jobFromDb.description,
+                        responsibilities: jobFromDb.responsibilities || [],
+                        whoYouAre: jobFromDb.whoYouAre || [],
+                        niceToHaves: jobFromDb.niceToHaves || [],
+                        benefits: mappedBenefits,
+                        questions: mappedQuestions
                     };
 
-                    console.log("Hydrating Context with Job Data...");
+                    // const jobMock = {
+                    //     _id: jobId,
+                    //     jobTitle: "Senior React Dev",
+                    //     jobType: "Full-Time",
+                    //     workplaceModel: "On-Site",
+                    //     salaryFrom: 20,
+                    //     salaryTo: 500,
+                    //     categories: ["Design", "Sales"],
+                    //     skills: ["694eb7f29491b725b3b12501", "694eb8059491b725b3b12502"],
+                    //     jobDescription: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    //     responsibilities: ["Design11111111111111", "Sales1111111111111111"],
+                    //     whoYouAre: ["aaaaaaaaaaaaaaaaa", "ccccccccccc"],
+                    //     niceToHaves: ["aaaaaaaaaaaaaaaa", "ccccccccccccccccccc"],
+                    //     benefits: [
+                    //         {
+                    //             id: 1,
+                    //             icon: "/public/images/Perks/PerksHealth.png",
+                    //             title: "Full Healthcare",
+                    //             description:
+                    //                 "We believe in thriving communities and that starts with our team being happy and healthy.",
+                    //         },
+                    //         {
+                    //             id: 2,
+                    //             icon: "/public/images/Perks/PerksVacation.png",
+                    //             title: "Unlimited Vacation",
+                    //             description:
+                    //                 "We believe you should have a flexible schedule that makes space for family, wellness, and fun.",
+                    //         },
+                    //     ],
+                    //     questions: [
+                    //         {
+                    //             id: 1,
+                    //             type: "YES_NO" as QuestionType,
+                    //             text: "Do you have +2 YOE in .NET ?"
+                    //         },
+                    //         {
+                    //             id: 2,
+                    //             type: "TEXT" as QuestionType,
+                    //             text: "Talk briefly about your latest experiences"
+                    //         }
+                    //     ]
+                    // };
 
-                    // Update ID
+                    console.log("Storing Job Data in Context ...");
                     setJobId(job._id);
+                    setCompanyId(job.companyId)
 
-                    // Update Step 1
-                    updateStep1({
-                        jobTitle: job.jobTitle,
-                        jobType: job.jobType,
-                        workplaceModel: job.workplaceModel, // Map DB field to Frontend field
-                        salaryFrom: job.salaryFrom,
-                        salaryTo: job.salaryTo,
-                        categories: job.categories,
-                        skills: job.skills // Assuming this is an array of IDs ["id1", "id2"],
-                    });
+                    // Batch updates
+                    updateStep1({ ...job });
+                    updateStep2({ ...job });
+                    updateStep3({ benefits: job.benefits });
+                    updateStep4({ questions: job.questions });
 
-                    // Update Step 2 (Even though we are on Step 1 page, we load ALL data)
-                    updateStep2({
-                        jobDescription: job.jobDescription,
-                        responsibilities: job.responsibilities,
-                        whoYouAre: job.whoYouAre,
-                        niceToHaves: job.niceToHaves
-                    });
+                } catch (apiError: any) {
+                    // 1. Log the full error for developers in server
+                    console.error("Failed to fetch job data in Step 1:", apiError);
 
-                    updateStep3({
-                        benefits: job.benefits
-                    });
+                    // 2. Extract the specific message from the Backend
+                    const errorMessage = apiError.response?.data?.message || "Something went wrong while fetching the job.";
 
-                    updateStep4({
-                        questions: job.questions
-                    });
+                    // 3. Toaster
+                    // toast.error(errorMessage);
 
-                } catch (error) {
-                    console.error("Failed to load job for editing", error);
+                    // 4. Redirect
+                    navigate("/company");
                 }
-            };
-            fetchJobForEdit();
-        }
-    }, [jobId, jobData._id, setJobId, updateStep1, updateStep2]);
 
-    // Fetch skills from your API
+            } catch (validationError: any) {
+                console.error("URL ID Validation Failed:", validationError.message);
+                setIdError("Invalid Job ID");
+
+                // Toaster notification & redirect
+                navigate("/company");
+            }
+        };
+        validateAndFetch();
+    }, [jobId, jobData._id, setJobId, updateStep1, updateStep2, updateStep3, updateStep4]);
+
+    // Fetch skills
     useEffect(() => {
         const fetchSkills = async () => {
             try {
                 const response = await getSkills();
 
-                // Axios puts the backend body in .data
-                // If your backend 'response' helper sends { status, data: [...] }, 
-                // then you access response.data.data
                 const skillsArray = response.data.data || response.data;
 
                 const formattedSkills = skillsArray.map((skill: { _id: string; name: string }) => ({
@@ -191,8 +231,8 @@ export default function Step1() {
     } = useForm<Step1Data>({
         defaultValues: jobData.step1 || {
             jobTitle: "",
-            jobType: "", // This will hold a single string
-            workplaceModel: "", // This will hold a single string
+            jobType: "",
+            workplaceModel: "",
             salaryFrom: 0,
             salaryTo: 0,
             categories: [],
@@ -215,7 +255,7 @@ export default function Step1() {
         updateStep1(data);
 
         setTimeout(() => {
-            navigate("/company/job-create/step-2");
+            navigate("/company/jobs/step-2");
         }, 100);
     };
 
@@ -241,7 +281,7 @@ export default function Step1() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="job-create-step1">
+        <form onSubmit={handleSubmit(onSubmit)} className="step1">
             {/* Basic Information */}
             <section className="mb-4 md:mb-8">
                 <InputTitle title="Basic Information" description="This information will be displayed publicly" />
