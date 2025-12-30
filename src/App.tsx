@@ -25,7 +25,6 @@ import Resume from './components/Recruiters/ApplicantProfile/Resume'
 import ApplyQuestionsAndAnswers from './components/Recruiters/ApplicantProfile/ApplyQuestionsAndAnswers'
 import JobListPage from "./components/Recruiters/JobList/JobListPage";
 import './App.css'
-import ApplicantsPage from './components/Recruiters/Applicants/Applicants'
 import { StepGuard } from './components/Recruiters/JobCreate/Components/Steps/StepGuard'
 // import ScrollToTop from './components/Recruiters/ScrollToTop'
 import DashboardPublicProfile from "./components/Applicants/DashboardPublicProfile/DashboardPublicProfile";

@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-// import axios from "axios";
 import JobListTable from "./JobListTable";
-import DashboardSidebarRecruiterComponent from "../Dashboard/DashboardSidebarRecruiterComponent";
+// import DashboardSidebarRecruiterComponent from "../Dashboard/DashboardSidebarRecruiterComponent";
 import instance from '@/components/AxiosConfig/instance'
 
 export interface Job {
