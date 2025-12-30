@@ -37,7 +37,6 @@ const schema = yup.object({
         )
         .min(1, "At least one item is required")
         .required(),
-    // <-- changed: made niceToHaves required as well
     niceToHaves: yup
         .array()
         .of(
@@ -280,7 +279,7 @@ export default function Step2() {
                 fieldArray={niceArray}
                 name="niceToHaves"
                 placeholder="Mention optional but useful skills..."
-                minLength={1} // changed from 0 -> 1 to prevent removing last item
+                minLength={1}
                 register={register}
                 errors={errors}
                 watch={watch}
@@ -300,7 +299,6 @@ export default function Step2() {
                 </button>
 
                 <div className="flex gap-3">
-                    {/* Clear / Reset */}
                     <button
                         type="button"
                         onClick={handleClearStep}
@@ -320,7 +318,6 @@ export default function Step2() {
                         onConfirm={confirmClear}
                     />
 
-                    {/* Next Step */}
                     <button
                         type="submit"
                         className="px-4 md:px-8 py-2 md:py-3 mb-4 md:mb-8 
@@ -331,7 +328,6 @@ export default function Step2() {
                     </button>
                 </div>
             </section>
-
         </form>
     );
 }

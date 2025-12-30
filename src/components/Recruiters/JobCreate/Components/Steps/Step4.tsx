@@ -55,8 +55,7 @@ export default function Step4() {
             const payload: JobPostPayload = {
                 _id: jobData._id,
 
-                // GRABBED FROM TOKEN  -------------------------------------->
-                companyId: "6581a2b3c4d5e6f7a8b9c0d1",
+                companyId: jobData.companyId,
 
                 // Use ! if you are 100% sure StepGuard prevents getting here without these values
                 // Otherwise use || "" to provide a safe fallback string
