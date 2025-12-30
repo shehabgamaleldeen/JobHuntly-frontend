@@ -24,14 +24,14 @@ export function StepGuard({ children }: StepGuardProps) {
 
             // LOGIC: Find the first incomplete step
             // This determines where the user SHOULD be.
-            let correctPath = "/company/job-create/step-1";
+            let correctPath = "/company/jobs/step-1";
             
             if (s1) {
-                correctPath = "/company/job-create/step-2"; // Step 1 is done, they are allowed on 2
+                correctPath = "/company/jobs/step-2"; // Step 1 is done, they are allowed on 2
                 if (s2) {
-                    correctPath = "/company/job-create/step-3"; // Step 2 is done, allowed on 3
+                    correctPath = "/company/jobs/step-3"; // Step 2 is done, allowed on 3
                     if (s3) {
-                        correctPath = "/company/job-create/step-4"; // Step 3 is done, allowed on 4
+                        correctPath = "/company/jobs/step-4"; // Step 3 is done, allowed on 4
                     }
                 }
             }
