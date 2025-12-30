@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom"; 
 import { useNavigate } from "react-router-dom";
+import instance from '@/components/AxiosConfig/instance'
 
 interface Props {
   rowsPerPage?: number;
@@ -21,33 +22,40 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    if (!jobId) return;
+  if (!jobId) return;
 
-    const fetchApplicants = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/company/jobs/${jobId}/applications`);
-        if (!response.ok) throw new Error("Failed to fetch applicants");
+  const fetchApplicants = async () => {
+    try {
+      const response = await instance.get(
+        `/company/jobs/${jobId}/applications`
+      );
 
-        const result = await response.json();
+      const result = response.data;
 
-        if (!Array.isArray(result.data)) {
-          console.error("Backend returned invalid data:", result);
-          return;
-        }
-
-        const formatted = result.data.map((app: BackendApplicant) => ({
-          ...app,
-          appliedDate: new Date(app.appliedAt).toLocaleDateString("en-GB"),
-        }));
-
-        setData(formatted);
-      } catch (error) {
-        console.error("Error fetching applicants:", error);
+      if (!Array.isArray(result.data)) {
+        console.error("Backend returned invalid data:", result);
+        return;
       }
-    };
 
-    fetchApplicants();
-  }, [jobId]);
+      const formatted = result.data.map((app: BackendApplicant) => ({
+        ...app,
+        appliedDate: new Date(app.appliedAt).toLocaleDateString("en-GB"),
+      }));
+
+      setData(formatted);
+
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error("Error fetching applicants:", err.message);
+      } else {
+        console.error("Error fetching applicants");
+      }
+    }
+  };
+
+  fetchApplicants();
+}, [jobId]);
+
 
   const totalPages = Math.ceil(data.length / rowsPerPage);
   const paginatedData = data.slice((page - 1) * rowsPerPage, page * rowsPerPage);

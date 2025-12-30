@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import JobListTable from "./JobListTable";
-import DashboardSidebarRecruiterComponent from "../Dashboard/DashboardSidebarRecruiterComponent";
+// import DashboardSidebarRecruiterComponent from "../Dashboard/DashboardSidebarRecruiterComponent";
+import instance from '@/components/AxiosConfig/instance'
 
 export interface Job {
   _id: string;
@@ -44,8 +44,7 @@ export default function JobListPage() {
       setError(null);
 
       const queryString = searchParams.toString();
-      const res = await axios.get(
-        `http://localhost:3000/companies/${companyId}/jobs?${queryString}`
+      const res = await instance.get(`/companies/${companyId}/jobs?${queryString}`
       );
 
       setJobs(res.data.data.data);
@@ -78,7 +77,7 @@ export default function JobListPage() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <DashboardSidebarRecruiterComponent />
+      {/* <DashboardSidebarRecruiterComponent /> */}
 
       <div className="flex-1 w-full px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-8">
         <div className="mb-6">

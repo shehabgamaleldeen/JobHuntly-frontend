@@ -1,9 +1,12 @@
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   emailValidation,
   passwordValidation,
 } from "../../../features/auth/authValidation";
+import instance from '@/components/AxiosConfig/instance'
+import axios from "axios";
 
 type CompanyLoginForm = {
   email: string;
@@ -12,44 +15,42 @@ type CompanyLoginForm = {
 
 export default function CompanyLogin() {
   const navigate = useNavigate();
-
+  const [errorMsg, setErrorMsg] = useState<string>(""); 
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<CompanyLoginForm>();
 
-  async function onSubmit(data:CompanyLoginForm) {
+ async function onSubmit(data: CompanyLoginForm) {
   try {
-    const response = await fetch("http://localhost:3000/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: data.email,
-        password: data.password,
-      }),
+    setErrorMsg("");
+
+    const response = await instance.post("/auth/login", {
+      email: data.email,
+      password: data.password,
     });
 
-    const result = await response.json();
+    const { accessToken, refreshToken } = response.data.data;
 
-    if (!response.ok) {
-      throw new Error(result.message || "Login failed");
+    if (!accessToken || !refreshToken) {
+      setErrorMsg("Login failed: tokens not returned");
+      return;
     }
 
-    console.log("Logged in user:", result.user);
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
 
-  navigate("/company");
+    navigate("/company");
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.error(err.message);
+    if (axios.isAxiosError(err) && err.response?.data?.message) {
+      setErrorMsg(err.response.data.message);
     } else {
-      console.error("Unexpected login error");
+      setErrorMsg("Invalid email or password");
     }
   }
 }
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -57,6 +58,7 @@ export default function CompanyLogin() {
         type="email"
         placeholder="Enter company email"
         {...register("email", emailValidation)}
+        autoComplete="username"
         className={`border p-3 ${
           errors.email ? "border-red-500" : "border-gray-300"
         }`}
@@ -71,6 +73,7 @@ export default function CompanyLogin() {
         type="password"
         placeholder="Enter password"
         {...register("password", passwordValidation)}
+        autoComplete="new-password"
         className={`border p-3 ${
           errors.password ? "border-red-500" : "border-gray-300"
         }`}
@@ -80,6 +83,7 @@ export default function CompanyLogin() {
           {String(errors.password.message)}
         </p>
       )}
+      {errorMsg && <p className="text-red-600 text-sm text-center">{errorMsg}</p>}
 
       <button type="submit" className="bg-[#4640DE] text-white py-3">
         Login
