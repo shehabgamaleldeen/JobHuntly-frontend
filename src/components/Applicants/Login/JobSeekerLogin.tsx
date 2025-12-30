@@ -5,6 +5,8 @@ import {
   emailValidation,
   passwordValidation,
 } from "../../../features/auth/authValidation";
+import instance from '@/components/AxiosConfig/instance'
+import axios from "axios";
 
 type JobSeekerLoginForm = {
   email: string;
@@ -21,30 +23,35 @@ export default function JobSeekerLogin() {
     formState: { errors },
   } = useForm<JobSeekerLoginForm>();
 
-  async function onSubmit(data: JobSeekerLoginForm) {
-    try {
-      setErrorMsg(""); 
-      console.log("submitted data", data);
+ async function onSubmit(data: JobSeekerLoginForm) {
+  try {
+    setErrorMsg("");
 
-      const response = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: data.email, password: data.password }),
-      });
+    const response = await instance.post("/auth/login", {
+      email: data.email,
+      password: data.password,
+    });
 
-      const result = await response.json();
+    const { accessToken, refreshToken } = response.data.data; 
 
-      if (!response.ok) {
-        setErrorMsg(result.error || "Login failed");
-        return;
-      }
+    if (!accessToken || !refreshToken) {
+      setErrorMsg("Login failed: tokens not returned");
+      return;
+    }
 
-      console.log("Logged in user:", result.user);
-      navigate("/find-jobs");
-    } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : "Unexpected login error");
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+
+    navigate("/find-jobs");
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err) && err.response?.data?.message) {
+      setErrorMsg(err.response.data.message);
+    } else {
+      setErrorMsg("Invalid email or password");
     }
   }
+}
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -52,6 +59,7 @@ export default function JobSeekerLogin() {
         type="email"
         placeholder="Enter email address"
         {...register("email", emailValidation)}
+        autoComplete="username"
         className={`border p-3 ${
           errors.email ? "border-red-500" : "border-gray-300"
         }`}
@@ -64,6 +72,8 @@ export default function JobSeekerLogin() {
         type="password"
         placeholder="Enter password"
         {...register("password", passwordValidation)}
+        autoComplete="new-password"
+
         className={`border p-3 ${
           errors.password ? "border-red-500" : "border-gray-300"
         }`}
