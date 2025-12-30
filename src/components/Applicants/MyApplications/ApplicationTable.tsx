@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import instance from '@/components/AxiosConfig/instance'
 
 interface Application {
   id: string;
@@ -23,38 +23,45 @@ const ApplicationTable: React.FC<Props> = ({ userId, rowsPerPage=5, searchText =
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get("http://localhost:3001/applications");
-        let applications: Application[] = response.data;
+  const fetchApplications = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        if (userId) {
-          applications = applications.filter(app => app.userId === userId);
-        }
+      const response = await instance.get("/job-applications/me");
 
-        if (searchText) {
-          applications = applications.filter(app =>
-            app.company.toLowerCase().includes(searchText.toLowerCase())
-          );
-        }
+      let applications: Application[] = response.data;
 
-        setData(applications);
-        setPage(1); 
-        setError(null);
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setError(err.response?.data?.message || err.message);
-        } else {
-          setError("An error occurred while fetching applications");
-        }
-      } finally {
-        setLoading(false);
+      if (userId) {
+        applications = applications.filter(
+          app => app.userId === userId
+        );
       }
-    };
 
-    fetchApplications();
-  }, [userId, searchText]);
+      if (searchText) {
+        applications = applications.filter(app =>
+          app.company.toLowerCase().includes(searchText.toLowerCase())
+        );
+      }
+
+      setData(applications);
+      setPage(1);
+
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An error occurred while fetching applications");
+      }
+      console.error("Error fetching applications:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchApplications();
+}, [userId, searchText]);
+
 
   if (loading)
     return (
