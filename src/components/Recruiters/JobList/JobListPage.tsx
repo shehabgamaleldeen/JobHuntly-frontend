@@ -78,7 +78,7 @@ export default function JobListPage() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <DashboardSidebarRecruiterComponent />
+      {/* <DashboardSidebarRecruiterComponent /> */}
 
       <div className="flex-1 w-full px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-8">
         <div className="mb-6">

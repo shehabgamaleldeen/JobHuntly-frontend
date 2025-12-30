@@ -13,6 +13,21 @@ export const updateJob = async (payload: JobPostPayload): Promise<any> => {
     return response;
 };
 
+export const openCloseJob = async (jobId: string): Promise<any> => {
+    const response = await instance.patch(`/jobs/${jobId}/live`);
+    return response;
+};
+
+export const deleteJob = async (jobId: string): Promise<any> => {
+    const response = await instance.delete(`/jobs/${jobId}`);
+    return response;
+};
+
+export const getJobById = async (jobId: String): Promise<any> => {
+    const response = await instance.get(`/jobs/${jobId}`);
+    return response;
+};
+
 export const getSkills = async (): Promise<any> => {
     const response = await instance.get('/skills');
     return response;
