@@ -6,61 +6,61 @@ import {
   passwordValidation,
   confirmPasswordValidation,
 } from "../../../features/auth/authValidation";
+import instance from '@/components/AxiosConfig/instance'
+import { useState } from "react";
+import axios from "axios";
+
 
 type JobSeekerSignupForm = {
-  userName: string;
+  fullName: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  rePassword: string;
 };
 
 function JobSeekerForm() {
   const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<JobSeekerSignupForm>();
+  } = useForm<JobSeekerSignupForm>({});
 
   const password = watch("password");
 
- const onSubmit = async (data: JobSeekerSignupForm) => {
-  try {
-    const response = await fetch("http://localhost:3000/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
-        userName: data.userName, 
-        email: data.email, 
-        password: data.password, 
-        confirmPassword: data.confirmPassword,
-        role: "user", // Pass role
-      }),
-    });
+  const onSubmit = async (data: JobSeekerSignupForm) => {
+    try {
+      setErrorMsg("");
 
-    const result = await response.json();
+      const res = await instance.post("/auth/register", {
+        fullName: data.fullName,
+        email: data.email,
+        password: data.password,
+        rePassword: data.rePassword,
+        role: "JOB_SEEKER",
+      });
 
-    if (!response.ok) {
-      throw new Error(result.message || "Registration failed");
+      const { accessToken, refreshToken } = res.data.data;
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      navigate("/dashboardSettings");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        setErrorMsg(err.response.data.message);
+      } else {
+        setErrorMsg("please try again");
+      }
     }
-
-    console.log(result);
-    navigate("/find-jobs");
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.error(err.message);
-    } else {
-      console.error("An unexpected error occurred");
-    }
-  }
-};
+  };
 
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-
       {/* Full Name */}
       <div>
         <label className="text-base font-epilogue text-[#515B6F] font-semibold block mb-1">
@@ -70,11 +70,12 @@ function JobSeekerForm() {
           type="text"
           placeholder="Enter your full name"
           className={`w-full border px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300
-            ${errors.userName ? "border-red-600" : "border-gray-300"}`}
-          {...register("userName", usernameValidation)}
+            ${errors.fullName ? "border-red-600" : "border-gray-300"}`}
+          {...register("fullName", usernameValidation)}
+          autoComplete="off"
         />
-        {errors.userName && (
-          <p className="text-red-600 text-sm">{errors.userName.message}</p>
+        {errors.fullName && (
+          <p className="text-red-600 text-sm">{errors.fullName.message}</p>
         )}
       </div>
 
@@ -89,6 +90,7 @@ function JobSeekerForm() {
           className={`w-full border px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300
             ${errors.email ? "border-red-600" : "border-gray-300"}`}
           {...register("email", emailValidation)}
+          autoComplete="username"
         />
         {errors.email && (
           <p className="text-red-600 text-sm">{errors.email.message}</p>
@@ -106,6 +108,7 @@ function JobSeekerForm() {
           className={`w-full border px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300
             ${errors.password ? "border-red-600" : "border-gray-300"}`}
           {...register("password", passwordValidation)}
+          autoComplete="new-password"
         />
         {errors.password && (
           <p className="text-red-600 text-sm">{errors.password.message}</p>
@@ -121,16 +124,16 @@ function JobSeekerForm() {
           type="password"
           placeholder="Confirm password"
           className={`w-full border px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300
-            ${errors.confirmPassword ? "border-red-600" : "border-gray-300"}`}
-          {...register("confirmPassword", confirmPasswordValidation(password))}
+            ${errors.rePassword ? "border-red-600" : "border-gray-300"}`}
+          {...register("rePassword", confirmPasswordValidation(password))}
         />
-        {errors.confirmPassword && (
-          <p className="text-red-600 text-sm">
-            {errors.confirmPassword.message}
-          </p>
+        {errors.rePassword && (
+          <p className="text-red-600 text-sm">{errors.rePassword.message}</p>
         )}
       </div>
-
+      {errorMsg && (
+        <p className="text-red-600 text-sm text-center">{errorMsg}</p>
+      )}
       <button
         type="submit"
         className="w-full bg-[#4640DE] text-white py-3 
