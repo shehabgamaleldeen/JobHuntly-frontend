@@ -1,194 +1,99 @@
 import React, { useState, useEffect } from "react";
-import instance from '@/components/AxiosConfig/instance'
+import instance from '@/components/AxiosConfig/instance';
+import Pagination from './Pagination'; 
 
-interface Application {
+export interface Application {
   id: string;
-  userId: string;
-  company: string;
   role: string;
+  company: string;
   dateApplied: string;
-  logo?: string; 
+  logo?: string;
 }
 
 interface Props {
-  userId?: string;
   rowsPerPage?: number;
   searchText?: string;
 }
 
-const ApplicationTable: React.FC<Props> = ({ userId, rowsPerPage=5, searchText = "" }) => {
+const ApplicationTable: React.FC<Props> = ({ rowsPerPage = 5, searchText = "" }) => {
   const [data, setData] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-  const fetchApplications = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+    const fetchApplications = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      const response = await instance.get("/job-applications/me");
+        const response = await instance.get("/job-applications/me");
+        let applications: Application[] = response.data.data;
 
-      let applications: Application[] = response.data;
+        if (searchText) {
+          applications = applications.filter(app =>
+            app.company.toLowerCase().includes(searchText.toLowerCase())
+          );
+        }
 
-      if (userId) {
-        applications = applications.filter(
-          app => app.userId === userId
-        );
+        setData(applications);
+        setPage(1);
+        setTotalPages(Math.ceil(applications.length / rowsPerPage));
+
+      } catch (err: unknown) {
+        if (err instanceof Error) setError(err.message);
+        else setError("An error occurred while fetching applications");
+        console.error("Error fetching applications:", err);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      if (searchText) {
-        applications = applications.filter(app =>
-          app.company.toLowerCase().includes(searchText.toLowerCase())
-        );
-      }
+    fetchApplications();
+  }, [searchText, rowsPerPage]);
 
-      setData(applications);
-      setPage(1);
-
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An error occurred while fetching applications");
-      }
-      console.error("Error fetching applications:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchApplications();
-}, [userId, searchText]);
-
-
-  if (loading)
-    return (
-      <div className="bg-white rounded-lg shadow border border-gray-200 p-8 text-center w-full">
-        Loading applications...
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="bg-white rounded-lg shadow border border-gray-200 p-8 text-center text-red-600 w-full">
-        Error: {error}
-      </div>
-    );
-
-  if (data.length === 0)
-    return (
-      <div className="bg-white rounded-lg shadow border border-gray-200 p-8 text-center w-full">
-        No applications found.
-      </div>
-    );
-
-  const totalPages = Math.ceil(data.length / rowsPerPage);
   const paginatedData = data.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-    const maxVisible = 5;
-
-    if (totalPages <= maxVisible + 2) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      pages.push(1);
-      if (page > 3) pages.push("...");
-      const start = Math.max(2, page - 1);
-      const end = Math.min(totalPages - 1, page + 1);
-      for (let i = start; i <= end; i++) pages.push(i);
-      if (page < totalPages - 2) pages.push("...");
-      pages.push(totalPages);
-    }
-
-    return pages;
-  };
-
-  const pageNumbers = getPageNumbers();
+  if (loading) return <p className="text-center mt-10">Loading applications...</p>;
+  if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+  if (data.length === 0) return <p className="text-center mt-10">No applications found.</p>;
 
   return (
-  <div className="bg-white rounded-lg w-full max-w-[1104px]">
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[640px]">
-        <thead className="bg-white border-b border-[#D6DDEB]">
-          <tr className="text-[#7C8493] text-sm">
-            <th className="py-3 px-2 md:px-4 text-left whitespace-nowrap">#</th>
-            <th className="py-3 px-2 md:px-4 text-left whitespace-nowrap">Company Name</th>
-            <th className="py-3 px-2 md:px-4 text-left whitespace-nowrap">Roles</th>
-            <th className="py-3 px-2 md:px-4 text-left whitespace-nowrap">Date Applied</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {paginatedData.map((app, index) => (
-            <tr
-              key={app.id}
-              className={`text-sm ${index % 2 === 0 ? "bg-white" : "bg-[#F4F4FD]"}`}
-            >
-              <td className="py-3 px-2 md:px-4">{app.id}</td>
-
-              <td className="py-3 px-2 md:px-4 whitespace-nowrap flex items-center gap-2">
-                <img
-                  src={app.logo}
-                  alt={app.company}
-                  className="w-6 h-6 rounded object-cover"
-                />
-                <span>{app.company}</span>
-              </td>
-
-              <td className="py-3 px-2 md:px-4 whitespace-nowrap">{app.role}</td>
-              <td className="py-3 px-2 md:px-4 whitespace-nowrap">{app.dateApplied}</td>
+    <div className="bg-white rounded-lg w-full max-w-[1104px]">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[640px]">
+          <thead className="bg-white border-b border-[#D6DDEB]">
+            <tr className="text-[#7C8493] text-sm">
+              <th className="py-3 px-4 text-left">#</th>
+              <th className="py-3 px-4 text-left">Company</th>
+              <th className="py-3 px-4 text-left">Role</th>
+              <th className="py-3 px-4 text-left">Date Applied</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-
-    {totalPages > 1 && (
-      <div className="flex flex-wrap justify-center items-center gap-1 md:gap-2 py-4 px-2">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-          className="px-2 md:px-3 py-1 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          ‹
-        </button>
-
-        <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
-          {pageNumbers.map((n, i) =>
-            n === "..." ? (
-              <span key={i} className="px-2 text-gray-500">
-                ...
-              </span>
-            ) : (
-              <button
-                key={n}
-                onClick={() => setPage(n as number)}
-                className={`px-2 md:px-3 py-1 rounded min-w-7 ${
-                  page === n ? "bg-purple-300 text-white" : "border hover:bg-gray-50"
-                }`}
+          </thead>
+          <tbody>
+            {paginatedData.map((app, index) => (
+              <tr
+                key={app.id}
+                className={index % 2 === 0 ? "bg-white" : "bg-[#F4F4FD]"}
               >
-                {n}
-              </button>
-            )
-          )}
-        </div>
-
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage(page + 1)}
-          className="px-2 md:px-3 py-1 border rounded hover:bg-[#F8F8FD] disabled:opacity-50"
-        >
-          ›
-        </button>
-
-        <span className="ml-1 text-xs text-gray-500">... {totalPages}</span>
+                <td className="py-3 px-4">{(page - 1) * rowsPerPage + index + 1}</td>
+                <td className="py-3 px-4 flex items-center gap-2">
+                  {app.logo && <img src={app.logo} alt={app.company} className="w-6 h-6 rounded object-cover" />}
+                  <span>{app.company}</span>
+                </td>
+                <td className="py-3 px-4">{app.role}</td>
+                <td className="py-3 px-4">{new Date(app.dateApplied).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    )}
-  </div>
-);
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+    </div>
+  );
 };
 
 export default ApplicationTable;
+
