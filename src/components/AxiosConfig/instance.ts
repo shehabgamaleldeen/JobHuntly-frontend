@@ -24,29 +24,21 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const status = error.response?.status;
-    const message = error.response?.data?.message;
+    const data = error.response?.data;
     const currentPath = window.location.pathname;
 
     if (status === 401) {
-      const shouldRedirectToLogin =
-        currentPath !== "/login" &&
-        (message === "please login first" || message === "user not found" || message === "invalid token format");
+      const refreshToken = localStorage.getItem("refreshToken");
 
-      if (shouldRedirectToLogin) {
+      if (!refreshToken) {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+        if (currentPath !== "/login") window.location.href = "/login";
         return Promise.reject(error);
       }
 
       if (!originalRequest._retry) {
         originalRequest._retry = true;
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (!refreshToken) {
-          localStorage.removeItem("accessToken");
-          if (currentPath !== "/login") window.location.href = "/login";
-          return Promise.reject(error);
-        }
         try {
           const res = await axios.post("/auth/refresh", { refreshToken });
           localStorage.setItem("accessToken", res.data.accessToken);
@@ -61,9 +53,18 @@ instance.interceptors.response.use(
       }
     }
 
+    if (status === 403) {
+      alert(data?.message || "You are not allowed to access this page.");
+    }
+
+    if (status >= 500) {
+      console.error("Server error:", data?.message || error.message);
+    }
+
     return Promise.reject(error);
   }
 );
+
 
 
 export default instance
