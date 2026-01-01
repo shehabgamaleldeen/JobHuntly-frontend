@@ -32,12 +32,18 @@ export default function CompanyLogin() {
       password: data.password,
     });
 
-    const { accessToken, refreshToken } = response.data.data;
+    const { accessToken, refreshToken, user } = response.data.data;
 
     if (!accessToken || !refreshToken) {
       setErrorMsg("Login failed: tokens not returned");
       return;
     }
+
+    if (user.role !== "COMPANY") {
+      setErrorMsg("You are not authorized to login as a company");
+      return;
+    }
+
 
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
