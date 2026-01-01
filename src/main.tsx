@@ -11,10 +11,13 @@ import App from './App.tsx'
 
 import { BrowserRouter } from 'react-router-dom'
 import ScrollManager from './scroll/ScrollManager.tsx'
+import AuthGate from './components/AxiosConfig/authGate.tsx'
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <ScrollManager />
-    <App />
+    <AuthGate>
+      <App />
+    </AuthGate>
   </BrowserRouter>
-)
+);
