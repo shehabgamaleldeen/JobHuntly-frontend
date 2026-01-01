@@ -9,6 +9,8 @@ import { isStep1Filled } from "./StepsFilledHelpers";
 import { getJobById, getSkills } from "@/services/jobService";
 import { type QuestionType } from "../../JobCreateContext";
 import * as yup from "yup";
+import { toast } from "sonner";
+import { toLocalISOString, toLocalISOStringFromDb } from "@/types/job";
 
 type categoryOption = {
     value: string;
@@ -67,157 +69,103 @@ export default function Step1() {
 
     useEffect(() => {
         const validateAndFetch = async () => {
-            // 1. Guard Clause: If no ID, stop immediately.
-            if (!jobId) return;
+            // Create Mode
+            if (!jobId || jobData._id === jobId) return;
 
-            // 2. Prevent Loop: If ID matches context, stop.
-            if (jobData._id === jobId) return;
-
+            // Update Mode
             try {
-                // 3. Validate ID Format
+                // Validate ID Format (Yup)
                 await jobIdSchema.validate(jobId);
 
-                // 5. Fetch Data (Proceeds only if validation passes)
-                try {
-                    // 1. API Checks Ownership of the recruiter/company to this Job
-                    const res = await getJobById(jobId);
-                    const jobFromDb = res.data.data
+                // Fetch Data with toast.promise
+                toast.promise(getJobById(jobId), {
+                    loading: 'Fetching job details...',
+                    success: (res) => {
+                        const jobFromDb = res.data.data;
 
-                    if (!jobFromDb) {
-                        throw new Error("No Job Found");
-                    }
+                        const mappedBenefits: Benefit[] = jobFromDb.benefits?.map((b: any) => ({
+                            id: b.id,
+                            icon: b.icon,
+                            title: b.title,
+                            description: b.description,
+                        })) || [];
 
-                    // 2. Transform Benefits (Discard MongoDB _id, custom id)
-                    const mappedBenefits: [Benefit] = jobFromDb.benefits?.map((b: any) => ({
-                        id: b.id,
-                        icon: b.icon,
-                        title: b.title,
-                        description: b.description,
-                    })) || [];
+                        const mappedQuestions: Question[] = jobFromDb.questions?.map((q: any, index: number) => ({
+                            id: index + 1,
+                            type: q.type as QuestionType,
+                            text: q.questionText,
+                        })) || [];
 
-                    // 3. Transform Questions (Map questionText -> text and generate numeric id)
-                    const mappedQuestions: [Question] = jobFromDb.questions?.map((q: any, index: number) => ({
-                        id: index + 1, // id: 1, 2, 3...
-                        type: q.type as QuestionType,
-                        text: q.questionText,
-                    })) || [];
+                        const job = {
+                            _id: jobId,
+                            companyId: jobFromDb.companyId._id,
+                            jobTitle: jobFromDb.title,
+                            jobType: jobFromDb.employmentType,
+                            workplaceModel: jobFromDb.workplaceModel,
+                            salaryFrom: jobFromDb.salaryMin,
+                            salaryTo: jobFromDb.salaryMax,
+                            dueDate: jobFromDb.dueDate ? toLocalISOStringFromDb(jobFromDb.dueDate) : "",
+                            categories: jobFromDb.categories || [],
+                            skills: jobFromDb.skillsIds,
+                            jobDescription: jobFromDb.description,
+                            responsibilities: jobFromDb.responsibilities || [],
+                            whoYouAre: jobFromDb.whoYouAre || [],
+                            niceToHaves: jobFromDb.niceToHaves || [],
+                            benefits: mappedBenefits,
+                            questions: mappedQuestions
+                        };
 
-                    // 4. Create the final clean object
-                    const job = {
-                        _id: jobId,
-                        companyId: jobFromDb.companyId._id,
-                        jobTitle: jobFromDb.title,
-                        jobType: jobFromDb.employmentType,
-                        workplaceModel: jobFromDb.workplaceModel,
-                        salaryFrom: jobFromDb.salaryMin,
-                        salaryTo: jobFromDb.salaryMax,
-                        categories: jobFromDb.categories || [],
-                        skills: jobFromDb.skillsIds,
-                        jobDescription: jobFromDb.description,
-                        responsibilities: jobFromDb.responsibilities || [],
-                        whoYouAre: jobFromDb.whoYouAre || [],
-                        niceToHaves: jobFromDb.niceToHaves || [],
-                        benefits: mappedBenefits,
-                        questions: mappedQuestions
-                    };
+                        // Update Context
+                        console.log("Storing Job Data in Context ...");
+                        setJobId(job._id);
+                        setCompanyId(job.companyId);
 
-                    // const jobMock = {
-                    //     _id: jobId,
-                    //     jobTitle: "Senior React Dev",
-                    //     jobType: "Full-Time",
-                    //     workplaceModel: "On-Site",
-                    //     salaryFrom: 20,
-                    //     salaryTo: 500,
-                    //     categories: ["Design", "Sales"],
-                    //     skills: ["694eb7f29491b725b3b12501", "694eb8059491b725b3b12502"],
-                    //     jobDescription: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                    //     responsibilities: ["Design11111111111111", "Sales1111111111111111"],
-                    //     whoYouAre: ["aaaaaaaaaaaaaaaaa", "ccccccccccc"],
-                    //     niceToHaves: ["aaaaaaaaaaaaaaaa", "ccccccccccccccccccc"],
-                    //     benefits: [
-                    //         {
-                    //             id: 1,
-                    //             icon: "/public/images/Perks/PerksHealth.png",
-                    //             title: "Full Healthcare",
-                    //             description:
-                    //                 "We believe in thriving communities and that starts with our team being happy and healthy.",
-                    //         },
-                    //         {
-                    //             id: 2,
-                    //             icon: "/public/images/Perks/PerksVacation.png",
-                    //             title: "Unlimited Vacation",
-                    //             description:
-                    //                 "We believe you should have a flexible schedule that makes space for family, wellness, and fun.",
-                    //         },
-                    //     ],
-                    //     questions: [
-                    //         {
-                    //             id: 1,
-                    //             type: "YES_NO" as QuestionType,
-                    //             text: "Do you have +2 YOE in .NET ?"
-                    //         },
-                    //         {
-                    //             id: 2,
-                    //             type: "TEXT" as QuestionType,
-                    //             text: "Talk briefly about your latest experiences"
-                    //         }
-                    //     ]
-                    // };
+                        updateStep1({ ...job });
+                        updateStep2({ ...job });
+                        updateStep3({ benefits: job.benefits });
+                        updateStep4({ questions: job.questions });
 
-                    console.log("Storing Job Data in Context ...");
-                    setJobId(job._id);
-                    setCompanyId(job.companyId)
-
-                    // Batch updates
-                    updateStep1({ ...job });
-                    updateStep2({ ...job });
-                    updateStep3({ benefits: job.benefits });
-                    updateStep4({ questions: job.questions });
-
-                } catch (apiError: any) {
-                    // 1. Log the full error for developers in server
-                    console.error("Failed to fetch job data in Step 1:", apiError);
-
-                    // 2. Extract the specific message from the Backend
-                    const errorMessage = apiError.response?.data?.message || "Something went wrong while fetching the job.";
-
-                    // 3. Toaster
-                    // toast.error(errorMessage);
-
-                    // 4. Redirect
-                    navigate("/company");
-                }
+                        return "Job data loaded";
+                    },
+                    error: (err) => {
+                        const errorMessage = err.response?.data?.error || "Failed to fetch job";
+                        return `Error: ${errorMessage}`;
+                    },
+                });
 
             } catch (validationError: any) {
-                console.error("URL ID Validation Failed:", validationError.message);
+                // Yup validation catch
+                console.error(validationError.message);
                 setIdError("Invalid Job ID");
-
-                // Toaster notification & redirect
-                navigate("/company");
+                toast.error(`${validationError.message}`);
             }
         };
+
         validateAndFetch();
     }, [jobId, jobData._id, setJobId, updateStep1, updateStep2, updateStep3, updateStep4]);
 
     // Fetch skills
     useEffect(() => {
         const fetchSkills = async () => {
-            try {
-                const response = await getSkills();
+            const skillsResponse = await getSkills();
 
-                const skillsArray = response.data.data || response.data;
+            const skillsArray = skillsResponse.data.data || skillsResponse.data;
 
-                const formattedSkills = skillsArray.map((skill: { _id: string; name: string }) => ({
-                    value: skill._id,  // MongoDB ID
-                    label: skill.name  // Skill Name
-                }));
+            const formattedSkills = skillsArray.map((skill: { _id: string; name: string }) => ({
+                value: skill._id,  // MongoDB ID
+                label: skill.name  // Skill Name
+            }));
 
-                setSkillsOptions(formattedSkills);
-            } catch (error) {
-                console.error("Failed to fetch skills:", error);
-            }
+            setSkillsOptions(formattedSkills);
+
         };
-        fetchSkills();
+        toast.promise(fetchSkills(), {
+            error: (err) => {
+                const errorMessage = err.response?.data?.error || "Failed to fetch skills";
+                return `${errorMessage}`;
+            }
+        }
+        );
     }, []);
 
 
@@ -235,6 +183,7 @@ export default function Step1() {
             workplaceModel: "",
             salaryFrom: 0,
             salaryTo: 0,
+            dueDate: undefined,
             categories: [],
             skills: []
         },
@@ -273,6 +222,7 @@ export default function Step1() {
             workplaceModel: "",
             salaryFrom: 0,
             salaryTo: 0,
+            dueDate: null,
             categories: [],
             skills: [],
         });
@@ -296,6 +246,7 @@ export default function Step1() {
                     <input
                         type="text"
                         placeholder="e.g. Software Engineer"
+                        minLength={10}
                         className={`
                             text-[11px] sm:text-sm lg:text-base 
                             p-4 h-[35px] md:h-3/5 w-full sm:w-13/15 md:w-10/12 
@@ -305,15 +256,16 @@ export default function Step1() {
                             minLength: {
                                 value: 10,
                                 message: "Title must be at least 10 characters"
+                            },
+                            maxLength: {
+                                value: 50,
+                                message: "Title must be at most 50 characters"
                             }
                         })}
                     />
                     {errors.jobTitle && (
                         <p className="text-red-500 text-xs md:text-sm">{errors.jobTitle.message}</p>
                     )}
-                    <p className="text-[#7C8493] text-[10px] md:text-xs lg:text-sm">
-                        At Least 10 Characters
-                    </p>
                 </div>
             </section>
 
@@ -418,6 +370,39 @@ export default function Step1() {
                             {errors.salaryTo ? errors.salaryTo.message : "\u00A0"}
                         </p>
                     </div>
+                </div>
+            </section>
+
+            <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
+
+            {/* Due Date */}
+            <section className="flex mb-4 md:mb-8">
+                <InputTitle title="Due Date" description="Specify the date at which the job closes" />
+                <div className="w-1/2">
+                    <input
+                        type="datetime-local"
+                        // Current time
+                        min={toLocalISOString(new Date())}
+                        className={`
+                            text-[11px] sm:text-sm lg:text-base 
+                            p-4 h-[35px] md:h-3/5 w-full sm:w-13/15 md:w-10/12 
+                            border-2 ${errors.dueDate ? "border-red-500" : "border-[#D6DDEB]"}`
+                        }
+
+                        {...register("dueDate", {
+                            validate: (value) => {
+                                if (!value) return true;
+
+                                const selected = new Date(value).getTime();
+                                const now = new Date().getTime();
+
+                                return selected > now || "Due date and time must be in the future";
+                            }
+                        })}
+                    />
+                    {errors.dueDate && (
+                        <p className="text-red-500 text-xs md:text-sm">{errors.dueDate.message}</p>
+                    )}
                 </div>
             </section>
 

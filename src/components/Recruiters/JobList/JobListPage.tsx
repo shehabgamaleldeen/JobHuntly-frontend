@@ -21,31 +21,29 @@ export default function JobListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
-  status: "",   
-  jobType: "",  
-  search: "",   
-});
+    status: "",
+    jobType: "",
+    search: "",
+  });
 
-  
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const page = Number(searchParams.get("page") || 1);
   const limit = Number(searchParams.get("limit") || 7);
 
-  const [totalPages, setTotalPages] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1);
 
- useEffect(() => {
-  if (!companyId) return;
-
-  const fetchJobs = async () => {
+  const fetchJobs = async (isSilent = false) => {
+    if (!companyId) return;
     try {
-      setLoading(true);
-      setError(null);
+      // Only trigger the full-page loading UI if NOT a silent refresh
+      if (!isSilent) setLoading(true);
 
+      setError(null);
       const queryString = searchParams.toString();
-      const res = await instance.get(`/companies/${companyId}/jobs?${queryString}`
-      );
+      const res = await instance.get(`/companies/${companyId}/jobs?${queryString}`);
 
       setJobs(res.data.data.data);
       setTotalPages(res.data.data.totalPages || 1);
@@ -57,8 +55,9 @@ export default function JobListPage() {
     }
   };
 
-  fetchJobs();
-}, [companyId, searchParams]);
+  useEffect(() => {
+    fetchJobs();
+  }, [companyId, searchParams]);
 
 
   const goToPage = (newPage: number) => {
@@ -137,7 +136,7 @@ export default function JobListPage() {
         </div>
 
         <div className="w-full max-w-[1104px] mx-auto">
-          <JobListTable data={jobs} />
+          <JobListTable data={jobs} onRefresh={() => fetchJobs(true)} />
 
           {totalPages > 1 && (
             <div className="flex justify-center items-center gap-2 mt-6">
@@ -153,9 +152,8 @@ export default function JobListPage() {
                 <button
                   key={p}
                   onClick={() => goToPage(p)}
-                  className={`px-3 py-1 border rounded ${
-                    p === page ? "bg-purple-300 text-white" : ""
-                  }`}
+                  className={`px-3 py-1 border rounded ${p === page ? "bg-purple-300 text-white" : ""
+                    }`}
                 >
                   {p}
                 </button>

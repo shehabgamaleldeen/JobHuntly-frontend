@@ -6,6 +6,7 @@ import type { Question, QuestionType } from "../../JobCreateContext";
 import ConfirmModal from "./ConfirmModal";
 import { postNewJob, updateJob } from "@/services/jobService";
 import type { JobPostPayload } from "@/types/job";
+import { toast } from "sonner";
 
 export default function Step4() {
     const navigate = useNavigate();
@@ -50,75 +51,83 @@ export default function Step4() {
         updateStep4({ questions });
         setIsSubmitting(true);
 
-        try {
-            // By casting to 'JobPostPayload', TS will check if you missed anything
-            const payload: JobPostPayload = {
-                _id: jobData._id,
+        const payload: JobPostPayload = {
+            _id: jobData._id,
 
-                companyId: jobData.companyId,
+            // Only put here in route of 'Update Job'
+            // For 'Create Job' it is put in the backend from access token
+            companyId: jobData.companyId,
 
-                // Use ! if you are 100% sure StepGuard prevents getting here without these values
-                // Otherwise use || "" to provide a safe fallback string
-                title: jobData.step1!.jobTitle!,
-                employmentType: jobData.step1!.jobType!,
-                workplaceModel: jobData.step1!.workplaceModel!,
+            // Use ! if you are 100% sure StepGuard prevents getting here without these values
+            // Otherwise use || "" to provide a safe fallback string
+            title: jobData.step1!.jobTitle!,
+            employmentType: jobData.step1!.jobType!,
+            workplaceModel: jobData.step1!.workplaceModel!,
 
-                salaryMin: Number(jobData.step1?.salaryFrom) || 0,
-                salaryMax: Number(jobData.step1?.salaryTo) || 1,
-                salaryCurrency: "EGP",
+            salaryMin: Number(jobData.step1?.salaryFrom) || 0,
+            salaryMax: Number(jobData.step1?.salaryTo) || 1,
+            salaryCurrency: "EGP",
 
-                // Ensure these match the array requirement in your interface
-                categories: jobData.step1?.categories || [],
-                skillsIds: jobData.step1?.skills || [],
+            // Ensure these match the array requirement in your interface
+            categories: jobData.step1?.categories || [],
+            skillsIds: jobData.step1?.skills || [],
 
-                postDate: new Date(),
+            dueDate: jobData.step1?.dueDate
+                ? new Date(jobData.step1.dueDate).toISOString()
+                : undefined,
 
-                description: jobData.step2!.jobDescription!,
-                responsibilities: jobData.step2?.responsibilities || [],
-                whoYouAre: jobData.step2?.whoYouAre || [],
-                niceToHaves: jobData.step2?.niceToHaves || [],
+            description: jobData.step2!.jobDescription!,
+            responsibilities: jobData.step2?.responsibilities || [],
+            whoYouAre: jobData.step2?.whoYouAre || [],
+            niceToHaves: jobData.step2?.niceToHaves || [],
 
-                benefits: jobData.step3?.benefits || [],
-                isLive: true,
+            benefits: jobData.step3?.benefits || [],
+            isLive: true,
 
-                // Map frontend 'text' to backend 'questionText'
-                // and match the 'TEXT' | 'YES_NO' type exactly
-                questions: questions.map(q => ({
-                    questionText: q.text,
-                    type: q.type
-                }))
-            };
+            // Map frontend 'text' to backend 'questionText'
+            // and match the 'TEXT' | 'YES_NO' type exactly
+            questions: questions.map(q => ({
+                questionText: q.text,
+                type: q.type
+            }))
+        };
 
-            if (jobData._id) {
-                const response = await updateJob(payload);
-                console.log("Job Updated Successfully");
-                if (response.status === 201 || response.status === 200) {
-                    // navigate first then clear local storage + context
-                    // because clearing steps data from context triggers re-rendering and causes
-                    // the firing of StepGuard between Step4 & 1
+        setIsSubmitting(false);
+        setConfirmJobOpen(false);
+
+        if (jobData._id) {
+            toast.promise(updateJob(payload), {
+                loading: 'Updating Job ...',
+                success: () => {
+                    console.log("Job Updated Successfully");
                     navigate("/company");
                     setTimeout(() => {
                         clearAllData();
                     }, 100);
-                }
-            } else {
-                const response = await postNewJob(payload);
-                console.log("Job Created Successfully");
-                if (response.status === 201 || response.status === 200) {
+                    return "Job Updated Successfully";
+                },
+                error: (err) => {
+                    const errorMessage = err.response?.data?.error || "Failed to update job";
+                    return `${errorMessage}`;
+                },
+            });
+        }
+        else {
+            toast.promise(postNewJob(payload), {
+                loading: 'Posting Job ...',
+                success: () => {
+                    console.log("Job Created Successfully");
                     navigate("/company");
                     setTimeout(() => {
                         clearAllData();
                     }, 100);
-                }
-            }
-
-
-        } catch (error: any) {
-            console.error("Post Job Error:", error.response?.data || error.message);
-            alert(error.response?.data?.message || "Failed to post job");
-        } finally {
-            setIsSubmitting(false);
-            setConfirmJobOpen(false);
+                    return "Job Created Successfully";
+                },
+                error: (err) => {
+                    const errorMessage = err.response?.data?.error || "Failed to create job";
+                    return `${errorMessage}`;
+                },
+            });
         }
     };
 

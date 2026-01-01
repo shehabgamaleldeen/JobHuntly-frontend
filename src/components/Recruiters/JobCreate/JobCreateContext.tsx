@@ -10,6 +10,7 @@ export type Step1Data = {
     workplaceModel: string;
     salaryFrom: number;
     salaryTo: number;
+    dueDate: Date | string | null;
     categories: string[];
     skills: string[];
 };
