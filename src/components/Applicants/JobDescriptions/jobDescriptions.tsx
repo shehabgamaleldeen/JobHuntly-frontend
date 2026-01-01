@@ -134,12 +134,12 @@ const JobDescriptions = () => {
               <h2 className="text-[#25324B] text-3xl font-semibold">
                 Description
               </h2>
-              <p className="text-[#515B6F] mt-4 mb-10">{job?.description}</p>
+              <p className="text-[#515B6F] mt-4">{job?.description}</p>
             </div>
 
             <div className="job-needs">
               <div className="mb-5">
-                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize mt-10">
                   Responsibilities
                 </h2>
                 <div className="mt-2">
@@ -159,7 +159,7 @@ const JobDescriptions = () => {
                 </div>
               </div>
               <div className="mb-5">
-                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize mt-10">
                   Who You Are
                 </h2>
                 <div className="mt-2">
@@ -179,7 +179,7 @@ const JobDescriptions = () => {
                 </div>
               </div>
               <div className="mb-5">
-                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize mt-10">
                   Nice-To-Haves
                 </h2>
                 <div className="mt-2">
@@ -253,9 +253,17 @@ const JobDescriptions = () => {
               </div>
             </div>
             <div className="RequiredSkills mt-4">
-              <h2 className="text-[#25324B] text-3xl font-semibold">
+              <h2 className="text-[#25324B] text-3xl font-semibold mb-2">
                 Required Skills
               </h2>
+              {job?.skillsIds.map((skill: any) => (
+                <span
+                  key={skill?._id}
+                  className="text-[#4640DE] p-3 bg-[#F8F8FD] w-fit inline-block text-base font-semibold rounded-2xl text-center my-1 mr-4"
+                >
+                  {skill?.name}
+                </span>
+              ))}
             </div>
           </div>
         </div>
