@@ -32,10 +32,14 @@ export default function JobSeekerLogin() {
       password: data.password,
     });
 
-    const { accessToken, refreshToken } = response.data.data; 
+    const { accessToken, refreshToken, user } = response.data.data; 
 
     if (!accessToken || !refreshToken) {
       setErrorMsg("Login failed: tokens not returned");
+      return;
+    }
+     if (user.role !== "JOB_SEEKER") {
+      setErrorMsg("You are not authorized to login as a company");
       return;
     }
 
