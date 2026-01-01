@@ -15,6 +15,9 @@ export const isStep1Filled = (step1: Step1Data | undefined): boolean => {
         skills: Array.isArray(step1.skills) && step1.skills.length > 0,
         salaryFrom: step1.salaryFrom > 0,
         salaryTo: step1.salaryTo > step1.salaryFrom,
+        dueDate: step1.dueDate 
+        ? new Date(step1.dueDate).getTime() > Date.now() 
+        : false,
         jobType: step1.jobType !== "",
         workplaceModel: step1.workplaceModel !== ""
     };

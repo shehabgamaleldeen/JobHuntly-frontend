@@ -24,7 +24,7 @@ export const deleteJob = async (jobId: string): Promise<any> => {
 };
 
 export const getJobById = async (jobId: String): Promise<any> => {
-    const response = await instance.get(`/jobs/${jobId}`);
+    const response = await instance.get(`/jobs/${jobId}/owner`);
     return response;
 };
 

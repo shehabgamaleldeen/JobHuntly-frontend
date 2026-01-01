@@ -12,7 +12,7 @@ export interface JobBenefit {
 }
 
 export interface JobPostPayload {
-    _id?:string,
+    _id?: string,
     companyId?: string;
     title: string;
     employmentType: string;
@@ -22,8 +22,7 @@ export interface JobPostPayload {
     salaryCurrency: string;
     categories: string[];
     skillsIds: string[];
-    postDate:Date;
-    // dueDate: Date;
+    dueDate: Date | string | undefined;
     description: string;
     responsibilities: string[];
     whoYouAre: string[];
@@ -32,3 +31,18 @@ export interface JobPostPayload {
     benefits?: JobBenefit[];
     isLive?: boolean;
 }
+
+export const toLocalISOString = (date: Date) => {
+    if (!date) return "";
+    const tzOffset = date.getTimezoneOffset() * 60000; // offset in milliseconds
+    const localISOTime = new Date(date.getTime() - tzOffset).toISOString().slice(0, 16);
+    return localISOTime;
+};
+
+export const toLocalISOStringFromDb = (date: any) => {
+    if (!date) return "";
+    const targetDate = new Date(date);
+    // Adjust for the user's timezone offset
+    const tzOffset = targetDate.getTimezoneOffset() * 60000;
+    return new Date(targetDate.getTime() - tzOffset).toISOString().slice(0, 16);
+};
