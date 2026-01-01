@@ -8,6 +8,28 @@ import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Button } from '@/components/ui/button'
+import JobPath from './JobPath.tsx'
+import { toast } from 'sonner'
+
+const shareJob = async () => {
+  const url = window.location.href
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'Job Opportunity',
+        text: 'Check out this job',
+        url,
+      })
+    } catch {
+      console.log('User cancelled share')
+    }
+  } else {
+    await navigator.clipboard.writeText(url)
+    // show toast instead of alert
+    toast.success('Job link copied to clipboard')
+  }
+}
 
 const JobDescriptions = () => {
   dayjs.extend(relativeTime)
@@ -46,7 +68,10 @@ const JobDescriptions = () => {
 
   return (
     <>
-      <section className="jobDescriptionsCard bg-[#F8F8FD] py-14 w-screen flex justify-center">
+      <section className="jobDescriptionsCard bg-[#F8F8FD] py-14 w-screen flex justify-center flex-col">
+        <div className="w-4/5 m-auto mb-10">
+          <JobPath jobName={job?.title} />
+        </div>
         <div className="bg-[#FFFFFF] w-4/5 m-auto p-6 flex max-sm:flex-col justify-between border border-[#D6DDEB]">
           <div className="flex max-sm:flex-col items-center  max-sm:place-items-start">
             <img
@@ -65,7 +90,25 @@ const JobDescriptions = () => {
           </div>
 
           <div className="flex items-center gap-16">
-            <img className="w-8" src="/ShareIcon.png" alt="Share Icon" />
+            <img
+              src="/ShareIcon.png"
+              alt="Share Icon"
+              onClick={shareJob}
+              className="
+                w-9 h-9
+                p-1.5
+                cursor-pointer
+                rounded-full
+                transition
+                duration-200
+                ease-in-out
+                hover:bg-gray-100
+                active:scale-95
+                focus:outline-none
+                focus:ring-2
+                focus:ring-blue-500
+              "
+            />
             {hasApplied ? (
               <Button
                 disabled
@@ -217,7 +260,7 @@ const JobDescriptions = () => {
           </div>
         </div>
       </section>
-      <PerksBenefits />
+      <PerksBenefits Benefits={job?.benefits} />
       <div className="bg-[#F8F8FD]">
         <SimilarJobs job={job} />
       </div>
