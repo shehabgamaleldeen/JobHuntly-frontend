@@ -58,7 +58,7 @@ instance.interceptors.response.use(
     }
 
     if (status >= 500) {
-      console.error("Server error:", data?.message || error.message);
+      console.error("Server error:", data?.error || error.message);
     }
 
     return Promise.reject(error);
