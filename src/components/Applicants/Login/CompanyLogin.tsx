@@ -42,7 +42,7 @@ export default function CompanyLogin() {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
-    navigate("/company");
+    navigate("/DashboardRecruiter");
   } catch (err: unknown) {
     if (axios.isAxiosError(err) && err.response?.data?.message) {
       setErrorMsg(err.response.data.message);

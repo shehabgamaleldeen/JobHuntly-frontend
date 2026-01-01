@@ -130,7 +130,7 @@ export function ApplyButton(props: ApplyButtonProps) {
           { responses: formattedResponses, resumeUrl },
           {
             headers: {
-              access_token: localStorage.getItem('token') || '',
+              access_token: localStorage.getItem('accessToken') || '',
             },
             withCredentials: true,
           }
@@ -171,7 +171,7 @@ export function ApplyButton(props: ApplyButtonProps) {
     }
   }
   const isLoggedIn = () => {
-    return Boolean(localStorage.getItem('token'))
+    return Boolean(localStorage.getItem('accessToken'))
   }
 
   return (

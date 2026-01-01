@@ -44,7 +44,7 @@ function CompanyForm() {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
-      navigate("/DashboardRecruiterSettings");
+      navigate("/DashboardRecruiter/settings");
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response?.data?.message) {
         setErrorMsg(err.response.data.message);

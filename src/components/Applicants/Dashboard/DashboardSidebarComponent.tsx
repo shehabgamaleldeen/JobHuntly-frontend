@@ -48,7 +48,7 @@ export function DashboardSidebarComponent(): JSX.Element {
               Dashboard
             </NavLink>
 
-            <NavLink to="applications" className={linkClass}>
+            <NavLink to="my-applications" className={linkClass}>
               <img src={FolderIcon} className="w-5 h-5" />
               My Applications
             </NavLink>
@@ -57,17 +57,6 @@ export function DashboardSidebarComponent(): JSX.Element {
               <img src={UserIcon} className="w-5 h-5" />
               My Public Profile
             </NavLink>
-
-            <NavLink to="Browse-Companies" className={linkClass}>
-              <img src={UserIcon} className="w-5 h-5" />
-              Browse Companies
-            </NavLink>
-
-            <NavLink to="Find-Jobs" className={linkClass}>
-              <img src={UserIcon} className="w-5 h-5" />
-              Find Jobs
-            </NavLink>
-
           </nav>
 
           <div className="mt-10">
@@ -115,17 +104,11 @@ export function DashboardSidebarComponent(): JSX.Element {
               <NavLink to="" end className={linkClass} onClick={closeDrawer}>
                 Dashboard
               </NavLink>
-              <NavLink to="applications" className={linkClass} onClick={closeDrawer}>
+              <NavLink to="my-applications" className={linkClass} onClick={closeDrawer}>
                 My Applications
               </NavLink>
               <NavLink to="public-profile" className={linkClass} onClick={closeDrawer}>
                 My Public Profile
-              </NavLink>
-              <NavLink to="Browse-Companies" className={linkClass} onClick={closeDrawer}>
-                Browse Companies
-              </NavLink>
-              <NavLink to="Find-Jobs" className={linkClass} onClick={closeDrawer}>
-                Find Jobs
               </NavLink>
               <NavLink to="settings" className={linkClass} onClick={closeDrawer}>
                 Settings

@@ -79,9 +79,11 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
             {/*mariz*/}
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
-            <Route path="/my-applications" element={<MyApplications />} />
-            <Route path="/companies/:companyId/jobs" element={<JobListPage />} />
-            <Route path="/applicants/:jobId" element={<ApplicantsPage />} />
+            {/* ( shuab ) */}
+              {/* <Route path="applicant-profile/:applicationId" element={<ApplicantProfile />}>
+                <Route index element={<Resume />} />
+                <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
+              </Route>{' '} */}
 
 
 
@@ -98,41 +100,47 @@ function App() {
               </Route>
 
               <Route path="public-profile" element={<DashboardPublicProfile />} />
-              <Route path="applications" element={<MyApplications />} />
+              <Route path="my-applications" element={<MyApplications />} />
               <Route path="help" element={<DashboardHelpCenter />} />
             </Route>
-
-
-
-            
-            {/*( shuab )*/}
-              <Route path="applicant-profile/:id" element={<ApplicantProfile />}>
-                <Route index element={<Resume />} />
-                <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
-              </Route>{' '}
-
 
 
             {/*Recruiters===============================================*/}
 
             {/*( moaz )*/}
-             <Route path="/DashboardRecruiter" element={<DashboardRecruiter/>}>
-                <Route index element={<Dashboard />} />
- 
+            <Route path="/DashboardRecruiter" element={<DashboardRecruiter />}>
+              <Route index element={<Dashboard />} />
+            
               <Route path="job-listing" element={<JobListing />}>
-                <Route index element={<ApplicantsPage />} />
+                
+                {/* company */}
+                <Route path=":companyId" element={<JobListPage />} />
+            
+                {/* job */}
+                <Route path=":companyId/:jobId" element={<ApplicantsPage />} />
+            
+                {/* applicant profile (EXTENDS job path) */}
+                <Route
+                  path=":companyId/:jobId/applicant-profile/:applicationId"
+                  element={<ApplicantProfile />}
+                >
+                  <Route index element={<Resume />} />
+                  <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
+                </Route>
+            
+                {/* job details */}
                 <Route path="job-details" element={<JobDetailsTab />} />
               </Route>
-
+            
               <Route path="settings" element={<DashboardUpdateCompanyProfile />}>
                 <Route index element={<CompanyOverviewTab />} />
                 <Route path="social-links" element={<CompanySocialLinksTab />} />
                 <Route path="login-details" element={<LoginCompanySettingsTab />} />
               </Route>
-
-                <Route path="company-profile" element={<CompanyPageRecruiterWrapper />} />
-                <Route path="help" element={<DashboardHelpCenterRecruiter />} />
-              </Route>
+            
+              <Route path="company-profile" element={<CompanyPageRecruiterWrapper />} />
+              <Route path="help" element={<DashboardHelpCenterRecruiter />} />
+            </Route>
 
 
             {/*Ahmed*/}
