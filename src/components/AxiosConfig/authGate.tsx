@@ -6,8 +6,13 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const accessToken = localStorage.getItem("accessToken")
-      const refreshToken = localStorage.getItem("refreshToken")
+      const accessToken =
+        localStorage.getItem("accessToken") ||
+        sessionStorage.getItem("accessToken");
+
+      const refreshToken =
+        localStorage.getItem("refreshToken") ||
+        sessionStorage.getItem("refreshToken");
 
       if (!accessToken && !refreshToken) {
         await new Promise((res) => setTimeout(res, 500)) 
