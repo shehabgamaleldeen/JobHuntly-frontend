@@ -45,20 +45,6 @@ function Login() {
             {selected === "job" ? "Welcome Back, Dude" : "Welcome Back"}
           </h2>
 
-          <button
-            className="w-full border border-gray-300 py-3 flex items-center
-                       justify-center gap-3 text-gray-700 hover:bg-gray-50"
-          >
-            <img src="/images/google.png" className="w-5 h-5" />
-            Login with Google
-          </button>
-
-          <div className="flex items-center w-full gap-2">
-            <div className="flex-1 h-px bg-gray-300" />
-            <span className="text-gray-500 text-sm">Or login with email</span>
-            <div className="flex-1 h-px bg-gray-300" />
-          </div>
-
           {selected === "job" ? <JobSeekerLogin /> : <CompanyLogin />}
 
           <div className="flex items-center justify-between">
