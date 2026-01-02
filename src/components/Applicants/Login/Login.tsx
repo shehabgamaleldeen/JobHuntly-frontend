@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import JobSeekerLogin from "./JobSeekerLogin";
 import CompanyLogin from "./CompanyLogin";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [selected, setSelected] = useState<"job" | "company">("job");
   const [rememberMe, setRememberMe] = useState(false);
+  const navigate=useNavigate();
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-white overflow-x-hidden">
@@ -60,7 +62,11 @@ function Login() {
               Remember Me
             </label>
 
-            <button className="text-sm text-[#4640DE] font-medium hover:underline">
+            <button
+              type="button"
+              onClick={() => navigate("/forgot-password")}
+              className="text-sm text-[#4640DE] font-medium hover:underline"
+            >
               Forgot Password?
             </button>
           </div>
