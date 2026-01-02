@@ -53,10 +53,10 @@ instance.interceptors.response.use(
       if (!originalRequest._retry) {
         originalRequest._retry = true;
         try {
-          const res = await axios.post("/auth/refresh", { refreshToken });
+          const res = await instance.post("/auth/refresh", { refreshToken });
           const storage = getAuthStorage();
-          storage.setItem("accessToken", res.data.accessToken);
-          originalRequest.headers.Authorization = `Bearer ${res.data.accessToken}`;
+          storage.setItem("accessToken", res.data.data.accessToken);
+          originalRequest.headers.Authorization = `Bearer ${res.data.data.accessToken}`;
           return instance(originalRequest);
           
         } catch {
