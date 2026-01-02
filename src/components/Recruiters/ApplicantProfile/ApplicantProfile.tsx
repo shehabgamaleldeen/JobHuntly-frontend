@@ -1,6 +1,6 @@
 import ApplicantProfileNavbar from './ApplicantProfileNavbar'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 import instance from '../../AxiosConfig/instance.ts'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'

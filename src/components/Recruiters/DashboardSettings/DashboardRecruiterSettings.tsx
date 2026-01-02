@@ -16,7 +16,7 @@ export default function DashboardRecruiter(): JSX.Element {
           logo={CompanyLogo}
           companyName="Nomad"
           buttonText="Post a job"
-          buttonLink="/company/jobs"
+          buttonLink="/company/jobs/step-1"
         />
 
         <div className="max-w-6xl mx-auto">

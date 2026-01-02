@@ -1,8 +1,17 @@
+import { useNavigate } from "react-router-dom";
+
 export default function JobCreateHeader() {
+    const navigate = useNavigate()
+
+    const handleBack = () => {
+        localStorage.removeItem("job_create_data");
+        navigate("/DashboardRecruiter");
+    };
+
     return (
         <div className="job-create-header">
             <header className="flex items-center gap-2 pb-2 md:pb-4 lg:pb-8">
-                <button>
+                <button onClick={handleBack}>
                     <img
                         className="w-5 h-5 md:w-6 md:h-6 lg:w-9 lg:h-9"
                         src="/public/images/JobCreateHeader/BackIcon.png"
