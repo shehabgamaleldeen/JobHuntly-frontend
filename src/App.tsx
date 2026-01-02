@@ -52,12 +52,26 @@ import ForgotPassword from './components/Basic/forgotPassword'
 
 
 function App() {
- const location = useLocation()
+  const location = useLocation();
 
-  const showNavbarRoutes = ['/', '/find-jobs', '/browse-companies']
-
-  const shouldShowNavbar = showNavbarRoutes.includes(location.pathname)
-
+  // Function to check if navbar should be shown
+  const shouldShowNavbar = () => {
+    const pathname = location.pathname;
+    
+    // Exact matches
+    const exactRoutes = ['/', '/find-jobs', '/browse-companies'];
+    if (exactRoutes.includes(pathname)) {
+      return true;
+    }
+    
+    // Dynamic route patterns
+    const dynamicPatterns = [
+      /^\/find-jobs\/[^/]+$/,        // Matches /find-jobs/:id
+      /^\/browse-companies\/[^/]+$/  // Matches /browse-companies/:id
+    ];
+    
+    return dynamicPatterns.some(pattern => pattern.test(pathname));
+  };
   return (
       // Scrolls to top when navigating between pages
       // Why?
@@ -67,7 +81,7 @@ function App() {
       // So if you scroll halfway on Step 2, then navigate to Step 3, it keeps the same scroll position.
       // <ScrollToTop />
       <div className="min-h-screen flex flex-col">
-        {shouldShowNavbar && <Navbar />}
+        {shouldShowNavbar() && <Navbar />}
         <main className="grow">
           <Routes>
 
