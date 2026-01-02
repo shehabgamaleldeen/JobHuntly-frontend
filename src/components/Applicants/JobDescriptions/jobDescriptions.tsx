@@ -44,7 +44,10 @@ const JobDescriptions = () => {
     try {
       const res = await instance.get(`/jobs/${id}`, {
         headers: {
-          access_token: localStorage.getItem('token') || '',
+          access_token:
+            localStorage.getItem('accessToken') ||
+            sessionStorage.getItem('accessToken') ||
+            '',
         },
       })
       setJob(res.data.data)
