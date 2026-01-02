@@ -1,32 +1,20 @@
 export interface Location {
   name: string; 
-  logo?: string;
-  code?: string; 
+  logo: string; 
 }
-
 export interface Tech {
   name: string; 
-  logo?: string;  
+  logo: string;  
 }
 
-export interface Images {
+export interface Images{
   src: string;
 }
 
-export interface Job {
-  _id: string;
-  title: string;
-  employmentTypes: string[];
-  categories: string[];
-  [key: string]: any;
-}
-
 export interface Company {
-  id: string;
-  _id?: string;
+  id: number;
   name: string;
   logo: string;
-  logoUrl?: string;
   locations: Location[]; 
   website: string;
   industry: string;
@@ -38,8 +26,12 @@ export interface Company {
   twitter?: string;
   techStack: Tech[];
   images: Images[];
-  hqCity?: string;
-  hqCountry?: string;
-  jobs?: Job[];
-  jobCount?: number;
+}
+
+export interface Job {
+  id: number;
+  title: string;
+  location: string;
+  type: string;
+  level: string;
 }
