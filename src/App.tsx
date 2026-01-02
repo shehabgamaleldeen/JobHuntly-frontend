@@ -119,7 +119,9 @@ function App() {
               <Route path="job-listing" element={<JobListing />}>
                 
                 {/* company */}
-                <Route path=":companyId" element={<JobListPage />} />
+                {/* <Route path=":companyId" element={<JobListPage />} /> */}
+                  <Route index element={<JobListPage />} />
+
             
                 {/* job */}
                 <Route path=":companyId/:jobId" element={<ApplicantsPage />} />
