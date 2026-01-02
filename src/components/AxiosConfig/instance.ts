@@ -31,8 +31,9 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const status = error.response?.status;
-    const data = error.response?.data;
+    // const data = error.response?.data;
     const currentPath = window.location.pathname;
+
 
     if (status === 401) {
     const refreshToken =
@@ -70,11 +71,12 @@ instance.interceptors.response.use(
     }
 
     if (status === 403) {
-      alert(data?.message || "You are not allowed to access this page.");
+      alert("You are not allowed to access this page.");
     }
 
     if (status >= 500) {
-      console.error("Server error:", data?.error || error.message);
+      alert("Something went wrong on our server. Please try again later.");
+      // console.error("Server error:", data?.error || error.message);
     }
 
     return Promise.reject(error);
