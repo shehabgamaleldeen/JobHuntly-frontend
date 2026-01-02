@@ -124,7 +124,7 @@ function App() {
 
             
                 {/* job */}
-                <Route path=":companyId/:jobId" element={<ApplicantsPage />} />
+                <Route path=":jobId" element={<ApplicantsPage />} />
             
                 {/* applicant profile (EXTENDS job path) */}
                 <Route
