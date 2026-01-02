@@ -49,58 +49,6 @@ export function ApplyButton(props: ApplyButtonProps) {
   const resumeName =
     resumeFile && resumeFile.length > 0 ? resumeFile[0].name : null
 
-  // const onSubmit: SubmitHandler<FormValues> = async (data) => {
-  //   try {
-  //     let resumeUrl = ''
-
-  //     // 1. Upload Resume
-  //     if (data.resume && data.resume[0]) {
-  //       const formData = new FormData()
-  //       formData.append('file', data.resume[0])
-  //       const uploadRes = await instance.post('/upload/resume', formData, {
-  //         headers: { 'Content-Type': 'multipart/form-data' },
-  //       })
-  //       resumeUrl = uploadRes.data.url
-  //     }
-
-  //     // 2. Format Responses
-  //     const formattedResponses = Object.entries(data.answers || {}).map(
-  //       ([questionId, answerValue]) => ({
-  //         questionId,
-  //         answerValue,
-  //       })
-  //     )
-
-  //     // 3. Submit Application
-  //     await instance.post(
-  //       `/jobs/${props.jobId}/apply`,
-  //       {
-  //         responses: formattedResponses,
-  //         resumeUrl,
-  //       },
-  //       {
-  //         headers: {
-  //           access_token: localStorage.getItem('token') || '',
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     )
-
-  //     setOpen(false)
-  //     toast.success('Application submitted successfully!')
-  //     reset()
-  //   } catch (error: any) {
-  //     console.error(error)
-  //     if (error instanceof AxiosError && error.response?.status === 401) {
-  //       toast.error('You must be logged in to apply.')
-  //     } else {
-  //       toast.error(
-  //         error?.response?.data?.message ||
-  //           'Something went wrong. Please try again.'
-  //       )
-  //     }
-  //   }
-  // }
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       let resumeUrl = ''
@@ -130,7 +78,10 @@ export function ApplyButton(props: ApplyButtonProps) {
           { responses: formattedResponses, resumeUrl },
           {
             headers: {
-              access_token: localStorage.getItem('accessToken') || '',
+              access_token:
+                localStorage.getItem('accessToken') ||
+                sessionStorage.getItem('accessToken') ||
+                '',
             },
             withCredentials: true,
           }
@@ -172,7 +123,10 @@ export function ApplyButton(props: ApplyButtonProps) {
     }
   }
   const isLoggedIn = () => {
-    return Boolean(localStorage.getItem('accessToken'))
+    return (
+      Boolean(localStorage.getItem('accessToken')) ||
+      sessionStorage.getItem('accessToken')
+    )
   }
 
   return (
