@@ -12,8 +12,12 @@ type JobSeekerLoginForm = {
   email: string;
   password: string;
 };
+type Props = {
+  rememberMe: boolean;
+};
 
-export default function JobSeekerLogin() {
+
+export default function JobSeekerLogin({ rememberMe }: Props) {
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<string>(""); 
 
@@ -32,15 +36,27 @@ export default function JobSeekerLogin() {
       password: data.password,
     });
 
-    const { accessToken, refreshToken } = response.data.data; 
+    const { accessToken, refreshToken, user } = response.data.data; 
 
-    if (!accessToken || !refreshToken) {
-      setErrorMsg("Login failed: tokens not returned");
+    // if (!accessToken || !refreshToken) {
+    //   setErrorMsg("Login failed: tokens not returned");
+    //   return;
+    // }
+     if (user.role !== "JOB_SEEKER") {
+      setErrorMsg("You are not authorized to login as a company");
       return;
     }
 
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+    
+    const storage = rememberMe ? localStorage : sessionStorage;
+
+    storage.setItem("accessToken", accessToken);
+    storage.setItem("refreshToken", refreshToken);
+
 
     navigate("/find-jobs");
   } catch (err: unknown) {

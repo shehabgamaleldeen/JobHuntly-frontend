@@ -4,10 +4,17 @@ const instance = axios.create({
   baseURL: 'http://localhost:5000/api',
 })
 
+const getAuthStorage = () => {
+  return localStorage.getItem("refreshToken")
+    ? localStorage
+    : sessionStorage;
+};
+
 // request interceptor
 instance.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken =
+      localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -28,11 +35,16 @@ instance.interceptors.response.use(
     const currentPath = window.location.pathname;
 
     if (status === 401) {
-      const refreshToken = localStorage.getItem("refreshToken");
+    const refreshToken =
+      localStorage.getItem("refreshToken") ||
+      sessionStorage.getItem("refreshToken");
 
-      if (!refreshToken) {
+       if (!refreshToken) {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        sessionStorage.removeItem("accessToken");
+        sessionStorage.removeItem("refreshToken");
+        
         if (currentPath !== "/login") window.location.href = "/login";
         return Promise.reject(error);
       }
@@ -41,12 +53,16 @@ instance.interceptors.response.use(
         originalRequest._retry = true;
         try {
           const res = await axios.post("/auth/refresh", { refreshToken });
-          localStorage.setItem("accessToken", res.data.accessToken);
+          const storage = getAuthStorage();
+          storage.setItem("accessToken", res.data.accessToken);
           originalRequest.headers.Authorization = `Bearer ${res.data.accessToken}`;
           return instance(originalRequest);
+          
         } catch {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
+          sessionStorage.removeItem("accessToken");
+          sessionStorage.removeItem("refreshToken");
           if (currentPath !== "/login") window.location.href = "/login";
           return Promise.reject(error);
         }
