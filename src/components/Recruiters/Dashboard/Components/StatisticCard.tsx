@@ -15,7 +15,7 @@ export const useWindowWidth = () => {
 };
 
 // Card
-export default function StatisticsCard({ title, bgColor }: { title: string; bgColor: string }) {
+export default function StatisticsCard({ title, bgColor, count }: { title: string; bgColor: string, count: number }) {
     const width = useWindowWidth();
 
     // Determine the class based on width (mirroring your original tag selection)
@@ -44,7 +44,7 @@ export default function StatisticsCard({ title, bgColor }: { title: string; bgCo
                 <p className={titleClass}>{title}</p>
                 {Icon && <Icon size={24} className="opacity-80" />}
             </header>
-            <p className="stat-value">70</p>
+            <p className="stat-value">{count}</p>
         </div>
     );
 }

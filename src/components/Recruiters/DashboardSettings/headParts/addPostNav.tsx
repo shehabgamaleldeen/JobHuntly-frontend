@@ -11,17 +11,20 @@ export function CompanyHeader({
   logo,
   companyName,
   buttonText = "Post a job",
-  buttonLink = "/company/job-create",
+  buttonLink = "/company/jobs/step-1",
 }: CompanyHeaderProps) {
+
+  const handleClearStorage = () => localStorage.removeItem("job_create_data");
+
   return (
     <header className="w-full bg-white border-b border-gray-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        
+
         <div className="flex items-center justify-between">
-          
+
           {/* LEFT SIDE: Burger + Logo + Name */}
           <div className="flex items-center gap-3">
-            
+
             {/* 🍔 Burger (mobile only) */}
             <button
               className="md:hidden p-2 rounded-md border border-gray-200 bg-white"
@@ -58,6 +61,7 @@ export function CompanyHeader({
           {/* RIGHT SIDE: Button */}
           <Link
             to={buttonLink}
+            onClick={handleClearStorage}
             className="
               inline-flex items-center justify-center
               px-4 py-2
