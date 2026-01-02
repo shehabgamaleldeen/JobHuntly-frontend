@@ -19,6 +19,8 @@ type Props = {
 export default function CompanyLogin({ rememberMe }: Props) {
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<string>(""); 
+  const [showPassword, setShowPassword] = useState(false);
+
   
   const {
     register,
@@ -37,10 +39,10 @@ export default function CompanyLogin({ rememberMe }: Props) {
 
     const { accessToken, refreshToken, user } = response.data.data;
 
-    // if (!accessToken || !refreshToken) {
-    //   setErrorMsg("Login failed: tokens not returned");
-    //   return;
-    // }
+    if (!accessToken || !refreshToken) {
+      setErrorMsg("Login failed: tokens not returned");
+      return;
+    }
 
     if (user.role !== "COMPANY") {
       setErrorMsg("You are not authorized to login as a company");
@@ -84,19 +86,28 @@ export default function CompanyLogin({ rememberMe }: Props) {
         </p>
       )}
 
-      <input
-        type="password"
-        placeholder="Enter password"
-        {...register("password", passwordValidation)}
-        autoComplete="new-password"
-        className={`border p-3 ${
-          errors.password ? "border-red-500" : "border-gray-300"
-        }`}
-      />
+    <div className="relative">
+        <input
+          type={showPassword ? "text" : "password"} 
+          placeholder="Enter password"
+          {...register("password", passwordValidation)}
+          autoComplete="new-password"
+          className={`border p-3 w-full ${
+            errors.password ? "border-red-500" : "border-gray-300"
+          }`}
+        />
+        
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 hover:text-gray-700"
+        >
+          {showPassword ? "Hide" : "Show"}
+        </button>
+      </div>
+
       {errors.password && (
-        <p className="text-red-500 text-sm">
-          {String(errors.password.message)}
-        </p>
+        <p className="text-red-500 text-sm">{String(errors.password.message)}</p>
       )}
       {errorMsg && <p className="text-red-600 text-sm text-center">{errorMsg}</p>}
 
