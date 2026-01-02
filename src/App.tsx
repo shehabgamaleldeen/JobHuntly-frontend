@@ -45,6 +45,8 @@ import ApplicantsPage from './components/Recruiters/Applicants/Applicants'
 import LoginCompanySettingsTab from './components/Recruiters/DashboardSettings/LoginCompanySettings'
 import SocialLinksTab from './components/Applicants/DashboardSettings/SocialLinks'
 import ProfileCareerTab from './components/Applicants/DashboardSettings/ProfileCareerTab'
+import ResetPassword from './components/Basic/resetPassword'
+import ForgotPassword from './components/Basic/forgotPassword'
 
 
 
@@ -79,6 +81,9 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
             {/*mariz*/}
             <Route path="/companies/:id" element={<CompanyPageWrapper />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+
             {/* ( shuab ) */}
               {/* <Route path="applicant-profile/:applicationId" element={<ApplicantProfile />}>
                 <Route index element={<Resume />} />
