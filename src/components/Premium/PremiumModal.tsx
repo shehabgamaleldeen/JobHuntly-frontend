@@ -1,32 +1,32 @@
-import React, { useState } from 'react';
-import { X, Crown, Check, Zap } from 'lucide-react';
-import { toast } from 'sonner';
-import instance from '@/components/AxiosConfig/instance';
+import React, { useState } from 'react'
+import { X, Crown, Check, Zap } from 'lucide-react'
+import { toast } from 'sonner'
+import instance from '@/components/AxiosConfig/instance'
 
 interface PremiumModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen: boolean
+  onClose: () => void
 }
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handleUpgrade = async () => {
     try {
-      setIsLoading(true);
-      const token = localStorage.getItem('accessToken');
-      
+      setIsLoading(true)
+      const token = localStorage.getItem('accessToken')
+
       if (!token) {
-        toast.error('Please login to upgrade to Premium');
-        setIsLoading(false);
-        onClose();
-        navigate('/login');
-        return;
+        toast.warning('Please login to upgrade to Premium')
+        setIsLoading(false)
+        onClose()
+        navigate('/login')
+        return
       }
-      
+
       const response = await instance.post(
         '/stripe/create-checkout-session',
         {},
@@ -35,21 +35,21 @@ export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
             access_token: token || '',
           },
         }
-      );
+      )
 
       // Redirect to Stripe Checkout
       if (response.data.url) {
-        window.location.href = response.data.url;
+        window.location.href = response.data.url
       }
     } catch (error) {
-      console.error('Error creating checkout session:', error);
-      toast.error('Failed to initiate payment. Please try again.');
+      console.error('Error creating checkout session:', error)
+      toast.error('Failed to initiate payment. Please try again.')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
@@ -86,7 +86,8 @@ export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
                   Early Job Access
                 </h3>
                 <p className="text-gray-600">
-                  See new job postings 1 hour before regular users and apply first
+                  See new job postings 1 hour before regular users and apply
+                  first
                 </p>
               </div>
             </div>
@@ -166,5 +167,5 @@ export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
