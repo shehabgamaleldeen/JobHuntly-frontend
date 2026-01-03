@@ -3,7 +3,7 @@ import PerksBenefits from './PerksBenefits.tsx'
 import SimilarJops from './SimilarJops.tsx'
 import { useEffect, useState } from 'react'
 import instance from '../../AxiosConfig/instance.ts'
-import './style.css'
+// import './style.css'
 import { useParams } from 'react-router-dom'
 
 const JobDescriptionsRec = () => {
