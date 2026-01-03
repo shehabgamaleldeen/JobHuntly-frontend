@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { useState } from "react";
-import JobDescriptionsRec from "../JobDescriptions/jobDescriptions";
+import JobDescriptionsRec from "../JobDescriptionsDashboard/jobDescriptionsDashboard";
 
 export default function JobDetailsTab(): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -15,14 +15,14 @@ export const useWindowWidth = () => {
 };
 
 // Card
-export default function StatisticsCard({ title, bgColor }: { title: string; bgColor: string }) {
+export default function StatisticsCard({ title, bgColor, count }: { title: string; bgColor: string, count: number }) {
     const width = useWindowWidth();
 
     // Determine the class based on width (mirroring your original tag selection)
     let titleClass = "title-style-a";  // Default to h2-like
 
     if (width < 410) titleClass = "title-style-c";  // h4-like
-    else if (width < 640) titleClass = "title-style-b";  // h5-like    
+    else if (width < 640) titleClass = "title-style-a";  // h5-like    
     else if (width < 670) titleClass = "title-style-e";  // h6-like
     else if (width < 755) titleClass = "title-style-d";  // h5-like
     else if (width < 870) titleClass = "title-style-b";  // h3-like
@@ -44,7 +44,7 @@ export default function StatisticsCard({ title, bgColor }: { title: string; bgCo
                 <p className={titleClass}>{title}</p>
                 {Icon && <Icon size={24} className="opacity-80" />}
             </header>
-            <p className="stat-value">70</p>
+            <p className="stat-value">{count}</p>
         </div>
     );
 }
