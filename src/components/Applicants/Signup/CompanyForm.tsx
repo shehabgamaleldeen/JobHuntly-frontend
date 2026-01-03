@@ -43,6 +43,7 @@ function CompanyForm() {
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("isPremium", String(response.data.data.user.isPremium));
 
       navigate("/DashboardRecruiter/settings");
     } catch (err: unknown) {

@@ -47,6 +47,7 @@ function JobSeekerForm() {
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("isPremium", String(res.data.data.user.isPremium));
 
       navigate("/Dashboard/settings");
     } catch (err: unknown) {
