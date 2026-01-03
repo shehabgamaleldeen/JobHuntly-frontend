@@ -4,6 +4,7 @@ import type { Company } from './Types';
 import CompanyPage from './CompanyPage';
 import instance from '@/components/AxiosConfig/instance'
 
+
 function CompanyPageWrapper() {
   const { id } = useParams<{ id: string }>();
   const [company, setCompany] = useState<Company | null>(null);
@@ -11,31 +12,32 @@ function CompanyPageWrapper() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCompany = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  const fetchCompany = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        const companyId = id || "1";
+      const companyId = id || "1";
 
         const response = await instance.get(`/companies/${companyId}`);
         
         setCompany(response.data.data);
 
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Failed to fetch company");
-        }
-        console.error("Error fetching company:", err);
-      } finally {
-        setLoading(false);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to fetch company");
       }
-    };
+      console.error("Error fetching company:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchCompany();
-  }, [id]);
+  fetchCompany();
+}, [id]);
+
 
   if (loading) {
     return (

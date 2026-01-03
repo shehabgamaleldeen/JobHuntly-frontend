@@ -3,7 +3,7 @@ import PerksBenefits from './PerksBenefits.tsx'
 import SimilarJops from './SimilarJops.tsx'
 import { useEffect, useState } from 'react'
 import instance from '../../AxiosConfig/instance.ts'
-import './style.css'
+// import './style.css'
 import { useParams } from 'react-router-dom'
 
 const JobDescriptionsRec = () => {
@@ -13,7 +13,7 @@ const JobDescriptionsRec = () => {
   }
   const [job, setJob] = useState<Job | null>(null)
 
-  async function getJop() {
+  async function getJob() {
     try {
       const res = await instance.get(`/jobs/${id}`)
       setJob(res.data)
@@ -23,12 +23,12 @@ const JobDescriptionsRec = () => {
   }
 
   useEffect(() => {
-    getJop()
+    getJob()
   }, [])
 
   return (
     <>
-      <section className="jobDescriptionsCard bg-[#F8F8FD] my-14 w-screen flex justify-center">
+      <section className="jobDescriptionsCard bg-[#F8F8FD] my-14  flex justify-center">
         <div className="bg-[#FFFFFF] w-4/5 m-auto p-6 flex max-sm:flex-col justify-between border border-[#D6DDEB]">
           <div className="flex max-sm:flex-col items-center  max-sm:place-items-start">
             <img
@@ -53,7 +53,7 @@ const JobDescriptionsRec = () => {
         </div>
       </section>
 
-      <section className="jobDescriptionsInfo bg-[#FFFFFF] w-screen h-1/4 flex justify-center">
+      <section className="jobDescriptionsInfo bg-[#FFFFFF] h-1/4 flex justify-center">
         <div className="py-16 max-sm:py-10 w-4/5 grid grid-cols-[2fr_1fr] gap-16 max-sm:gap-8 max-md:grid-cols-1">
           <div className="discription ">
             <div>

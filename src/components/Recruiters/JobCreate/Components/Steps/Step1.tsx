@@ -333,7 +333,7 @@ export default function Step1() {
                             type="number"
                             placeholder="From"
                             className={`text-[11px] lg:text-base 
-                            w-[70px] sm:w-[100px] md:w-[150px] lg:w-[130px] 
+                            w-[80px] sm:w-[100px] md:w-[100px] lg:w-[130px] 
                             h-7 md:h-10 p-3 sm:p-4 
                             border-2 rounded ${errors.salaryFrom ? "border-red-500" : "border-[#D6DDEB]"}`}
                             {...register("salaryFrom", {
@@ -354,7 +354,7 @@ export default function Step1() {
                             type="number"
                             placeholder="To"
                             className={`text-[11px] lg:text-base 
-                            w-[70px] sm:w-[100px] md:w-[100px] lg:w-[130px] 
+                            w-[80px] sm:w-[100px] md:w-[100px] lg:w-[130px] 
                             h-7 md:h-10 p-3 sm:p-4 
                             border-2 rounded ${errors.salaryTo ? "border-red-500" : "border-[#D6DDEB]"}`}
                             {...register("salaryTo", {
