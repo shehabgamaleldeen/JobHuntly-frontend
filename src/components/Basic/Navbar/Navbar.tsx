@@ -1,33 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import mainImage from '../../../assets/images/Logo.svg';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import mainImage from '../../../assets/images/Logo.svg'
+import { Link, useNavigate } from 'react-router-dom'
+import PremiumNotification from '../../Premium/PremiumNotification'
 
 function Navbar() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = React.useState(
+    () => !!localStorage.getItem('accessToken')
+  )
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userRole, setUserRole] = useState<string | null>(null)
+  const navigate = useNavigate()
+  const [isPremium, setIsPremium] = React.useState(
+    () => localStorage.getItem('isPremium') === 'true'
+  )
+
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setIsLoggedIn(!!localStorage.getItem('accessToken'))
+      setIsPremium(localStorage.getItem('isPremium') === 'true')
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
+  }, [])
 
   useEffect(() => {
     // Check for accessToken in localStorage
-    const accessToken = localStorage.getItem('accessToken');
-    const role = localStorage.getItem('role');
+    const accessToken = localStorage.getItem('accessToken')
+    const role = localStorage.getItem('role')
 
     if (accessToken) {
-      setIsAuthenticated(true);
-      setUserRole(role);
+      setIsAuthenticated(true)
+      setUserRole(role)
     } else {
-      setIsAuthenticated(false);
-      setUserRole(null);
+      setIsAuthenticated(false)
+      setUserRole(null)
     }
-  }, []);
+  }, [])
 
   const handleAvatarClick = () => {
     if (userRole === 'COMPANY') {
-      navigate('/DashboardRecruiter');
+      navigate('/DashboardRecruiter')
     } else if (userRole === 'JOB_SEEKER') {
-      navigate('/Dashboard');
+      navigate('/Dashboard')
     }
-  };
+  }
 
   return (
     <nav className="bg-white border-b border-gray-200">
@@ -61,6 +78,7 @@ function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
+            <PremiumNotification isPremium={isPremium} />
             {!isAuthenticated ? (
               <>
                 <button className="px-6 py-2 text-indigo-600 font-medium text-sm hover:text-indigo-700 transition-colors">
@@ -82,7 +100,7 @@ function Navbar() {
         </div>
       </div>
     </nav>
-  );
+  )
 }
 
-export default Navbar;
+export default Navbar
