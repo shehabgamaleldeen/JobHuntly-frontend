@@ -76,7 +76,7 @@ function SearchCompany() {
         <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-4">
-              Find your <span className="text-blue-600">dream companies</span>
+              Find your <span className="text-[#4640DE]">dream companies</span>
             </h1>
 
             <p className="text-gray-600 text-lg mb-10">
@@ -111,7 +111,7 @@ function SearchCompany() {
 
               <button 
                 onClick={handleSearch}
-                className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
+                className="bg-[#4640DE] text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
               >
                 Search
               </button>

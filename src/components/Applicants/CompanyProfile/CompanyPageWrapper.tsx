@@ -19,8 +19,9 @@ function CompanyPageWrapper() {
 
       const companyId = id || "1";
 
-      const response = await instance.get(`/companies/${companyId}`);
-      setCompany(response.data.data);
+        const response = await instance.get(`/companies/${companyId}`);
+        
+        setCompany(response.data.data);
 
     } catch (err) {
       if (err instanceof Error) {
