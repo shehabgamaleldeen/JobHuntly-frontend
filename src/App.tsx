@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
+import PaymentSuccessHandler from './components/Premium/PaymentSuccessHandler'
 import { Toaster } from '@/components/ui/sonner'
 import Navbar from './components/Basic/Navbar/Navbar'
 import Footer from './components/Basic/footer/footer'
@@ -177,6 +178,7 @@ function App() {
       </main>
 
       <Footer />
+      <PaymentSuccessHandler />
       <Toaster />
     </div>
   )

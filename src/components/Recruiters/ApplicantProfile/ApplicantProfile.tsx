@@ -60,7 +60,8 @@ const ApplicantProfile = () => {
                   {application?.jobId?.title}
                 </h4>
                 <span className="text-[#515B6F] font-normal text-sm">
-                  {application?.jobId?.categories[0]} . Full-Time
+                  {application?.jobId?.categories[0]} .{' '}
+                  {application?.jobId?.employmentTypes}
                 </span>
               </div>
             </div>
