@@ -20,7 +20,6 @@ function CompanyPageWrapper() {
 
         const response = await instance.get(`/companies/${companyId}`);
         
-        // الـ data جاية بالشكل الصح من الـ API
         setCompany(response.data.data);
 
       } catch (err) {
