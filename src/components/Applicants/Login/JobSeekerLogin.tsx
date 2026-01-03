@@ -57,7 +57,7 @@ export default function JobSeekerLogin({ rememberMe }: Props) {
 
       storage.setItem('accessToken', accessToken)
       storage.setItem('refreshToken', refreshToken)
-      storage.setItem('role', role)
+      // storage.setItem('role', role)
       localStorage.setItem(
         'isPremium',
         String(response.data.data.user.isPremium)
