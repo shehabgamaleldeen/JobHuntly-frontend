@@ -22,7 +22,7 @@ export default function StatisticsCard({ title, bgColor, count }: { title: strin
     let titleClass = "title-style-a";  // Default to h2-like
 
     if (width < 410) titleClass = "title-style-c";  // h4-like
-    else if (width < 640) titleClass = "title-style-b";  // h5-like    
+    else if (width < 640) titleClass = "title-style-a";  // h5-like    
     else if (width < 670) titleClass = "title-style-e";  // h6-like
     else if (width < 755) titleClass = "title-style-d";  // h5-like
     else if (width < 870) titleClass = "title-style-b";  // h3-like
