@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import JobListTable from "./JobListTable";
 // import DashboardSidebarRecruiterComponent from "../Dashboard/DashboardSidebarRecruiterComponent";
 import instance from '@/components/AxiosConfig/instance'
@@ -14,7 +14,9 @@ export interface Job {
   applicantsCount: number;
 }
 
+
 export default function JobListPage() {
+  const { companyId } = useParams<{ companyId: string }>();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,20 +26,24 @@ export default function JobListPage() {
     search: "",
   });
 
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const page = Number(searchParams.get("page") || 1);
   const limit = Number(searchParams.get("limit") || 7);
+
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchJobs = async (isSilent = false) => {
+    if (!companyId) return;
     try {
+      // Only trigger the full-page loading UI if NOT a silent refresh
       if (!isSilent) setLoading(true);
-      setError(null);
 
+      setError(null);
       const queryString = searchParams.toString();
-      const res = await instance.get(`/companies/me/jobs?${queryString}`);
+      const res = await instance.get(`/companies/${companyId}/jobs?${queryString}`);
 
       setJobs(res.data.data.data);
       setTotalPages(res.data.data.totalPages || 1);
@@ -51,12 +57,13 @@ export default function JobListPage() {
 
   useEffect(() => {
     fetchJobs();
-  }, [searchParams]); 
+  }, [companyId, searchParams]);
+
 
   const goToPage = (newPage: number) => {
     searchParams.set("page", newPage.toString());
     searchParams.set("limit", limit.toString());
-    navigate(`?${searchParams.toString()}`); 
+    navigate(`/companies/${companyId}/jobs?${searchParams.toString()}`);
   };
 
   if (loading) {
@@ -97,6 +104,7 @@ export default function JobListPage() {
             <option value="">All Job Types</option>
             <option value="Full-Time">Full-Time</option>
             <option value="Part-Time">Part-Time</option>
+            <option value="Remote">Remote</option>
             <option value="Internship">Internship</option>
             <option value="Contract">Contract</option>
           </select>
@@ -117,7 +125,9 @@ export default function JobListPage() {
               });
               searchParams.set("page", "1");
               searchParams.set("limit", limit.toString());
-              navigate(`?${searchParams.toString()}`); 
+              navigate(
+                `/companies/${companyId}/jobs?${searchParams.toString()}`
+              );
             }}
             className="bg-purple-600 text-white px-3 py-1 rounded"
           >
@@ -142,9 +152,8 @@ export default function JobListPage() {
                 <button
                   key={p}
                   onClick={() => goToPage(p)}
-                  className={`px-3 py-1 border rounded ${
-                    p === page ? "bg-purple-300 text-white" : ""
-                  }`}
+                  className={`px-3 py-1 border rounded ${p === page ? "bg-purple-300 text-white" : ""
+                    }`}
                 >
                   {p}
                 </button>
