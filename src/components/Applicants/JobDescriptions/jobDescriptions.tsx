@@ -8,6 +8,28 @@ import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Button } from '@/components/ui/button'
+import JobPath from './JobPath.tsx'
+import { toast } from 'sonner'
+
+const shareJob = async () => {
+  const url = window.location.href
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'Job Opportunity',
+        text: 'Check out this job',
+        url,
+      })
+    } catch {
+      console.log('User cancelled share')
+    }
+  } else {
+    await navigator.clipboard.writeText(url)
+    // show toast instead of alert
+    toast.success('Job link copied to clipboard')
+  }
+}
 
 const JobDescriptions = () => {
   dayjs.extend(relativeTime)
@@ -22,7 +44,10 @@ const JobDescriptions = () => {
     try {
       const res = await instance.get(`/jobs/${id}`, {
         headers: {
-          access_token: localStorage.getItem('token') || '',
+          access_token:
+            localStorage.getItem('accessToken') ||
+            sessionStorage.getItem('accessToken') ||
+            '',
         },
       })
       setJob(res.data.data)
@@ -36,9 +61,7 @@ const JobDescriptions = () => {
   }, [id])
 
   useEffect(() => {
-    if (job?.hasApplied) {
-      setHasApplied(true)
-    }
+    setHasApplied(Boolean(job?.hasApplied))
   }, [job])
 
   // for debbuging
@@ -48,7 +71,10 @@ const JobDescriptions = () => {
 
   return (
     <>
-      <section className="jobDescriptionsCard bg-[#F8F8FD] py-14 w-screen flex justify-center">
+      <section className="jobDescriptionsCard bg-[#F8F8FD] py-14 w-screen flex justify-center flex-col">
+        <div className="w-4/5 m-auto mb-10">
+          <JobPath jobName={job?.title} />
+        </div>
         <div className="bg-[#FFFFFF] w-4/5 m-auto p-6 flex max-sm:flex-col justify-between border border-[#D6DDEB]">
           <div className="flex max-sm:flex-col items-center  max-sm:place-items-start">
             <img
@@ -67,7 +93,25 @@ const JobDescriptions = () => {
           </div>
 
           <div className="flex items-center gap-16">
-            <img className="w-8" src="/ShareIcon.png" alt="Share Icon" />
+            <img
+              src="/ShareIcon.png"
+              alt="Share Icon"
+              onClick={shareJob}
+              className="
+                w-9 h-9
+                p-1.5
+                cursor-pointer
+                rounded-full
+                transition
+                duration-200
+                ease-in-out
+                hover:bg-gray-100
+                active:scale-95
+                focus:outline-none
+                focus:ring-2
+                focus:ring-blue-500
+              "
+            />
             {hasApplied ? (
               <Button
                 disabled
@@ -93,12 +137,12 @@ const JobDescriptions = () => {
               <h2 className="text-[#25324B] text-3xl font-semibold">
                 Description
               </h2>
-              <p className="text-[#515B6F] mt-4 mb-10">{job?.description}</p>
+              <p className="text-[#515B6F] mt-4">{job?.description}</p>
             </div>
 
             <div className="job-needs">
               <div className="mb-5">
-                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize mt-10">
                   Responsibilities
                 </h2>
                 <div className="mt-2">
@@ -118,7 +162,7 @@ const JobDescriptions = () => {
                 </div>
               </div>
               <div className="mb-5">
-                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize mt-10">
                   Who You Are
                 </h2>
                 <div className="mt-2">
@@ -138,7 +182,7 @@ const JobDescriptions = () => {
                 </div>
               </div>
               <div className="mb-5">
-                <h2 className="text-[#25324B] text-3xl font-semibold capitalize">
+                <h2 className="text-[#25324B] text-3xl font-semibold capitalize mt-10">
                   Nice-To-Haves
                 </h2>
                 <div className="mt-2">
@@ -186,7 +230,7 @@ const JobDescriptions = () => {
                   Job Type
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.employmentTypes?.[0]}
+                  {job?.employmentTypes}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
@@ -212,14 +256,22 @@ const JobDescriptions = () => {
               </div>
             </div>
             <div className="RequiredSkills mt-4">
-              <h2 className="text-[#25324B] text-3xl font-semibold">
+              <h2 className="text-[#25324B] text-3xl font-semibold mb-2">
                 Required Skills
               </h2>
+              {job?.skillsIds.map((skill: any) => (
+                <span
+                  key={skill?._id}
+                  className="text-[#4640DE] p-3 bg-[#F8F8FD] w-fit inline-block text-base font-semibold rounded-2xl text-center my-1 mr-4"
+                >
+                  {skill?.name}
+                </span>
+              ))}
             </div>
           </div>
         </div>
       </section>
-      <PerksBenefits />
+      <PerksBenefits Benefits={job?.benefits} />
       <div className="bg-[#F8F8FD]">
         <SimilarJobs job={job} />
       </div>
