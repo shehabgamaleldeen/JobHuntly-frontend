@@ -19,10 +19,10 @@ function HeaderTitle() {
             <br />
             more than
             <br />
-            <span className="text-blue-600">5000+ Jobs</span>
+            <span className="text-[#4640DE]">5000+ Jobs</span>
           </h1>
 
-          <div className="w-96 h-2 bg-blue-600 rounded-full mb-8"></div>
+          <div className="w-96 h-2 bg-[#4640DE] rounded-full mb-8"></div>
 
           <p className="text-gray-600 text-lg mb-10 overflow-x-hidden ">
             Great platform for the job seeker that searching for new career
@@ -84,7 +84,7 @@ function HeaderTitle() {
 
             <button 
               onClick={handleSearch}
-              className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
+              className="bg-[#4640DE] text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
             >
               Search my job
             </button>

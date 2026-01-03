@@ -8,14 +8,14 @@ function JobHeader() {
           
           <div>
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900">
-              Featured <span className="text-blue-600">jobs</span>
+              Featured <span className="text-[#4640DE]">jobs</span>
             </h2>
           </div>
 
           <div>
             <a 
               href="#" 
-              className="flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 transition-colors group"
+              className="flex items-center gap-2 text-[#4640DE] font-semibold hover:text-[#4640DE] transition-colors group"
             >
               <span>Show all jobs</span>
               <svg 
