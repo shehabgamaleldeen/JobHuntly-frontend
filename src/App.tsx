@@ -125,10 +125,10 @@ function App() {
               <Route path="job-listing" element={<JobListing />}>
                 
                 {/* company */}
-                <Route path=":companyId" element={<JobListPage />} />
+                <Route index element={<JobListPage />} />
             
                 {/* job */}
-                <Route path=":companyId/:jobId" element={<ApplicantsPage />} />
+                <Route path=":jobId" element={<ApplicantsPage />} />
             
                 {/* applicant profile (EXTENDS job path) */}
                 <Route
