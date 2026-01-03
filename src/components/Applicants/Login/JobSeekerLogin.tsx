@@ -36,7 +36,7 @@ export default function JobSeekerLogin({ rememberMe }: Props) {
         password: data.password,
       });
 
-      const { accessToken, refreshToken, user } = response.data.data;
+      const { accessToken, refreshToken, user , role } = response.data.data;
 
       if (!accessToken || !refreshToken) {
         setErrorMsg("Login failed: tokens not returned");
@@ -57,6 +57,7 @@ export default function JobSeekerLogin({ rememberMe }: Props) {
 
       storage.setItem("accessToken", accessToken);
       storage.setItem("refreshToken", refreshToken);
+      storage.setItem("role", role);
 
       navigate("/find-jobs");
     } catch (err: unknown) {
