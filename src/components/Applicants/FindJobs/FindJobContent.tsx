@@ -7,7 +7,7 @@ function FindJobContent(props: any) {
         <div className="text-center mb-6">
           <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-10">
             {props.title}
-            <span className="text-blue-600 ml-4">
+            <span className="text-[#4640DE] ml-4">
               {props.highlightText}
             </span>
           </h1>
@@ -68,7 +68,7 @@ function FindJobContent(props: any) {
                 <option>Paris, France</option>
               </select>
             </div>
-            <button className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap">
+            <button className="bg-[#4640DE] text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap">
               Search
             </button>
           </div>
