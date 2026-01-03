@@ -42,6 +42,7 @@ export default function Step4() {
 
     const handleConfirmJob = () => {
         if (questions.length === 0) {
+            toast.error("Please add at least one question before posting the job")
             return
         }
         setConfirmJobOpen(true);
@@ -100,7 +101,7 @@ export default function Step4() {
                 loading: 'Updating Job ...',
                 success: () => {
                     console.log("Job Updated Successfully");
-                    navigate("/company");
+                    navigate("/DashboardRecruiter");
                     setTimeout(() => {
                         clearAllData();
                     }, 100);
@@ -117,7 +118,7 @@ export default function Step4() {
                 loading: 'Posting Job ...',
                 success: () => {
                     console.log("Job Created Successfully");
-                    navigate("/company");
+                    navigate("/DashboardRecruiter");
                     setTimeout(() => {
                         clearAllData();
                     }, 100);
@@ -168,61 +169,8 @@ export default function Step4() {
             <section className="mb-6 md:mb-8">
                 <InputTitle
                     title="Job Application Questions"
-                    description="Add optional questions for your applicants such as essay or yes/no type questions"
+                    description="Add questions for your applicants such as essay or yes/no type questions"
                 />
-            </section>
-
-            <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
-
-            {/* ADD QUESTION SECTION */}
-            <section className="mb-6 md:mb-10">
-                <InputTitle
-                    title="Add a Question"
-                    description="Choose a type and write the question text"
-                />
-
-                <div className="flex flex-col space-y-8 mt-3">
-                    {/* Question Type */}
-                    <select
-                        value={questionType}
-                        onChange={(e) => setQuestionType(e.target.value as QuestionType)}
-                        className="
-                            w-[150px]
-                            text-xs lg:text-base p-3 
-                            border-2 border-[#D6DDEB] rounded
-                        "
-                    >
-                        <option value="YES_NO">Yes / No Question</option>
-                        <option value="TEXT">Essay Question</option>
-                    </select>
-
-                    {/* Question Text Input */}
-                    <textarea
-                        value={questionText}
-                        onChange={(e) => setQuestionText(e.target.value)}
-                        placeholder="Write your question here..."
-                        className="
-                            w-14/16 text-xs lg:text-base p-4 
-                            h-[90px] md:h-[120px]
-                            border-2 border-[#D6DDEB] rounded resize-none
-                        "
-                    />
-
-                    {/* Add Button */}
-                    <button
-                        onClick={handleAddQuestion}
-                        type="button"
-                        className="
-                            w-[150px]
-                            px-4 py-2 md:px-6 md:py-3 
-                            bg-indigo-600 hover:bg-indigo-700
-                            text-white rounded-md text-sm font-medium
-                            transition-colors
-                        "
-                    >
-                        Add Question
-                    </button>
-                </div>
             </section>
 
             <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
@@ -231,12 +179,12 @@ export default function Step4() {
             <section>
                 <InputTitle
                     title="Questions Preview"
-                    description="Questions added in the application form"
+                    description=""
                 />
 
-                <div className="mt-6 w-full space-y-4">
+                <div className="mt-2 w-full space-y-4">
                     {questions.length === 0 && (
-                        <p className="text-sm text-gray-500">
+                        <p className="text-[12px] sm:text-sm text-gray-500">
                             No questions added yet.
                         </p>
                     )}
@@ -282,6 +230,62 @@ export default function Step4() {
                     ))}
                 </div>
             </section>
+
+            <hr className="border-[0px] pb-4 md:pb-8" />
+
+            {/* ADD QUESTION SECTION */}
+            <section className="mb-6 md:mb-10">
+                <InputTitle
+                    title="Add a Question"
+                    description=""
+                />
+
+                <div className="flex flex-col space-y-6 mt-3">
+                    {/* Question Type */}
+                    <select
+                        value={questionType}
+                        onChange={(e) => setQuestionType(e.target.value as QuestionType)}
+                        className="
+                            w-40 sm:w-50
+                            h-7 sm:h-10
+                            text-xs lg:text-base p-1
+                            border-2 border-[#D6DDEB] rounded
+                        "
+                    >
+                        <option value="YES_NO">Yes / No Question</option>
+                        <option value="TEXT">Essay Question</option>
+                    </select>
+
+                    {/* Question Text Input */}
+                    <textarea
+                        value={questionText}
+                        onChange={(e) => setQuestionText(e.target.value)}
+                        placeholder="Write your question here..."
+                        className="
+                            w-80 sm:w-1/2 text-xs lg:text-base p-4 
+                            h-[90px] md:h-[100px]
+                            border-2 border-[#D6DDEB] rounded resize-none
+                        "
+                    />
+
+                    {/* Add Button */}
+                    <button
+                        onClick={handleAddQuestion}
+                        type="button"
+                        className="
+                            w-[150px]
+                            px-4 py-2 md:px-6 md:py-3 
+                            bg-indigo-600 hover:bg-indigo-700
+                            text-white rounded-md text-sm font-medium
+                            transition-colors
+                        "
+                    >
+                        Add Question
+                    </button>
+                </div>
+            </section>
+
+            <hr className="border-[#D6DDEB] pb-4 md:pb-8" />
 
             <section className="flex justify-between pt-6">
                 {/* Previous Step */}
