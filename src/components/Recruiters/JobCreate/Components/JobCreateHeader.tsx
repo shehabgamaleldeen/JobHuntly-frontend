@@ -1,8 +1,17 @@
+import { useNavigate } from "react-router-dom";
+
 export default function JobCreateHeader() {
+    const navigate = useNavigate()
+
+    const handleBack = () => {
+        localStorage.removeItem("job_create_data");
+        navigate("/DashboardRecruiter");
+    };
+
     return (
         <div className="job-create-header">
             <header className="flex items-center gap-2 pb-2 md:pb-4 lg:pb-8">
-                <button>
+                <button onClick={handleBack}>
                     <img
                         className="w-5 h-5 md:w-6 md:h-6 lg:w-9 lg:h-9"
                         src="/public/images/JobCreateHeader/BackIcon.png"
@@ -15,10 +24,6 @@ export default function JobCreateHeader() {
             </header>
 
             <nav className="pb-4 sm:pb-2 md:pb-4 lg:pb-8">
-                {/* 1. Default (mobile): flex-col (one column/4 rows)
-                  2. sm (640px) to before md (768px): grid grid-cols-2 (two columns/2 rows)
-                  3. md (768px) and up: flex-row justify-evenly (one row/4 columns)
-                */}
                 <ul className="flex flex-col items-center 
                   sm:grid sm:grid-cols-2 sm:gap-2 sm:p-2 sm:border sm:border-[#D6DDEB] sm:rounded
                   md:flex md:flex-row md:justify-evenly md:gap-0 md:p-0">

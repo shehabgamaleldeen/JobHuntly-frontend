@@ -1,253 +1,328 @@
-import type { JSX } from "react";
-import React, { useState } from "react";
-import mainImage from "../../../assets/images/Logo.svg";
-import HouseIcon from "../../../assets/icons/house-solid-full (1).svg";
-import FolderIcon from "../../../assets/icons/folder-closed-solid-full.svg";
-import UserIcon from "../../../assets/icons/user-solid-full.svg";
-import HelpIcon from "../../../assets/icons/circle-question-regular-full.svg";
-import GearIcon from "../../../assets/icons/gear-solid-full.svg";
-import ProfileImage from "../../../assets/images/alex-suprun-ZHvM3XIOHoE-unsplash 1.png";
+import type { JSX } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate, NavLink } from 'react-router-dom'
 
-export type PageKey =
-  | "dashboard"
-  | "applications"
-  | "publicProfile"
-  | "settings"
-  | "help";
+import mainImage from '../../../assets/images/Logo.svg'
+import HouseIcon from '../../../assets/icons/house-solid-full (1).svg'
+import FolderIcon from '../../../assets/icons/folder-closed-solid-full.svg'
+import UserIcon from '../../../assets/icons/user-solid-full.svg'
+import HelpIcon from '../../../assets/icons/circle-question-regular-full.svg'
+import GearIcon from '../../../assets/icons/gear-solid-full.svg'
+import PremiumNotification from '../../Premium/PremiumNotification'
+import PremiumStatusCard from '../../Premium/PremiumStatusCard'
+import instance from '@/components/AxiosConfig/instance'
 
-export interface DashboardSidebarProps {
-  active?: PageKey;
-  onNavigate?: (page: PageKey) => void;
+interface UserProfile {
+  user: {
+    _id: string
+    fullName: string
+    email: string
+    role: string
+  }
+  profile: {
+    avatarUrl?: string
+    logoUrl?: string
+  }
 }
 
-export function DashboardSidebarComponent({
-  active = "dashboard",
-  onNavigate,
-}: DashboardSidebarProps): JSX.Element {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+const linkClass = ({ isActive }: { isActive: boolean }) =>
+  `flex items-center gap-3 px-3 py-2 rounded-lg w-full transition
+   ${
+     isActive
+       ? 'bg-blue-50 text-[#4640DE] font-semibold'
+       : 'text-[#7C8493] hover:bg-blue-50'
+   }`
 
-  const itemClass = (p: PageKey) =>
-    `flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer w-full ${
-      active === p ? "bg-blue-50 text-[#4640DE] font-semibold" : "text-[#7C8493] hover:bg-blue-50"
-    }`;
+export function DashboardSidebarComponent(): JSX.Element {
+  const navigate = useNavigate()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [isPremium, setIsPremium] = useState(
+    () => localStorage.getItem('isPremium') === 'true'
+  )
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const handleNav = (p: PageKey, href?: string) => {
-    if (onNavigate) onNavigate(p);
-    else if (href) window.location.href = href;
-    // close drawer on mobile after navigating
-    setDrawerOpen(false);
-  };
+  // Fetch user profile
+  useEffect(() => {
+    fetchUserProfile()
+  }, [])
+
+  // Listen to premium status changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsPremium(localStorage.getItem('isPremium') === 'true')
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
+  }, [])
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await instance.get('/settings/getProfile')
+      if (response.data.success) {
+        setUserProfile(response.data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('accessToken')
+    sessionStorage.removeItem('refreshToken')
+    sessionStorage.removeItem('role')
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('role')
+    localStorage.removeItem('isPremium')
+    navigate('/login')
+    window.dispatchEvent(new Event('storage'))
+  }
+
+  const closeDrawer = () => setDrawerOpen(false)
+
+  // Get avatar letter based on role
+  const getAvatarLetter = () => {
+    if (!userProfile) return 'U'
+    return userProfile.user.role === 'COMPANY' ? 'C' : 'U'
+  }
+
+  // Get avatar/logo URL
+  const getAvatarUrl = () => {
+    if (!userProfile) return null
+    return userProfile.profile.avatarUrl || userProfile.profile.logoUrl || null
+  }
+
+  // Don't render if no user data and not loading
+  if (!loading && !userProfile) return null
 
   return (
     <>
-      {/* MOBILE: hamburger button */}
+      {/* MOBILE: hamburger */}
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button
-          aria-label="Open navigation"
           onClick={() => setDrawerOpen(true)}
           className="p-2 rounded-md bg-white shadow-sm border border-gray-200"
         >
-          {/* hamburger icon */}
-          <svg className="w-6 h-6 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            className="w-6 h-6 text-slate-700"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         </button>
       </div>
 
       {/* DESKTOP SIDEBAR */}
-      <aside
-        className="
-          hidden md:flex md:w-64 min-h-screen bg-[#fbfdff] border-r border-gray-200 
-          p-6 flex-col justify-between
-        "
-        aria-label="Sidebar"
-      >
-        {/* Top section */}
+      <aside className="hidden md:flex md:w-64 min-h-screen bg-[#fbfdff] border-r border-gray-200 p-6 flex-col justify-between">
         <div>
-          {/* Logo */}
-          <div className="flex items-center gap-3 pb-5">
-            <img src={mainImage} alt="JobHuntly logo" className="object-contain w-28" />
-          </div>
+          <Link to="/">
+            <img src={mainImage} alt="logo" className="w-28 mb-6" />
+          </Link>
 
-          {/* Navigation */}
-          <nav className="flex flex-col gap-3 text-[#7C8493]" aria-label="Main navigation">
-            <button type="button" className={itemClass("dashboard")} onClick={() => handleNav("dashboard")}>
-              <img className="w-5 h-5" src={HouseIcon} alt="Dashboard" />
-              <span>Dashboard</span>
-            </button>
+          <nav className="flex flex-col gap-3">
+            <NavLink to="" end className={linkClass}>
+              <img src={HouseIcon} className="w-5 h-5" alt="Dashboard" />
+              Dashboard
+            </NavLink>
 
-            <button type="button" className={itemClass("applications")} onClick={() => handleNav("applications")}>
-              <img className="w-5 h-5" src={FolderIcon} alt="Applications" />
-              <span>My Applications</span>
-            </button>
+            <NavLink to="my-applications" className={linkClass}>
+              <img src={FolderIcon} className="w-5 h-5" alt="Applications" />
+              My Applications
+            </NavLink>
 
-            <button type="button" className={itemClass("publicProfile")} onClick={() => handleNav("publicProfile")}>
-              <img className="w-5 h-5" src={UserIcon} alt="Public profile" />
-              <span>My Public Profile</span>
-            </button>
+            <NavLink to="public-profile" className={linkClass}>
+              <img src={UserIcon} className="w-5 h-5" alt="Profile" />
+              My Public Profile
+            </NavLink>
           </nav>
 
-          {/* Settings */}
-          <div className="mt-10 text-[#7C8493]">
-            <h4 className="text-xs text-[#7C8493] uppercase mb-2">Settings</h4>
+          <div className="mt-6">
+            {isPremium ? (
+              <PremiumStatusCard activeSince={new Date().toISOString()} />
+            ) : (
+              <PremiumNotification isPremium={false} />
+            )}
+          </div>
 
-            <ul className="space-y-2">
-              <li>
-                <button
-                  type="button"
-                  className={itemClass("settings")}
-                  onClick={() => handleNav("settings")}
-                >
-                  <img className="w-5 h-5" src={GearIcon} alt="Settings" />
-                  <span>Settings</span>
-                </button>
-              </li>
+          <div className="mt-10">
+            <h4 className="text-xs uppercase text-[#7C8493] mb-2">Settings</h4>
 
-              <li>
-                <button
-                  type="button"
-                  className={itemClass("help")}
-                  onClick={() => handleNav("help")}
-                >
-                  <img className="w-5 h-5" src={HelpIcon} alt="Help center" />
-                  <span>Help Center</span>
-                </button>
-              </li>
-            </ul>
+            <NavLink to="settings" className={linkClass}>
+              <img src={GearIcon} className="w-5 h-5" alt="Settings" />
+              Settings
+            </NavLink>
+
+            <NavLink to="help" className={linkClass}>
+              <img src={HelpIcon} className="w-5 h-5" alt="Help" />
+              Help Center
+            </NavLink>
           </div>
         </div>
 
-        {/* Profile / Logout */}
-        <div className="flex items-center gap-3 mt-6">
-          <img src={ProfileImage} alt="avatar" className="w-18 h-18 rounded-full object-cover" />
-
-          <div className="flex flex-col gap-1 text-sm">
-            <div className="pb-1.5">
-              <div className="font-semibold">Jake Gyll</div>
-              <div className="text-[#7C8493] text-xs">jakegyll@email.com</div>
+        {/* Profile */}
+        {loading ? (
+          <div className="flex items-center gap-3">
+            <div className="w-14 h-14 rounded-full bg-gray-200 animate-pulse" />
+            <div className="flex-1">
+              <div className="h-4 bg-gray-200 rounded animate-pulse mb-2" />
+              <div className="h-3 bg-gray-200 rounded animate-pulse w-3/4" />
             </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                /* add logout logic here */
-              }}
-              className="px-4 py-2 border border-rose-200 rounded text-rose-500 text-sm hover:bg-rose-50 w-fit"
-            >
-              Log Out
-            </button>
           </div>
-        </div>
+        ) : userProfile ? (
+          <div className="flex items-center gap-3">
+            {getAvatarUrl() ? (
+              <img
+                src={getAvatarUrl()!}
+                alt={userProfile.user.fullName}
+                className="w-14 h-14 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                <span className="text-xl font-bold text-white">
+                  {getAvatarLetter()}
+                </span>
+              </div>
+            )}
+            <div>
+              <div className="font-semibold text-gray-900 truncate max-w-[120px]">
+                {userProfile.user.fullName}
+              </div>
+              <div className="text-xs text-[#7C8493] truncate max-w-[120px]">
+                {userProfile.user.email}
+              </div>
+              <button
+                onClick={handleLogout}
+                className="mt-2 px-3 py-1 border border-rose-200 text-rose-500 rounded hover:bg-rose-50 text-sm transition"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        ) : null}
       </aside>
 
       {/* MOBILE DRAWER */}
       {drawerOpen && (
-        <div
-          className="fixed inset-0 z-40 flex"
-          role="dialog"
-          aria-modal="true"
-        >
-          {/* overlay */}
-          <div
-            className="fixed inset-0 bg-black/40"
-            onClick={() => setDrawerOpen(false)}
-            aria-hidden="true"
-          />
+        <div className="fixed inset-0 z-40 flex">
+          <div className="fixed inset-0 bg-black/40" onClick={closeDrawer} />
 
-          {/* sliding panel */}
-          <div className="relative w-72 max-w-full bg-[#fbfdff] border-r border-gray-200 p-6 overflow-auto transform transition ease-in-out duration-200 translate-x-0">
-            {/* close button */}
-            <div className="absolute top-4 right-4">
+          <div className="relative w-72 bg-[#fbfdff] p-6 border-r h-full overflow-y-auto flex flex-col justify-between">
+            <div>
               <button
-                aria-label="Close navigation"
-                onClick={() => setDrawerOpen(false)}
-                className="p-2 rounded-md bg-white shadow-sm border border-gray-200"
+                onClick={closeDrawer}
+                className="absolute top-4 right-4 p-2 border rounded hover:bg-gray-100"
               >
-                <svg className="w-5 h-5 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                ✕
               </button>
-            </div>
 
-            {/* Drawer content */}
-            <div className="flex flex-col h-full justify-between">
-              <div>
-                <div className="flex items-center gap-3 pb-5">
-                  <img src={mainImage} alt="JobHuntly logo" className="object-contain w-28" />
-                </div>
+              <Link to="/" onClick={closeDrawer}>
+                <img src={mainImage} alt="logo" className="w-28 mb-6 mt-10" />
+              </Link>
 
-                <nav className="flex flex-col gap-3 text-[#7C8493]" aria-label="Mobile navigation">
-                  <button type="button" className={itemClass("dashboard")} onClick={() => handleNav("dashboard")}>
-                    <img className="w-5 h-5" src={HouseIcon} alt="Dashboard" />
-                    <span>Dashboard</span>
-                  </button>
+              <nav className="flex flex-col gap-3">
+                <NavLink to="" end className={linkClass} onClick={closeDrawer}>
+                  <img src={HouseIcon} className="w-5 h-5" alt="Dashboard" />
+                  Dashboard
+                </NavLink>
+                <NavLink
+                  to="my-applications"
+                  className={linkClass}
+                  onClick={closeDrawer}
+                >
+                  <img src={FolderIcon} className="w-5 h-5" alt="Applications" />
+                  My Applications
+                </NavLink>
+                <NavLink
+                  to="public-profile"
+                  className={linkClass}
+                  onClick={closeDrawer}
+                >
+                  <img src={UserIcon} className="w-5 h-5" alt="Profile" />
+                  My Public Profile
+                </NavLink>
+              </nav>
 
-                  <button type="button" className={itemClass("applications")} onClick={() => handleNav("applications")}>
-                    <img className="w-5 h-5" src={FolderIcon} alt="Applications" />
-                    <span>My Applications</span>
-                  </button>
-
-                  <button type="button" className={itemClass("publicProfile")} onClick={() => handleNav("publicProfile")}>
-                    <img className="w-5 h-5" src={UserIcon} alt="Public profile" />
-                    <span>My Public Profile</span>
-                  </button>
-
-                  <div className="mt-8 text-[#7C8493]">
-                    <h4 className="text-xs text-[#7C8493] uppercase mb-2">Settings</h4>
-
-                    <ul className="space-y-2">
-                      <li>
-                        <button
-                          type="button"
-                          className={itemClass("settings")}
-                          onClick={() => handleNav("settings")}
-                        >
-                          <img className="w-5 h-5" src={GearIcon} alt="Settings" />
-                          <span>Settings</span>
-                        </button>
-                      </li>
-
-                      <li>
-                        <button
-                          type="button"
-                          className={itemClass("help")}
-                          onClick={() => handleNav("help")}
-                        >
-                          <img className="w-5 h-5" src={HelpIcon} alt="Help center" />
-                          <span>Help Center</span>
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </nav>
+              <div className="mt-6">
+                {isPremium ? (
+                  <PremiumStatusCard activeSince={new Date().toISOString()} />
+                ) : (
+                  <PremiumNotification isPremium={false} />
+                )}
               </div>
 
+              <div className="mt-10">
+                <h4 className="text-xs uppercase text-[#7C8493] mb-2">Settings</h4>
+                <NavLink
+                  to="settings"
+                  className={linkClass}
+                  onClick={closeDrawer}
+                >
+                  <img src={GearIcon} className="w-5 h-5" alt="Settings" />
+                  Settings
+                </NavLink>
+                <NavLink to="help" className={linkClass} onClick={closeDrawer}>
+                  <img src={HelpIcon} className="w-5 h-5" alt="Help" />
+                  Help Center
+                </NavLink>
+              </div>
+            </div>
+
+            {/* Mobile Profile */}
+            {loading ? (
               <div className="flex items-center gap-3 mt-6">
-                <img src={ProfileImage} alt="avatar" className="w-18 h-18 rounded-full object-cover" />
-
-                <div className="flex flex-col gap-1 text-sm">
-                  <div className="pb-1.5">
-                    <div className="font-semibold">Jake Gyll</div>
-                    <div className="text-[#7C8493] text-xs">jakegyll@email.com</div>
+                <div className="w-14 h-14 rounded-full bg-gray-200 animate-pulse" />
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2" />
+                  <div className="h-3 bg-gray-200 rounded animate-pulse w-3/4" />
+                </div>
+              </div>
+            ) : userProfile ? (
+              <div className="flex items-center gap-3 mt-6 pt-6 border-t">
+                {getAvatarUrl() ? (
+                  <img
+                    src={getAvatarUrl()!}
+                    alt={userProfile.user.fullName}
+                    className="w-14 h-14 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                    <span className="text-xl font-bold text-white">
+                      {getAvatarLetter()}
+                    </span>
                   </div>
-
+                )}
+                <div>
+                  <div className="font-semibold text-gray-900 truncate max-w-[150px]">
+                    {userProfile.user.fullName}
+                  </div>
+                  <div className="text-xs text-[#7C8493] truncate max-w-[150px]">
+                    {userProfile.user.email}
+                  </div>
                   <button
-                    type="button"
-                    onClick={() => {
-                      /* add logout logic here */
-                    }}
-                    className="px-4 py-2 border border-rose-200 rounded text-rose-500 text-sm hover:bg-rose-50 w-fit"
+                    onClick={handleLogout}
+                    className="mt-2 px-3 py-1 border border-rose-200 text-rose-500 rounded hover:bg-rose-50 text-sm transition"
                   >
                     Log Out
                   </button>
                 </div>
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
       )}
     </>
-  );
+  )
 }
 
-export default DashboardSidebarComponent;
+export default DashboardSidebarComponent

@@ -49,19 +49,6 @@ function Signup() {
             Get more opportunities
           </h2>
 
-          <button
-            className="w-full border border-gray-300 py-3 flex items-center justify-center gap-3 text-gray-700 hover:bg-gray-50"
-          >
-            <img src="/images/google.png" className="w-5 h-5" alt="Google" />
-            Sign Up with Google
-          </button>
-
-          <div className="flex items-center w-full gap-2">
-            <div className="flex-1 h-px bg-gray-300" />
-            <span className="text-gray-500 text-sm">Or sign up with email</span>
-            <div className="flex-1 h-px bg-gray-300" />
-          </div>
-
           {activeTab === "jobseeker" ? <JobSeekerForm /> : <CompanyForm />}
 
           <p className="text-gray-600 text-sm text-center">

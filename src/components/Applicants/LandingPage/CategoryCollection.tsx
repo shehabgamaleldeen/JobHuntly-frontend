@@ -15,7 +15,7 @@ import {
 function CategoryCollection() {
   const [categories, setCategories] = useState<any[]>([]);
 
-  // الـ Icons mapping
+
   const iconMap: { [key: string]: JSX.Element } = {
     "Design": <DesignIcon />,
     "Sales": <SalesIcon />,

@@ -9,7 +9,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
   useEffect(() => {
     if (query.trim() === "") {
-      onSearch(""); // reset
+      onSearch(""); 
     }
   }, [query, onSearch]);
 
@@ -34,7 +34,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       />
       <button
         onClick={handleSearch}
-        className="px-4 py-2 bg-white text-[#25324B] border border-gray-300 rounded hover:bg-gray-50 text-sm md:text-base"
+        className="px-4 py-2 bg-[#F4F4FD] text-[#25324B] border border-gray-300 rounded hover:bg-gray-50 text-sm md:text-base"
       >
         Search
       </button>

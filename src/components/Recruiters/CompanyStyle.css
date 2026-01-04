@@ -21,37 +21,36 @@ button {
 /* For the statistic value (original h1) */
 .stat-value {
     font-weight: 650;
-    font-size: 3rem;
-    line-height: 1;
+    font-size: 2.5rem;
 }
 
 /* Title style variants (mapped from your h2-h5) */
 .title-style-a {  /* Like original h2 */
     font-weight: 650;
-    font-size: 1.5rem;
-    line-height: 2rem;
+    font-size: 1.2rem;
+    line-height: 1.6rem;
 }
 
 .title-style-b {  /* Like original h3 */
     font-weight: 600;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.75rem;
 }
 
 .title-style-c {  /* Like original h4 */
     font-weight: 600;
-    font-size: 1.1rem;
-    line-height: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.3rem;
 }
 
 .title-style-d {  /* Like original h5 */
     font-weight: 600;
     font-size: 1rem;
-    line-height: 1.5rem;
+    line-height: 1.3rem;
 }
 
 .title-style-e {  /* Like original h5 */
     font-weight: 600;
     font-size: 0.9rem;
-    line-height: 1.5rem;
+    line-height: 1.3rem;
 }

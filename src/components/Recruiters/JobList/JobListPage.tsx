@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import JobListTable from "./JobListTable";
-import DashboardSidebarRecruiterComponent from "../Dashboard/DashboardSidebarRecruiterComponent";
+// import DashboardSidebarRecruiterComponent from "../Dashboard/DashboardSidebarRecruiterComponent";
+import instance from '@/components/AxiosConfig/instance'
+import Loader from "@/components/Basic/Loader";
 
 export interface Job {
   _id: string;
@@ -14,39 +15,30 @@ export interface Job {
   applicantsCount: number;
 }
 
-
 export default function JobListPage() {
-  const { companyId } = useParams<{ companyId: string }>();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
-  status: "",   
-  jobType: "",  
-  search: "",   
-});
+    status: "",
+    jobType: "",
+    search: "",
+  });
 
-  
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const page = Number(searchParams.get("page") || 1);
   const limit = Number(searchParams.get("limit") || 7);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const [totalPages, setTotalPages] = useState(1); 
-
- useEffect(() => {
-  if (!companyId) return;
-
-  const fetchJobs = async () => {
+  const fetchJobs = async (isSilent = false) => {
     try {
-      setLoading(true);
+      if (!isSilent) setLoading(true);
       setError(null);
 
       const queryString = searchParams.toString();
-      const res = await axios.get(
-        `http://localhost:3000/companies/${companyId}/jobs?${queryString}`
-      );
+      const res = await instance.get(`/companies/me/jobs?${queryString}`);
 
       setJobs(res.data.data.data);
       setTotalPages(res.data.data.totalPages || 1);
@@ -58,18 +50,18 @@ export default function JobListPage() {
     }
   };
 
-  fetchJobs();
-}, [companyId, searchParams]);
-
+  useEffect(() => {
+    fetchJobs();
+  }, [searchParams]); 
 
   const goToPage = (newPage: number) => {
     searchParams.set("page", newPage.toString());
     searchParams.set("limit", limit.toString());
-    navigate(`/companies/${companyId}/jobs?${searchParams.toString()}`);
+    navigate(`?${searchParams.toString()}`); 
   };
 
   if (loading) {
-    return <p className="text-center mt-10">Loading jobs...</p>;
+    return (<Loader/>)
   }
 
   if (error) {
@@ -78,7 +70,7 @@ export default function JobListPage() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <DashboardSidebarRecruiterComponent />
+      {/* <DashboardSidebarRecruiterComponent /> */}
 
       <div className="flex-1 w-full px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-8">
         <div className="mb-6">
@@ -106,7 +98,6 @@ export default function JobListPage() {
             <option value="">All Job Types</option>
             <option value="Full-Time">Full-Time</option>
             <option value="Part-Time">Part-Time</option>
-            <option value="Remote">Remote</option>
             <option value="Internship">Internship</option>
             <option value="Contract">Contract</option>
           </select>
@@ -127,9 +118,7 @@ export default function JobListPage() {
               });
               searchParams.set("page", "1");
               searchParams.set("limit", limit.toString());
-              navigate(
-                `/companies/${companyId}/jobs?${searchParams.toString()}`
-              );
+              navigate(`?${searchParams.toString()}`); 
             }}
             className="bg-purple-600 text-white px-3 py-1 rounded"
           >
@@ -138,7 +127,7 @@ export default function JobListPage() {
         </div>
 
         <div className="w-full max-w-[1104px] mx-auto">
-          <JobListTable data={jobs} />
+          <JobListTable data={jobs} onRefresh={() => fetchJobs(true)} />
 
           {totalPages > 1 && (
             <div className="flex justify-center items-center gap-2 mt-6">
