@@ -5,7 +5,7 @@ import PremiumNotification from '../../Premium/PremiumNotification'
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(
-    () => !!localStorage.getItem('accessToken')
+    () => !!sessionStorage.getItem('accessToken')
   )
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userRole, setUserRole] = useState<string | null>(null)
@@ -18,7 +18,7 @@ function Navbar() {
 
   React.useEffect(() => {
     const handleStorageChange = () => {
-      setIsLoggedIn(!!localStorage.getItem('accessToken'))
+      setIsLoggedIn(!!sessionStorage.getItem('accessToken'))
       setIsPremium(localStorage.getItem('isPremium') === 'true')
     }
 
@@ -27,8 +27,8 @@ function Navbar() {
   }, [])
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken')
-    const role = localStorage.getItem('role')
+    const accessToken = sessionStorage.getItem('accessToken')
+    const role = sessionStorage.getItem('role')
 
     if (accessToken) {
       setIsAuthenticated(true)
@@ -48,12 +48,13 @@ function Navbar() {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('accessToken')
+    sessionStorage.removeItem('accessToken')
+    sessionStorage.removeItem('refreshToken')
     localStorage.removeItem('isPremium')
-    localStorage.removeItem('role')
+    sessionStorage.removeItem('role')
 
     setOpenMenu(false)
-    navigate('/')
+    navigate('/login')
     window.dispatchEvent(new Event('storage'))
   }
 
