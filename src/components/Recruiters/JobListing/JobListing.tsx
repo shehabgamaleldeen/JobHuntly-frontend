@@ -12,11 +12,11 @@ export function JobListing(): JSX.Element {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <PageHeader
+      {/* <PageHeader
         title="Social Media Assistant"
         description="full time"
         backTo="/DashboardRecruiter"
-      />
+      /> */}
 
       {/* Card */}
       <main className="max-w-6xl mx-auto bg-white rounded-lg shadow-sm ring-1 ring-slate-100">
