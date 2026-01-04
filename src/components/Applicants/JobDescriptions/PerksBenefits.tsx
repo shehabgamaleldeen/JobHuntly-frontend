@@ -1,6 +1,14 @@
 import PerksBenefitCard from './Cards/PerkBenefitCard'
 
-const PerksBenefits = () => {
+type Benefit = {
+  [key: string]: any
+}
+
+type PerksBenefitsProps = {
+  Benefits?: Benefit[]
+}
+
+const PerksBenefits = ({ Benefits = [] }: PerksBenefitsProps) => {
   return (
     <>
       <section className="bg-[#FFFFFF]">
@@ -15,12 +23,9 @@ const PerksBenefits = () => {
             </span>
           </div>
           <div className="grid grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-8 mb-8">
-            <PerksBenefitCard />
-            <PerksBenefitCard />
-            <PerksBenefitCard />
-            <PerksBenefitCard />
-            <PerksBenefitCard />
-            <PerksBenefitCard />
+            {Benefits.map((benefit) => (
+              <PerksBenefitCard key={benefit?._id} benefit={benefit} />
+            ))}
           </div>
         </div>
       </section>

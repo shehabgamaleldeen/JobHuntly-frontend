@@ -1,89 +1,124 @@
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   emailValidation,
   passwordValidation,
-} from "../../../features/auth/authValidation";
+} from '../../../features/auth/authValidation'
+import instance from '@/components/AxiosConfig/instance'
+import axios from 'axios'
 
 type CompanyLoginForm = {
-  email: string;
-  password: string;
-};
+  email: string
+  password: string
+}
+type Props = {
+  rememberMe: boolean
+}
 
-export default function CompanyLogin() {
-  const navigate = useNavigate();
+export default function CompanyLogin({ rememberMe }: Props) {
+  const navigate = useNavigate()
+  const [errorMsg, setErrorMsg] = useState<string>('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CompanyLoginForm>();
+  } = useForm<CompanyLoginForm>()
 
-  async function onSubmit(data:CompanyLoginForm) {
-  try {
-    const response = await fetch("http://localhost:3000/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+  async function onSubmit(data: CompanyLoginForm) {
+    try {
+      setErrorMsg('')
+
+      const response = await instance.post('/auth/login', {
         email: data.email,
         password: data.password,
-      }),
-    });
+      })
 
-    const result = await response.json();
+      const { accessToken, refreshToken, user  } = response.data.data
 
-    if (!response.ok) {
-      throw new Error(result.message || "Login failed");
-    }
+      if (!accessToken || !refreshToken) {
+        setErrorMsg('Login failed: tokens not returned')
+        return
+      }
 
-    console.log("Logged in user:", result.user);
+      if (user.role !== 'COMPANY') {
+        setErrorMsg('You are not authorized to login as a company')
+        return
+      }
 
-  navigate("/company");
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.error(err.message);
-    } else {
-      console.error("Unexpected login error");
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
+      sessionStorage.removeItem('accessToken')
+      sessionStorage.removeItem('refreshToken')
+
+      const storage = rememberMe ? localStorage : sessionStorage
+
+      storage.setItem('accessToken', accessToken)
+      storage.setItem('refreshToken', refreshToken)
+      storage.setItem('role', user.role )
+      localStorage.setItem(
+        'isPremium',
+        String(response.data.data.user.isPremium)
+      )
+      navigate('/DashboardRecruiter')
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        setErrorMsg(err.response.data.message)
+      } else {
+        setErrorMsg('Invalid email or password')
+      }
     }
   }
-}
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <input
         type="email"
         placeholder="Enter company email"
-        {...register("email", emailValidation)}
+        {...register('email', emailValidation)}
+        autoComplete="username"
         className={`border p-3 ${
-          errors.email ? "border-red-500" : "border-gray-300"
+          errors.email ? 'border-red-500' : 'border-gray-300'
         }`}
       />
       {errors.email && (
-        <p className="text-red-500 text-sm">
-          {String(errors.email.message)}
-        </p>
+        <p className="text-red-500 text-sm">{String(errors.email.message)}</p>
       )}
 
-      <input
-        type="password"
-        placeholder="Enter password"
-        {...register("password", passwordValidation)}
-        className={`border p-3 ${
-          errors.password ? "border-red-500" : "border-gray-300"
-        }`}
-      />
+      <div className="relative">
+        <input
+          type={showPassword ? 'text' : 'password'}
+          placeholder="Enter password"
+          {...register('password', passwordValidation)}
+          autoComplete="new-password"
+          className={`border p-3 w-full ${
+            errors.password ? 'border-red-500' : 'border-gray-300'
+          }`}
+        />
+
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 hover:text-gray-700"
+        >
+          {showPassword ? 'Hide' : 'Show'}
+        </button>
+      </div>
+
       {errors.password && (
         <p className="text-red-500 text-sm">
           {String(errors.password.message)}
         </p>
+      )}
+      {errorMsg && (
+        <p className="text-red-600 text-sm text-center">{errorMsg}</p>
       )}
 
       <button type="submit" className="bg-[#4640DE] text-white py-3">
         Login
       </button>
     </form>
-  );
+  )
 }
