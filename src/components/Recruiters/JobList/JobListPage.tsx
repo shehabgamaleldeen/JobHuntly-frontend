@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import JobListTable from "./JobListTable";
 // import DashboardSidebarRecruiterComponent from "../Dashboard/DashboardSidebarRecruiterComponent";
 import instance from '@/components/AxiosConfig/instance'
+import Loader from "@/components/Basic/Loader";
 
 export interface Job {
   _id: string;
@@ -60,7 +61,7 @@ export default function JobListPage() {
   };
 
   if (loading) {
-    return <p className="text-center mt-10">Loading jobs...</p>;
+    return (<Loader/>)
   }
 
   if (error) {
