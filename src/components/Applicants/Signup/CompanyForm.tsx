@@ -34,7 +34,7 @@ function CompanyForm() {
         role: "COMPANY",
       });
 
-      const { accessToken, refreshToken } = response.data.data;
+      const { accessToken, refreshToken ,user} = response.data.data;
 
       if (!accessToken || !refreshToken) {
         setErrorMsg("Registration failed. Please try again.");
@@ -43,6 +43,7 @@ function CompanyForm() {
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem('role', user.role)
       localStorage.setItem("isPremium", String(response.data.data.user.isPremium));
 
       navigate("/DashboardRecruiter/settings");
