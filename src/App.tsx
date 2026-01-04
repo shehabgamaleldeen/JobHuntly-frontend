@@ -48,6 +48,7 @@ import SocialLinksTab from './components/Applicants/DashboardSettings/SocialLink
 import ProfileCareerTab from './components/Applicants/DashboardSettings/ProfileCareerTab'
 import ResetPassword from './components/Basic/resetPassword'
 import ForgotPassword from './components/Basic/forgotPassword'
+import Profile from './components/Applicants/DashboardPublicProfile/DashboardProfile'
 
 
 
@@ -101,7 +102,7 @@ function App() {
 
             {/*( moaz )*/}
             <Route path="/dashboard" element={<DashboardSettings />}>
-              <Route index element={<div className="text-lg p-4">Dashboard</div>} />
+              <Route index element={<Profile/>} />
 
               <Route path="settings" element={<DashboardUpdateProfile />}>
                 <Route index element={<ProfileSettingsTab />} />

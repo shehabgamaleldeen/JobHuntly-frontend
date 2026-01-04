@@ -1,6 +1,6 @@
-// src/pages/ProfileView/ProfileView.tsx
-// صفحة عرض Profile بدون أزرار تعديل - للعرض العام فقط
+// src/pages/Profile/Profile.tsx
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   MapPin, 
   Mail, 
@@ -8,13 +8,14 @@ import {
   Globe, 
   Linkedin, 
   Github, 
+  Edit2, 
+  Plus,
   ExternalLink,
   Briefcase,
   GraduationCap,
 } from 'lucide-react';
 import Loader from '@/components/Basic/Loader';
 import instance from '@/components/AxiosConfig/instance';
-import { PageHeader } from '../DashboardSettings/headParts/headerPart';
 
 interface Language {
   name: string;
@@ -85,7 +86,8 @@ interface ProfileData {
   };
 }
 
-const ProfileView: React.FC = () => {
+const Profile: React.FC = () => {
+  const navigate = useNavigate();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAllExperiences, setShowAllExperiences] = useState(false);
@@ -150,7 +152,6 @@ const ProfileView: React.FC = () => {
     : [];
 
   return (
-    
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -159,7 +160,14 @@ const ProfileView: React.FC = () => {
             {/* Profile Header Card */}
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
               {/* Banner */}
-              <div className="h-32 bg-gradient-to-r from-pink-200 via-purple-300 to-purple-600"></div>
+              <div className="h-32 bg-gradient-to-r from-pink-200 via-purple-300 to-purple-600 relative">
+                <button 
+                  onClick={() => navigate('/dashboard/settings')}
+                  className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition"
+                >
+                  <ExternalLink className="w-5 h-5 text-white" />
+                </button>
+              </div>
 
               <div className="px-6 pb-6">
                 {/* Avatar */}
@@ -176,22 +184,31 @@ const ProfileView: React.FC = () => {
                 </div>
 
                 {/* Name and Title */}
-                <div className="mb-4">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-1">{user.fullName}</h1>
-                  {(profile.currentJobTitle || profile.headline) && (
-                    <p className="text-gray-600 mb-2">
-                      {profile.currentJobTitle || profile.headline}
-                      {profile.experiences && profile.experiences.length > 0 && profile.experiences[0].companyName && 
-                        ` at ${profile.experiences[0].companyName}`
-                      }
-                    </p>
-                  )}
-                  {(profile.locationCity || profile.locationCountry) && (
-                    <div className="flex items-center text-gray-500 text-sm">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {[profile.locationCity, profile.locationCountry].filter(Boolean).join(', ')}
-                    </div>
-                  )}
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900 mb-1">{user.fullName}</h1>
+                    {(profile.currentJobTitle || profile.headline) && (
+                      <p className="text-gray-600 mb-2">
+                        {profile.currentJobTitle || profile.headline}
+                        {profile.experiences && profile.experiences.length > 0 && profile.experiences[0].companyName && 
+                          ` at ${profile.experiences[0].companyName}`
+                        }
+                      </p>
+                    )}
+                    {(profile.locationCity || profile.locationCountry) && (
+                      <div className="flex items-center text-gray-500 text-sm">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        {[profile.locationCity, profile.locationCountry].filter(Boolean).join(', ')}
+                      </div>
+                    )}
+                  </div>
+                  <button 
+                    onClick={() => navigate('/dashboard/settings')}
+                    className="px-4 py-2 border-2 border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-50 transition flex items-center gap-2 font-medium"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                    Edit Profile
+                  </button>
                 </div>
 
                 {/* Open for Opportunities Badge */}
@@ -207,7 +224,15 @@ const ProfileView: React.FC = () => {
             {/* About Me */}
             {profile.aboutMe && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">About Me</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-gray-900">About Me</h2>
+                  <button 
+                    onClick={() => navigate('/dashboard/settings')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                  >
+                    <Edit2 className="w-5 h-5" />
+                  </button>
+                </div>
                 <p className="text-gray-600 leading-relaxed whitespace-pre-line">
                   {profile.aboutMe}
                 </p>
@@ -222,22 +247,40 @@ const ProfileView: React.FC = () => {
             {/* Experiences */}
             {profile.experiences && profile.experiences.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Experiences</h2>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-gray-900">Experiences</h2>
+                  <button 
+                    onClick={() => navigate('/dashboard/settings/career')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                  >
+                    <Plus className="w-5 h-5" />
+                  </button>
+                </div>
 
                 <div className="space-y-6">
                   {visibleExperiences.map((exp) => (
-                    <div key={exp._id} className="flex gap-4">
+                    <div key={exp._id} className="flex gap-4 group">
                       <div className="flex-shrink-0">
                         <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
                           <Briefcase className="w-6 h-6 text-blue-600" />
                         </div>
                       </div>
                       <div className="flex-grow">
-                        <h3 className="font-semibold text-gray-900 text-lg">{exp.jobTitle}</h3>
-                        <p className="text-gray-600">
-                          {exp.companyName} • {exp.employmentType} • {formatDate(exp.startDate)} - {exp.currentlyWorking ? 'Present' : formatDate(exp.endDate!)} ({calculateDuration(exp.startDate, exp.endDate, exp.currentlyWorking)})
-                        </p>
-                        <p className="text-gray-500 text-sm">{exp.location}</p>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h3 className="font-semibold text-gray-900 text-lg">{exp.jobTitle}</h3>
+                            <p className="text-gray-600">
+                              {exp.companyName} • {exp.employmentType} • {formatDate(exp.startDate)} - {exp.currentlyWorking ? 'Present' : formatDate(exp.endDate!)} ({calculateDuration(exp.startDate, exp.endDate, exp.currentlyWorking)})
+                            </p>
+                            <p className="text-gray-500 text-sm">{exp.location}</p>
+                          </div>
+                          <button 
+                            onClick={() => navigate('/dashboard/settings/career')}
+                            className="opacity-0 group-hover:opacity-100 p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                        </div>
                         {exp.description && (
                           <p className="text-gray-600 mt-2">{exp.description}</p>
                         )}
@@ -260,22 +303,40 @@ const ProfileView: React.FC = () => {
             {/* Educations */}
             {profile.educations && profile.educations.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Educations</h2>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-gray-900">Educations</h2>
+                  <button 
+                    onClick={() => navigate('/dashboard/settings/career')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                  >
+                    <Plus className="w-5 h-5" />
+                  </button>
+                </div>
 
                 <div className="space-y-6">
                   {visibleEducations.map((edu) => (
-                    <div key={edu._id} className="flex gap-4">
+                    <div key={edu._id} className="flex gap-4 group">
                       <div className="flex-shrink-0">
                         <div className="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center">
                           <GraduationCap className="w-6 h-6 text-red-600" />
                         </div>
                       </div>
                       <div className="flex-grow">
-                        <h3 className="font-semibold text-gray-900 text-lg">{edu.institution}</h3>
-                        <p className="text-gray-600">{edu.degree}, {edu.fieldOfStudy}</p>
-                        <p className="text-gray-500 text-sm">
-                          {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
-                        </p>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h3 className="font-semibold text-gray-900 text-lg">{edu.institution}</h3>
+                            <p className="text-gray-600">{edu.degree}, {edu.fieldOfStudy}</p>
+                            <p className="text-gray-500 text-sm">
+                              {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                            </p>
+                          </div>
+                          <button 
+                            onClick={() => navigate('/dashboard/settings/career')}
+                            className="opacity-0 group-hover:opacity-100 p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -295,12 +356,28 @@ const ProfileView: React.FC = () => {
             {/* Skills */}
             {profile.skills && profile.skills.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Skills</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-gray-900">Skills</h2>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => navigate('/dashboard/settings/career')}
+                      className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                    >
+                      <Plus className="w-5 h-5" />
+                    </button>
+                    <button 
+                      onClick={() => navigate('/dashboard/settings/career')}
+                      className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                    >
+                      <Edit2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {profile.skills.map((skill) => (
                     <span
                       key={skill._id}
-                      className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium"
+                      className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium hover:bg-indigo-100 transition"
                     >
                       {skill.name}
                     </span>
@@ -314,7 +391,15 @@ const ProfileView: React.FC = () => {
           <div className="space-y-6">
             {/* Additional Details */}
             <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-6">Additional Details</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold text-gray-900">Additional Details</h2>
+                <button 
+                  onClick={() => navigate('/dashboard/settings/login')}
+                  className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                >
+                  <Edit2 className="w-5 h-5" />
+                </button>
+              </div>
 
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
@@ -353,7 +438,15 @@ const ProfileView: React.FC = () => {
             {/* Social Links */}
             {(profile?.socialLinks?.linkedin || profile?.socialLinks?.github || profile?.portfolioUrl || profile?.socialLinks?.twitter || profile?.socialLinks?.website) && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-bold text-gray-900 mb-6">Social Links</h2>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-lg font-bold text-gray-900">Social Links</h2>
+                  <button 
+                    onClick={() => navigate('/dashboard/settings/social-links')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                  >
+                    <Edit2 className="w-5 h-5" />
+                  </button>
+                </div>
 
                 <div className="space-y-3">
                   {profile.socialLinks.linkedin && (
@@ -419,4 +512,4 @@ const ProfileView: React.FC = () => {
   );
 };
 
-export default ProfileView;
+export default Profile;

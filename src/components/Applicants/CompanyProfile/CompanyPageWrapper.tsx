@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import type { Company } from './Types';
 import CompanyPage from './CompanyPage';
 import instance from '@/components/AxiosConfig/instance'
+import Loader from '@/components/Basic/Loader';
 
 
 function CompanyPageWrapper() {
@@ -41,9 +42,7 @@ function CompanyPageWrapper() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl">Loading...</div>
-      </div>
+      <Loader/>
     );
   }
 
