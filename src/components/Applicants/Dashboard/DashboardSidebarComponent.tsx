@@ -1,6 +1,6 @@
 import type { JSX } from 'react'
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link, Navigate, NavLink } from 'react-router-dom'
 
 import mainImage from '../../../assets/images/Logo.svg'
 import HouseIcon from '../../../assets/icons/house-solid-full (1).svg'
@@ -64,7 +64,7 @@ export function DashboardSidebarComponent(): JSX.Element {
       {/* DESKTOP SIDEBAR */}
       <aside className="hidden md:flex md:w-64 min-h-screen bg-[#fbfdff] border-r border-gray-200 p-6 flex-col justify-between">
         <div>
-          <img src={mainImage} alt="logo" className="w-28 mb-6" />
+         <Link to="/" > <img src={mainImage} alt="logo" className="w-28 mb-6" /></Link>
 
           <nav className="flex flex-col gap-3">
             <NavLink to="" end className={linkClass}>

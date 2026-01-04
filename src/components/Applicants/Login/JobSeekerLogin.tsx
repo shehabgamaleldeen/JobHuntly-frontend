@@ -36,12 +36,13 @@ export default function JobSeekerLogin({ rememberMe }: Props) {
         password: data.password,
       })
 
-      const { accessToken, refreshToken, user, role } = response.data.data
+      const { accessToken, refreshToken, user } = response.data.data
 
       if (!accessToken || !refreshToken) {
         setErrorMsg('Login failed: tokens not returned')
         return
       }
+      
 
       if (user.role !== 'JOB_SEEKER') {
         setErrorMsg('You are not authorized to login as a company')
@@ -57,7 +58,7 @@ export default function JobSeekerLogin({ rememberMe }: Props) {
 
       storage.setItem('accessToken', accessToken)
       storage.setItem('refreshToken', refreshToken)
-      // storage.setItem('role', role)
+      storage.setItem('role', user.role)
       localStorage.setItem(
         'isPremium',
         String(response.data.data.user.isPremium)

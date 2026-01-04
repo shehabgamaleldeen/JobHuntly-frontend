@@ -43,10 +43,11 @@ function JobSeekerForm() {
         role: "JOB_SEEKER",
       });
 
-      const { accessToken, refreshToken } = res.data.data;
+      const { accessToken, refreshToken , user } = res.data.data;
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem('role', user.role)
       localStorage.setItem("isPremium", String(res.data.data.user.isPremium));
 
       navigate("/Dashboard/settings");
