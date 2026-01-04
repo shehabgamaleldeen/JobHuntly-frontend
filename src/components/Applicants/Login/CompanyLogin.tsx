@@ -36,7 +36,7 @@ export default function CompanyLogin({ rememberMe }: Props) {
         password: data.password,
       })
 
-      const { accessToken, refreshToken, user } = response.data.data
+      const { accessToken, refreshToken, user  } = response.data.data
 
       if (!accessToken || !refreshToken) {
         setErrorMsg('Login failed: tokens not returned')
@@ -57,6 +57,7 @@ export default function CompanyLogin({ rememberMe }: Props) {
 
       storage.setItem('accessToken', accessToken)
       storage.setItem('refreshToken', refreshToken)
+      storage.setItem('role', user.role )
       localStorage.setItem(
         'isPremium',
         String(response.data.data.user.isPremium)
