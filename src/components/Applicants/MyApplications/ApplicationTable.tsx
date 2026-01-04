@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import instance from '@/components/AxiosConfig/instance';
 import Pagination from './Pagination'; 
+import Loader from "@/components/Basic/Loader";
 
 export interface Application {
   id: string;
@@ -55,7 +56,7 @@ const ApplicationTable: React.FC<Props> = ({ rowsPerPage = 5, searchText = "" })
 
   const paginatedData = data.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
-  if (loading) return <p className="text-center mt-10">Loading applications...</p>;
+  if (loading) return ( <Loader/> );
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
   if (data.length === 0) return <p className="text-center mt-10">No applications found.</p>;
 
