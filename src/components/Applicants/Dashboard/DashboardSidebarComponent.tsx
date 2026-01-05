@@ -20,8 +20,8 @@ interface UserProfile {
     role: string
   }
   profile: {
-    avatarUrl?: string
     logoUrl?: string
+    avatarUrl?: string
   }
 }
 
@@ -93,8 +93,9 @@ export function DashboardSidebarComponent(): JSX.Element {
   // Get avatar/logo URL
   const getAvatarUrl = () => {
     if (!userProfile) return null
-    return userProfile.profile.avatarUrl || userProfile.profile.logoUrl || null
+    return userProfile.profile.logoUrl || userProfile.profile.avatarUrl || null
   }
+  
 
   // Don't render if no user data and not loading
   if (!loading && !userProfile) return null

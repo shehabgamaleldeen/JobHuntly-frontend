@@ -10,7 +10,6 @@ interface ProfileData {
   locationCity: string;
   locationCountry: string;
   aboutMe: string;
-  avatarUrl?: string;
   logoUrl?: string;
 }
 
@@ -47,7 +46,7 @@ export default function ProfileSettingsTab(): JSX.Element {
           locationCity: profileData.locationCity || "",
           locationCountry: profileData.locationCountry || "",
           aboutMe: profileData.aboutMe || "",
-          avatarUrl: profileData.avatarUrl || profileData.logoUrl || "",
+          logoUrl: profileData.logoUrl || profileData.logoUrl || "",
         });
       }
     } catch (err) {
@@ -73,14 +72,14 @@ export default function ProfileSettingsTab(): JSX.Element {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await instance.post("/settings/uploadImage", formData, {
+      const res = await instance.post("/settings/logoUrl", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       if (res.data.success) {
-        setProfile({ ...profile, avatarUrl: res.data.data.url });
+        setProfile({ ...profile, logoUrl: res.data.data.url });
         alert("Avatar uploaded successfully!");
       }
     } catch (err: any) {
@@ -148,9 +147,9 @@ export default function ProfileSettingsTab(): JSX.Element {
           {/* Avatar */}
           <div className="lg:col-span-2">
             <div className="flex flex-col sm:flex-row items-center gap-6">
-              {profile.avatarUrl ? (
+              {profile.logoUrl ? (
                 <img
-                  src={profile.avatarUrl}
+                  src={profile.logoUrl}
                   alt="avatar"
                   className="w-24 h-24 rounded-full object-cover ring-2 ring-slate-100"
                 />
