@@ -28,9 +28,9 @@ const ApplicantProfile = () => {
   useEffect(() => {
     getApplication()
   }, [])
-  useEffect(() => {
-    console.log(application)
-  }, [application])
+  // useEffect(() => {
+  //   console.log(application)
+  // }, [application])
   return (
     <>
       <section className="flex">
