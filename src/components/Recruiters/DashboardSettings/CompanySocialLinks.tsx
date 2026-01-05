@@ -6,9 +6,7 @@ import Loader from "@/components/Basic/Loader";
 export default function CompanySocialLinksTab(): JSX.Element {
   const [instagram, setInstagram] = useState("");
   const [twitter, setTwitter] = useState("");
-  const [facebook, setFacebook] = useState("");
   const [linkedin, setLinkedin] = useState("");
-  const [youtube, setYoutube] = useState("");
   const [github, setGithub] = useState("");
   const [website, setWebsite] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,9 +24,7 @@ export default function CompanySocialLinksTab(): JSX.Element {
         const socialLinks = response.data.data.profile.socialLinks || {};
         setInstagram(socialLinks.instagram || "");
         setTwitter(socialLinks.twitter || "");
-        setFacebook(socialLinks.facebook || "");
         setLinkedin(socialLinks.linkedin || "");
-        setYoutube(socialLinks.youtube || "");
         setGithub(socialLinks.github || "");
         setWebsite(socialLinks.website || "");
       }
@@ -47,9 +43,7 @@ export default function CompanySocialLinksTab(): JSX.Element {
       // Only add non-empty links
       if (instagram.trim()) socialLinks.instagram = instagram.trim();
       if (twitter.trim()) socialLinks.twitter = twitter.trim();
-      if (facebook.trim()) socialLinks.facebook = facebook.trim();
       if (linkedin.trim()) socialLinks.linkedin = linkedin.trim();
-      if (youtube.trim()) socialLinks.youtube = youtube.trim();
       if (github.trim()) socialLinks.github = github.trim();
       if (website.trim()) socialLinks.website = website.trim();
 
@@ -140,32 +134,6 @@ export default function CompanySocialLinksTab(): JSX.Element {
                 value={instagram}
                 onChange={(e) => setInstagram(e.target.value)}
                 placeholder="https://www.instagram.com/yourprofile"
-                disabled={loading}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Facebook
-              </label>
-              <input
-                className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                value={facebook}
-                onChange={(e) => setFacebook(e.target.value)}
-                placeholder="https://www.facebook.com/yourprofile"
-                disabled={loading}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Youtube
-              </label>
-              <input
-                className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                value={youtube}
-                onChange={(e) => setYoutube(e.target.value)}
-                placeholder="https://www.youtube.com/@yourchannel"
                 disabled={loading}
               />
             </div>
