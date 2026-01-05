@@ -1,77 +1,126 @@
 import type { JSX } from "react";
 import { useEffect, useState } from "react";
-import ProfileImage from "../../../assets/images/alex-suprun-ZHvM3XIOHoE-unsplash 1.png";
-import axios from "axios";
+import instance from "@/components/AxiosConfig/instance";
+import Loader from "@/components/Basic/Loader";
 
 interface ProfileData {
   fullName: string;
   email: string;
-  phone: string;
-  gender: string;
   dateOfBirth: string;
-  city: string;
-  country: string;
+  locationCity: string;
+  locationCountry: string;
   aboutMe: string;
-  avatar?: string;
+  avatarUrl?: string;
+  logoUrl?: string;
 }
 
 export default function ProfileSettingsTab(): JSX.Element {
   const [profile, setProfile] = useState<ProfileData>({
     fullName: "",
     email: "",
-    phone: "",
-    gender: "",
     dateOfBirth: "",
-    city: "",
-    country: "",
+    locationCity: "",
+    locationCountry: "",
     aboutMe: "",
   });
 
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  /* 🔹 Load profile data */
+  /* Load profile data */
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get("/api/profile", {
-          withCredentials: true,
-        });
-
-        setProfile({
-          ...profile,
-          ...res.data,
-        });
-      } catch (err) {
-        console.error("Failed to load profile", err);
-      }
-    };
-
     fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* 🔹 Handle input change */
+  const fetchProfile = async () => {
+    try {
+      const res = await instance.get("/settings/getProfile");
+      
+      if (res.data.success) {
+        const { user, profile: profileData } = res.data.data;
+        
+        setProfile({
+          fullName: user.fullName || "",
+          email: user.email || "",
+          dateOfBirth: profileData.dateOfBirth || "",
+          locationCity: profileData.locationCity || "",
+          locationCountry: profileData.locationCountry || "",
+          aboutMe: profileData.aboutMe || "",
+          avatarUrl: profileData.avatarUrl || profileData.logoUrl || "",
+        });
+      }
+    } catch (err) {
+      console.error("Failed to load profile", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* Handle input change */
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  /* 🔹 Save profile */
+  /* Handle avatar upload */
+  const handleAvatarUpload = async (file: File) => {
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await instance.post("/settings/uploadImage", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.data.success) {
+        setProfile({ ...profile, avatarUrl: res.data.data.url });
+        alert("Avatar uploaded successfully!");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert(err.response?.data?.message || "Failed to upload avatar");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  /* Save profile */
   const handleSave = async () => {
     setSaving(true);
     try {
-      await axios.put("/api/profile", profile, {
-        withCredentials: true,
-      });
-      alert("Profile updated successfully");
-    } catch (err) {
+      const updateData = {
+        locationCity: profile.locationCity,
+        locationCountry: profile.locationCountry,
+        aboutMe: profile.aboutMe,
+        dateOfBirth: profile.dateOfBirth,
+      };
+
+      const res = await instance.put("/settings/updateProfile", updateData);
+
+      if (res.data.success) {
+        alert("Profile updated successfully");
+        fetchProfile(); // Refresh data
+      }
+    } catch (err: any) {
       console.error(err);
-      alert("Failed to update profile");
+      alert(err.response?.data?.message || "Failed to update profile");
     } finally {
       setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <Loader/>
+    );
+  }
 
   return (
     <>
@@ -99,15 +148,23 @@ export default function ProfileSettingsTab(): JSX.Element {
           {/* Avatar */}
           <div className="lg:col-span-2">
             <div className="flex flex-col sm:flex-row items-center gap-6">
-              <img
-                src={profile.avatar || ProfileImage}
-                alt="avatar"
-                className="w-24 h-24 rounded-full object-cover ring-2 ring-slate-100"
-              />
+              {profile.avatarUrl ? (
+                <img
+                  src={profile.avatarUrl}
+                  alt="avatar"
+                  className="w-24 h-24 rounded-full object-cover ring-2 ring-slate-100"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center ring-2 ring-slate-100">
+                  <span className="text-3xl font-bold text-white">
+                    {profile.fullName.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
 
               <label
                 htmlFor="avatar-upload"
-                className="flex-1 border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer"
+                className="flex-1 border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer hover:bg-blue-50 transition"
               >
                 <div className="flex flex-col items-center gap-2">
                   <svg
@@ -124,7 +181,7 @@ export default function ProfileSettingsTab(): JSX.Element {
                     />
                   </svg>
                   <div className="text-sm font-medium text-slate-700">
-                    Click to replace or drag and drop
+                    {uploading ? "Uploading..." : "Click to replace or drag and drop"}
                   </div>
                   <div className="text-xs text-slate-400">
                     SVG, PNG, JPG or GIF (max. 400 x 400px)
@@ -135,6 +192,11 @@ export default function ProfileSettingsTab(): JSX.Element {
                   type="file"
                   className="hidden"
                   accept="image/*"
+                  disabled={uploading}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleAvatarUpload(file);
+                  }}
                 />
               </label>
             </div>
@@ -157,9 +219,13 @@ export default function ProfileSettingsTab(): JSX.Element {
               <input
                 name="fullName"
                 value={profile.fullName}
-                onChange={handleChange}
-                className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                disabled
+                className="w-full border border-slate-200 rounded px-3 py-2 text-sm bg-gray-50 cursor-not-allowed"
+                title="Name cannot be changed here"
               />
+              <p className="text-xs text-slate-400 mt-1">
+                Name cannot be changed
+              </p>
             </div>
 
             <div>
@@ -169,74 +235,54 @@ export default function ProfileSettingsTab(): JSX.Element {
               <input
                 name="email"
                 value={profile.email}
-                onChange={handleChange}
-                className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                disabled
+                className="w-full border border-slate-200 rounded px-3 py-2 text-sm bg-gray-50 cursor-not-allowed"
+                title="Email can be changed in Login & Security tab"
               />
+              <p className="text-xs text-slate-400 mt-1">
+                Change in Login & Security tab
+              </p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                name="phone"
-                value={profile.phone}
-                onChange={handleChange}
-                className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-              />
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Gender <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="gender"
-                value={profile.gender}
-                onChange={handleChange}
-                className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-              >
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select>
-            </div>
-
-            {/* ✅ City */}
             <div>
               <label className="block text-sm font-medium text-slate-700">
                 City
               </label>
               <input
-                name="city"
-                value={profile.city}
+                name="locationCity"
+                value={profile.locationCity}
                 onChange={handleChange}
+                disabled={saving}
                 className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                placeholder="e.g., Cairo"
               />
             </div>
 
-            {/* ✅ Country */}
             <div>
               <label className="block text-sm font-medium text-slate-700">
                 Country
               </label>
               <input
-                name="country"
-                value={profile.country}
+                name="locationCountry"
+                value={profile.locationCountry}
                 onChange={handleChange}
+                disabled={saving}
                 className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                placeholder="e.g., Egypt"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-slate-700">
-                Date of Birth <span className="text-red-500">*</span>
+                Date of Birth
               </label>
               <input
                 type="date"
                 name="dateOfBirth"
                 value={profile.dateOfBirth}
                 onChange={handleChange}
+                disabled={saving}
                 className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
               />
             </div>
@@ -244,11 +290,14 @@ export default function ProfileSettingsTab(): JSX.Element {
         </div>
       </div>
 
-      {/* ✅ About Me (same section style) */}
+      {/* About Me */}
       <div className="py-8 border-t">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="text-sm text-slate-700">
             <div className="font-medium mb-2">About Me</div>
+            <p className="text-xs text-slate-400">
+              Write a brief description about yourself
+            </p>
           </div>
 
           <div className="lg:col-span-2">
@@ -256,19 +305,21 @@ export default function ProfileSettingsTab(): JSX.Element {
               name="aboutMe"
               value={profile.aboutMe}
               onChange={handleChange}
+              disabled={saving}
+              placeholder="Tell us about yourself, your experience, and what you're looking for..."
               className="w-full border border-slate-200 rounded px-3 py-2 text-sm min-h-[120px] focus:outline-none focus:ring-2 focus:ring-blue-200"
             />
           </div>
         </div>
       </div>
 
-      {/* Save button (UNCHANGED POSITION & STYLE) */}
+      {/* Save button */}
       <div className="pt-6 pb-8 border-t">
         <div className="flex justify-end">
           <button
             onClick={handleSave}
-            disabled={saving}
-            className="px-4 py-2 bg-[#4640DE] text-white rounded shadow-sm disabled:opacity-60"
+            disabled={saving || uploading}
+            className="px-6 py-2 bg-[#4640DE] text-white rounded shadow-sm disabled:opacity-60 disabled:cursor-not-allowed hover:bg-[#3730d8] transition"
           >
             {saving ? "Saving..." : "Save Profile"}
           </button>
