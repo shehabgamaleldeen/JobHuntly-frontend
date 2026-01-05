@@ -14,7 +14,6 @@ const defaultState = {
 
   languages: [] as {
     name: string;
-    level: string;
   }[],
 
   experiences: [] as {
@@ -56,7 +55,7 @@ export default function ProfileCareerTab(): JSX.Element {
   
   
   // Language form
-  const [langForm, setLangForm] = useState({ name: "", level: "" });
+  const [langForm, setLangForm] = useState({ name: ""});
   
   // Experience form
   const [expForm, setExpForm] = useState({
@@ -134,9 +133,9 @@ export default function ProfileCareerTab(): JSX.Element {
   
   /* ================= LANGUAGE ================= */
   const addLanguage = () => {
-    if (langForm.name.trim() && langForm.level.trim()) {
+    if (langForm.name.trim()) {
       setData({ ...data, languages: [...data.languages, langForm] });
-      setLangForm({ name: "", level: "" });
+      setLangForm({ name: ""});
       setLanguageModal(false);
     }
   };
@@ -193,10 +192,6 @@ export default function ProfileCareerTab(): JSX.Element {
     setData({ ...data, backgroundUrl: previewUrl });
   };
 
-  const handleResumeUpload = (file: File) => {
-    const previewUrl = URL.createObjectURL(file);
-    setData({ ...data, resumeUrl: previewUrl });
-  };
 
 
   return (
@@ -211,123 +206,8 @@ export default function ProfileCareerTab(): JSX.Element {
         </p>
       </div>
 
-      {/* ================= BACKGROUND IMAGE ================= */}
-      <div className="border-t border-b py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          <div className="text-sm text-slate-700">
-            <div className="font-medium mb-2">Background Image</div>
-            <p className="text-xs text-slate-400">
-              This image will be shown as your profile background banner.
-            </p>
-          </div>
-
-          <div className="lg:col-span-2">
-            <div className="flex flex-col gap-6">
-              {data.backgroundUrl && (
-                <div className="w-full h-32 rounded-md overflow-hidden bg-gray-100">
-                  <img src={data.backgroundUrl} alt="background" className="w-full h-full object-cover" />
-                </div>
-              )}
-
-              <label
-                htmlFor="background-upload"
-                className="border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer"
-              >
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <svg
-                    className="w-6 h-6 text-[#4640DE]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeWidth={1.5}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M7 16v-4m0 0l5-5 5 5M12 12v8"
-                    />
-                  </svg>
-                  <div className="text-sm font-medium text-slate-700">Click to replace or drag and drop</div>
-                  <div className="text-xs text-slate-400">SVG, PNG, JPG or GIF (max. 1920 x 400px)</div>
-                </div>
-                <input id="background-upload" type="file" className="hidden" accept="image/*" />
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ================= RESUME UPLOAD ================= */}
-      <div className="border-b py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          <div className="text-sm text-slate-700">
-            <div className="font-medium mb-2">Resume / CV</div>
-            <p className="text-xs text-slate-400">
-              Upload your resume or CV to share with potential employers.
-            </p>
-          </div>
-
-          <div className="lg:col-span-2">
-            <div className="flex flex-col gap-6">
-              {data.resumeUrl && (
-                <div className="flex items-center gap-3 p-3 border rounded-md bg-gray-50">
-                  <svg
-                    className="w-8 h-8 text-slate-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium text-slate-700">Resume uploaded</div>
-                    <a
-                      href={data.resumeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-[#4640DE] hover:underline"
-                    >
-                      View resume
-                    </a>
-                  </div>
-                </div>
-              )}
-
-              <label
-                htmlFor="resume-upload"
-                className="border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer"
-              >
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <svg
-                    className="w-6 h-6 text-[#4640DE]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeWidth={1.5}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M7 16v-4m0 0l5-5 5 5M12 12v8"
-                    />
-                  </svg>
-                  <div className="text-sm font-medium text-slate-700">Click to upload or drag and drop</div>
-                  <div className="text-xs text-slate-400">PDF, DOC, DOCX (max. 5MB)</div>
-                </div>
-                <input id="resume-upload" type="file" className="hidden" accept=".pdf,.doc,.docx" />
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* ================= BASIC DETAILS ================= */}
-      <div className="py-8 border-b">
+      <div className="border-t border-b py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="text-sm text-slate-700">
             <div className="font-medium mb-2">Basic Details</div>
@@ -516,7 +396,7 @@ export default function ProfileCareerTab(): JSX.Element {
                     key={i}
                     className="px-2 py-1 rounded bg-emerald-50 text-emerald-700 text-xs flex items-center gap-1"
                   >
-                    {lang.name} - {lang.level}
+                    {lang.name}
                     <button
                       onClick={() => removeLanguage(i)}
                       className="ml-1 text-emerald-500 hover:text-emerald-700"
@@ -690,24 +570,6 @@ export default function ProfileCareerTab(): JSX.Element {
                   placeholder="e.g., English"
                   className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                 />
-              </div>
-
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-slate-700">
-                  Proficiency Level
-                </label>
-                <select
-                  value={langForm.level}
-                  onChange={(e) => setLangForm({ ...langForm, level: e.target.value })}
-                  className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                >
-                  <option value="">Select level</option>
-                  <option value="Native">Native</option>
-                  <option value="Fluent">Fluent</option>
-                  <option value="Professional">Professional</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Basic">Basic</option>
-                </select>
               </div>
 
               <div className="mt-6 flex justify-end gap-3">
@@ -995,7 +857,7 @@ export default function ProfileCareerTab(): JSX.Element {
         </div>
       )}
        {/* ================= BACKGROUND IMAGE ================= */}
-      <div className="border-t border-b py-8">
+      <div className=" border-b py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <div className="text-sm text-slate-700">
             <div className="font-medium mb-2">Background Image</div>
@@ -1035,46 +897,7 @@ export default function ProfileCareerTab(): JSX.Element {
         </div>
       </div>
 
-      {/* ================= RESUME ================= */}
-      <div className="border-b py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          <div className="text-sm text-slate-700">
-            <div className="font-medium mb-2">Resume / CV</div>
-            <p className="text-xs text-slate-400">
-              Upload your resume to share with employers.
-            </p>
-          </div>
 
-          <div className="lg:col-span-2">
-            {data.resumeUrl && (
-              <a
-                href={data.resumeUrl}
-                target="_blank"
-                className="block mb-3 text-sm text-[#4640DE]"
-              >
-                View Resume
-              </a>
-            )}
-
-            <label
-              htmlFor="resume-upload"
-              className="border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer"
-            >
-              Click to upload
-              <input
-                id="resume-upload"
-                type="file"
-                className="hidden"
-                accept=".pdf,.doc,.docx"
-                onChange={(e) =>
-                  e.target.files?.[0] &&
-                  handleResumeUpload(e.target.files[0])
-                }
-              />
-            </label>
-          </div>
-        </div>
-      </div>
 
       {/* ================= SAVE ================= */}
       <div className="pt-6 pb-8">

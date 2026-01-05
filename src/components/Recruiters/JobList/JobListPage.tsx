@@ -120,7 +120,7 @@ export default function JobListPage() {
               searchParams.set("limit", limit.toString());
               navigate(`?${searchParams.toString()}`); 
             }}
-            className="bg-purple-600 text-white px-3 py-1 rounded"
+            className="bg-[#4640DE] text-white px-3 py-1 rounded"
           >
             Filter
           </button>

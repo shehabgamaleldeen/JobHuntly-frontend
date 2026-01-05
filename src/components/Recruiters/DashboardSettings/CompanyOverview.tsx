@@ -29,7 +29,6 @@ export default function CompanyOverviewTab(): JSX.Element {
     { src: CompanyLogoPlaceholder },
     { src: CompanyLogoPlaceholder }
   ]);
-  const [phone, setPhone] = useState("");
   const [backgroundUrl, setBackgroundUrl] = useState("");
 
   return (
@@ -304,14 +303,6 @@ export default function CompanyOverviewTab(): JSX.Element {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700">Phone</label>
-                <input
-                  className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </div>
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-slate-700">Tech Stack</label>
