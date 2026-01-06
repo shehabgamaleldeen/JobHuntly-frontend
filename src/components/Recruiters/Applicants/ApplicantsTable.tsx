@@ -108,7 +108,7 @@ const ApplicantsTable: React.FC<Props> = ({ rowsPerPage = 7 }) => {
                     <td className="py-3 px-2 md:px-4 whitespace-nowrap">
                       <button
                         onClick={() =>
-                          navigate(`/applicant-profile/${app._id}`)
+                          navigate(`applicant-profile/${app._id}`)
                         }
                         className="px-3 py-1 bg-[#E9EBFD] text-[#4640DE] border border-[#4640DE] text-sm hover:bg-purple-700 hover:text-white"
                       >

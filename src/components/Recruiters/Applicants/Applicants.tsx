@@ -1,6 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import ApplicantsTable from "./ApplicantsTable";
+import { Outlet, useNavigate } from "react-router-dom";
 
 export default function ApplicantsPage() {
   const navigate = useNavigate();
@@ -19,8 +18,8 @@ export default function ApplicantsPage() {
             <span className="text-sm font-medium">Back to Job Listings</span>
           </button>
 
-          {/* Applicants Table */}
-          <ApplicantsTable />
+          {/* Child Route (Table or Profile) */}
+          <Outlet />
         </div>
       </div>
     </div>
