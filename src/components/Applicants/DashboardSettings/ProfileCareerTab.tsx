@@ -166,7 +166,7 @@ export default function ProfileCareerTab(): JSX.Element {
       });
 
       if (res.data.success) {
-        setData({ ...data, backgroundUrl: res.data.data.url });
+        setData({ ...data, backgroundUrl: res.data.url });
         alert("Background uploaded successfully!");
       }
     } catch (err: any) {
