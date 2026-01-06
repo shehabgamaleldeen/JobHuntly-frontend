@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSocket } from '@/context/SocketContext';
-import { Bell } from 'lucide-react';
+import { Bell, CheckCheck } from 'lucide-react'; // Added CheckCheck icon
 import { useNavigate } from 'react-router-dom';
 import instance from '@/components/AxiosConfig/instance';
 
@@ -11,14 +11,31 @@ const NotificationDropdown = () => {
 
     const unreadCount = notifications.filter((n: any) => !n.isRead).length;
 
+    // --- NEW: Mark All as Read Logic ---
+    const handleMarkAllAsRead = async () => {
+        if (unreadCount === 0) return;
+
+        try {
+            // 1. Backend Call
+            const response = await instance.patch('/notifications');
+
+            if (response.data) {
+                // 2. Optimistic UI Update
+                setNotifications((prev: any) =>
+                    prev.map((n: any) => ({ ...n, isRead: true }))
+                );
+            }
+            else
+                console.error("Failed to mark all as read");
+        } catch (err) {
+            console.error("Failed to mark all as read", err);
+        }
+    };
+
     const handleNotificationClick = async (notification: any) => {
-        // Mark as Read
         if (!notification.isRead) {
             try {
                 await instance.patch(`/notifications/${notification._id}`);
-                console.log("Notification clicked");
-                
-                // 2. Update Local State (Optimistic UI)
                 setNotifications((prev: any) =>
                     prev.map((n: any) =>
                         n._id === notification._id ? { ...n, isRead: true } : n
@@ -29,16 +46,14 @@ const NotificationDropdown = () => {
             }
         }
 
-        // 3. Navigate & Close Dropdown
         if (notification.link) navigate(notification.link);
         setIsOpen(false);
     };
 
     return (
         <div className="relative">
-            {/* Bell Icon with Badge */}
-            <button 
-                onClick={() => setIsOpen(!isOpen)} 
+            <button
+                onClick={() => setIsOpen(!isOpen)}
                 className="relative p-2 rounded-full hover:bg-zinc-100 transition-colors"
             >
                 <Bell className="text-zinc-600" size={22} />
@@ -49,14 +64,27 @@ const NotificationDropdown = () => {
                 )}
             </button>
 
-            {/* Dropdown Card */}
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-                    <div className="absolute right-0 mt-3 w-80 bg-white border border-zinc-200 rounded-2xl shadow-2xl z-50 overflow-hidden transform origin-top-right transition-all">
+                    <div className="absolute right-0 mt-3 w-80 bg-white border border-zinc-200 rounded-2xl shadow-2xl z-50 overflow-hidden">
+
+                        {/* Header with Mark All Read Button */}
                         <div className="flex items-center justify-between p-4 border-b border-zinc-50">
-                            <h3 className="font-bold text-zinc-900">Notifications</h3>
-                            <span className="text-xs text-indigo-600 font-medium">{unreadCount} New</span>
+                            <div>
+                                <h3 className="font-bold text-zinc-900 leading-tight">Notifications</h3>
+                                <p className="text-[10px] text-zinc-400">{unreadCount} unread items</p>
+                            </div>
+
+                            {unreadCount > 0 && (
+                                <button
+                                    onClick={handleMarkAllAsRead}
+                                    className="flex items-center gap-1 text-[11px] text-indigo-600 font-semibold hover:text-indigo-800 transition-colors"
+                                >
+                                    <CheckCheck size={14} />
+                                    Mark all read
+                                </button>
+                            )}
                         </div>
 
                         <div className="max-h-[400px] overflow-y-auto">
@@ -66,8 +94,8 @@ const NotificationDropdown = () => {
                                 </div>
                             ) : (
                                 notifications.map((notif: any) => (
-                                    <div 
-                                        key={notif._id} 
+                                    <div
+                                        key={notif._id}
                                         onClick={() => handleNotificationClick(notif)}
                                         className={`p-4 border-b border-zinc-50 cursor-pointer transition-colors relative
                                             ${notif.isRead ? 'bg-white opacity-70' : 'bg-indigo-50/30 hover:bg-indigo-50/50'}
@@ -81,7 +109,7 @@ const NotificationDropdown = () => {
                                                 {notif.message}
                                             </p>
                                             <p className="text-[10px] text-zinc-400 mt-1">
-                                                {new Date(notif.createdAt).toLocaleDateString()} at {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {new Date(notif.createdAt).toLocaleDateString()}
                                             </p>
                                         </div>
                                     </div>
