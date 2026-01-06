@@ -79,7 +79,7 @@ export default function ProfileSettingsTab(): JSX.Element {
       });
 
       if (res.data.success) {
-        setProfile({ ...profile, logoUrl: res.data.data.url });
+        setProfile({ ...profile, logoUrl: res.data.url });
         alert("Avatar uploaded successfully!");
       }
     } catch (err: any) {
