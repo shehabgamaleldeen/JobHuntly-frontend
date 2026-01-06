@@ -26,7 +26,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
                 if (role === "JOB_SEEKER") {
                     // An array of notification objects
                     const res = await instance.get("/notifications");
-                    console.log(res.data);
 
                     setNotifications(res.data.data);
                 }
