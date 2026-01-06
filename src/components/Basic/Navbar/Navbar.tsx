@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import mainImage from '../../../assets/images/Logo.svg'
 import { Link, useNavigate } from 'react-router-dom'
 import PremiumNotification from '../../Premium/PremiumNotification'
+import NotificationDropdown from '@/components/ui/notificationDropdown'
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(
@@ -99,31 +100,32 @@ function Navbar() {
                 </Link>
               </>
             ) : (
-              <div className="relative">
-                <button
-                  onClick={() => setOpenMenu((prev) => !prev)}
-                  className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-medium hover:bg-indigo-700"
-                >
-                  {userRole === 'COMPANY' ? 'C' : 'U'}
-                </button>
+            <div className="flex gap-3">
+              <NotificationDropdown/>
+              <button
+                onClick={() => setOpenMenu((prev) => !prev)}
+                className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-medium hover:bg-indigo-700"
+              >
+                {userRole === 'COMPANY' ? 'C' : 'U'}
+              </button>
 
-                {openMenu && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50">
-                    <button
-                      onClick={handleAvatarClick}
-                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                    >
-                      Dashboard
-                    </button>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
+              {openMenu && (
+                <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50">
+                  <button
+                    onClick={handleAvatarClick}
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
             )}
           </div>
         </div>
