@@ -1,5 +1,5 @@
 import type { JSX } from 'react'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, NavLink } from 'react-router-dom'
 
 import mainImage from '../../../assets/images/Logo.svg'
@@ -27,11 +27,10 @@ interface UserProfile {
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   `flex items-center gap-3 px-3 py-2 rounded-lg w-full transition
-   ${
-     isActive
-       ? 'bg-blue-50 text-[#4640DE] font-semibold'
-       : 'text-[#7C8493] hover:bg-blue-50'
-   }`
+    ${isActive
+    ? 'bg-blue-50 text-[#4640DE] font-semibold'
+    : 'text-[#7C8493] hover:bg-blue-50'
+  }`
 
 export function DashboardSidebarComponent(): JSX.Element {
   const navigate = useNavigate()
@@ -74,10 +73,13 @@ export function DashboardSidebarComponent(): JSX.Element {
     sessionStorage.removeItem('accessToken')
     sessionStorage.removeItem('refreshToken')
     sessionStorage.removeItem('role')
+
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
     localStorage.removeItem('role')
+
     localStorage.removeItem('isPremium')
+
     navigate('/login')
     window.dispatchEvent(new Event('storage'))
   }
@@ -95,10 +97,11 @@ export function DashboardSidebarComponent(): JSX.Element {
     if (!userProfile) return null
     return userProfile.profile.logoUrl || userProfile.profile.avatarUrl || null
   }
-  
 
-  // Don't render if no user data and not loading
-  if (!loading && !userProfile) return null
+
+  // Error
+  // // Don't render if no user data and not loading
+  // if (!loading && !userProfile) return
 
   return (
     <>
