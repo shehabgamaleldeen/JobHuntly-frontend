@@ -1,35 +1,138 @@
 import type { JSX } from "react";
-import { useState } from "react";
-import CompanyLogoPlaceholder from "../../../assets/images/twiteer.jpg";
+import { useState, useEffect } from "react";
+import instance from "@/components/AxiosConfig/instance";
+import Loader from "@/components/Basic/Loader";
 
 export default function CompanyOverviewTab(): JSX.Element {
-  const [companyName, setCompanyName] = useState("Nomad");
-  const [website, setWebsite] = useState("https://www.nomad.com");
-  const [location, setLocation] = useState("England, Japan, Australia");
-  const [employees, setEmployees] = useState("1 - 50");
-  const [industry, setIndustry] = useState("Technology");
-  const [dateDay, setDateDay] = useState("31");
-  const [dateMonth, setDateMonth] = useState("July");
-  const [dateYear, setDateYear] = useState("2021");
-  const [techStack] = useState(["HTML 5", "CSS 3", "Javascript"]);
-  const [description, setDescription] = useState(
-    "Nomad is part of the Information Technology Industry. We believe travellers want to experience real life and meet local people..."
-  );
-  
-  // New fields
+  const [companyName, setCompanyName] = useState("");
+  const [website, setWebsite] = useState("");
+  const [employees, setEmployees] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [foundedDate, setFoundedDate] = useState("");
   const [hqCity, setHqCity] = useState("");
   const [hqCountry, setHqCountry] = useState("");
-  const [countries] = useState([
-    { code: "US", name: "United States" },
-    { code: "UK", name: "United Kingdom" },
-    { code: "JP", name: "Japan" }
-  ]);
-  const [images] = useState([
-    { src: CompanyLogoPlaceholder },
-    { src: CompanyLogoPlaceholder },
-    { src: CompanyLogoPlaceholder }
-  ]);
+  const [description, setDescription] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
   const [backgroundUrl, setBackgroundUrl] = useState("");
+  
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingBg, setUploadingBg] = useState(false);
+
+  useEffect(() => {
+    fetchCompanyProfile();
+  }, []);
+
+  const fetchCompanyProfile = async () => {
+    try {
+      const response = await instance.get("/settings/getProfileRecruiter");
+      if (response.data.success) {
+        const { user, profile } = response.data.data;
+        
+        setCompanyName(profile.name || "");
+        setWebsite(profile.website || "");
+        setEmployees(profile.employeesRange || "");
+        setIndustry(profile.industry || "");
+        setFoundedDate(profile.foundedDate || "");
+        setHqCity(profile.hqCity || "");
+        setHqCountry(profile.hqCountry || "");
+        setDescription(profile.about || "");
+        setLogoUrl(profile.logoUrl || "");
+        setBackgroundUrl(profile.backGroundUrl || "");
+      }
+    } catch (error) {
+      console.error("Error fetching company profile:", error);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  const handleLogoUpload = async (file: File) => {
+    if (!file) return;
+
+    setUploadingLogo(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await instance.post("/settings/logoUrl", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.data.success) {
+        setLogoUrl(res.data.url);
+        alert("Logo uploaded successfully!");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert(err.response?.data?.message || "Failed to upload logo");
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
+  const handleBackgroundUpload = async (file: File) => {
+    if (!file) return;
+
+    setUploadingBg(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await instance.post("/settings/backgroundUrl", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.data.success) {
+        
+        setBackgroundUrl(res.data.url);
+        alert("Background uploaded successfully!");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert(err.response?.data?.message || "Failed to upload background");
+    } finally {
+      setUploadingBg(false);
+    }
+  };
+
+  const handleSaveChanges = async () => {
+    setLoading(true);
+    try {
+      const updateData = {
+        website: website.trim(),
+        employeesRange: employees,
+        industry: industry,
+        foundedDate: foundedDate,
+        hqCity: hqCity.trim(),
+        hqCountry: hqCountry.trim(),
+        about: description.trim(),
+      };
+
+      const response = await instance.put("/settings/updateProfileRecruiter", updateData);
+
+      console.log( response.data );
+      
+      if (response.data.success) {
+        alert("Company profile updated successfully!");
+        fetchCompanyProfile();
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Failed to update company profile";
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (fetching) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -44,7 +147,6 @@ export default function CompanyOverviewTab(): JSX.Element {
       {/* Logo / Upload */}
       <div className="border-t border-b py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* Left column (labels) */}
           <div className="text-sm text-slate-700">
             <div className="font-medium mb-2">Company Logo</div>
             <p className="text-xs text-slate-400">
@@ -52,16 +154,23 @@ export default function CompanyOverviewTab(): JSX.Element {
             </p>
           </div>
 
-          {/* Right columns (avatar + upload) */}
           <div className="lg:col-span-2">
             <div className="flex flex-col sm:flex-row items-center gap-6">
-              <div className="w-24 h-24 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center">
-                <img src={CompanyLogoPlaceholder} alt="company logo" className="w-20 h-20 object-cover" />
-              </div>
+              {logoUrl ? (
+                <div className="w-24 h-24 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <img src={logoUrl} alt="company logo" className="w-20 h-20 object-cover" />
+                </div>
+              ) : (
+                <div className="w-24 h-24 rounded-md bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center">
+                  <span className="text-3xl font-bold text-white">
+                    {companyName.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
 
               <label
                 htmlFor="logo-upload"
-                className="flex-1 border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer"
+                className="flex-1 border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer hover:bg-blue-50 transition"
               >
                 <div className="flex flex-col items-center justify-center gap-2">
                   <svg
@@ -77,10 +186,22 @@ export default function CompanyOverviewTab(): JSX.Element {
                       d="M7 16v-4m0 0l5-5 5 5M12 12v8"
                     />
                   </svg>
-                  <div className="text-sm font-medium text-slate-700">Click to replace or drag and drop</div>
+                  <div className="text-sm font-medium text-slate-700">
+                    {uploadingLogo ? "Uploading..." : "Click to replace or drag and drop"}
+                  </div>
                   <div className="text-xs text-slate-400">SVG, PNG, JPG or GIF (max. 400 x 400px)</div>
                 </div>
-                <input id="logo-upload" type="file" className="hidden" accept="image/*" />
+                <input
+                  id="logo-upload"
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  disabled={uploadingLogo}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleLogoUpload(file);
+                  }}
+                />
               </label>
             </div>
           </div>
@@ -90,7 +211,6 @@ export default function CompanyOverviewTab(): JSX.Element {
       {/* Background Image / Upload */}
       <div className="border-b py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* Left column (labels) */}
           <div className="text-sm text-slate-700">
             <div className="font-medium mb-2">Background Image</div>
             <p className="text-xs text-slate-400">
@@ -98,7 +218,6 @@ export default function CompanyOverviewTab(): JSX.Element {
             </p>
           </div>
 
-          {/* Right columns (background preview + upload) */}
           <div className="lg:col-span-2">
             <div className="flex flex-col gap-6">
               {backgroundUrl && (
@@ -109,7 +228,7 @@ export default function CompanyOverviewTab(): JSX.Element {
 
               <label
                 htmlFor="background-upload"
-                className="border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer"
+                className="border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer hover:bg-blue-50 transition"
               >
                 <div className="flex flex-col items-center justify-center gap-2">
                   <svg
@@ -125,63 +244,22 @@ export default function CompanyOverviewTab(): JSX.Element {
                       d="M7 16v-4m0 0l5-5 5 5M12 12v8"
                     />
                   </svg>
-                  <div className="text-sm font-medium text-slate-700">Click to replace or drag and drop</div>
+                  <div className="text-sm font-medium text-slate-700">
+                    {uploadingBg ? "Uploading..." : "Click to replace or drag and drop"}
+                  </div>
                   <div className="text-xs text-slate-400">SVG, PNG, JPG or GIF (max. 1920 x 400px)</div>
                 </div>
-                <input id="background-upload" type="file" className="hidden" accept="image/*" />
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Gallery Images */}
-      <div className="border-b py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* Left column (labels) */}
-          <div className="text-sm text-slate-700">
-            <div className="font-medium mb-2">Gallery Images</div>
-            <p className="text-xs text-slate-400">
-              Upload images to showcase your company workspace and culture.
-            </p>
-          </div>
-
-          {/* Right columns (gallery + upload) */}
-          <div className="lg:col-span-2">
-            <div className="flex flex-col gap-6">
-              {/* Gallery preview */}
-              {images.length > 0 && (
-                <div className="grid grid-cols-3 gap-4">
-                  {images.map((img, idx) => (
-                    <div key={idx} className="aspect-square rounded-md overflow-hidden bg-gray-100">
-                      <img src={img.src} alt={`gallery ${idx + 1}`} className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <label
-                htmlFor="gallery-upload"
-                className="border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer"
-              >
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <svg
-                    className="w-6 h-6 text-[#4640DE]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeWidth={1.5}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M7 16v-4m0 0l5-5 5 5M12 12v8"
-                    />
-                  </svg>
-                  <div className="text-sm font-medium text-slate-700">Click to add images or drag and drop</div>
-                  <div className="text-xs text-slate-400">SVG, PNG, JPG or GIF (max. 800 x 800px each)</div>
-                </div>
-                <input id="gallery-upload" type="file" className="hidden" accept="image/*" multiple />
+                <input
+                  id="background-upload"
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  disabled={uploadingBg}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleBackgroundUpload(file);
+                  }}
+                />
               </label>
             </div>
           </div>
@@ -203,10 +281,12 @@ export default function CompanyOverviewTab(): JSX.Element {
               <div>
                 <label className="block text-sm font-medium text-slate-700">Company Name</label>
                 <input
-                  className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm bg-gray-50 cursor-not-allowed"
                   value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
+                  disabled
+                  title="Company name cannot be changed"
                 />
+                <p className="text-xs text-slate-400 mt-1">Name cannot be changed</p>
               </div>
 
               <div>
@@ -215,29 +295,25 @@ export default function CompanyOverviewTab(): JSX.Element {
                   className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                   value={website}
                   onChange={(e) => setWebsite(e.target.value)}
+                  placeholder="https://www.yourcompany.com"
+                  disabled={loading}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700">Location</label>
-                <input
-                  className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700">Employee</label>
+                <label className="block text-sm font-medium text-slate-700">Company Size</label>
                 <select
                   className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                   value={employees}
                   onChange={(e) => setEmployees(e.target.value)}
+                  disabled={loading}
                 >
-                  <option>1 - 50</option>
-                  <option>51 - 200</option>
-                  <option>201 - 500</option>
-                  <option>500+</option>
+                  <option value="">Select size</option>
+                  <option value="1-50">1 - 50</option>
+                  <option value="51-200">51 - 200</option>
+                  <option value="201-500">201 - 500</option>
+                  <option value="501-1000">501 - 1000</option>
+                  <option value="1000+">1000+</option>
                 </select>
               </div>
 
@@ -247,42 +323,28 @@ export default function CompanyOverviewTab(): JSX.Element {
                   className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                   value={industry}
                   onChange={(e) => setIndustry(e.target.value)}
+                  disabled={loading}
                 >
-                  <option>Technology</option>
-                  <option>Finance</option>
-                  <option>Healthcare</option>
+                  <option value="">Select industry</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Education">Education</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Social & Non-Profit">Social & Non-Profit</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-700">Date Founded</label>
-                <div className="mt-2 grid grid-cols-3 gap-2">
-                  <select
-                    className="border border-slate-200 rounded px-2 py-2 text-sm focus:outline-none"
-                    value={dateDay}
-                    onChange={(e) => setDateDay(e.target.value)}
-                  >
-                    <option>31</option>
-                    <option>30</option>
-                    <option>29</option>
-                  </select>
-                  <select
-                    className="border border-slate-200 rounded px-2 py-2 text-sm focus:outline-none"
-                    value={dateMonth}
-                    onChange={(e) => setDateMonth(e.target.value)}
-                  >
-                    <option>July</option>
-                    <option>June</option>
-                  </select>
-                  <select
-                    className="border border-slate-200 rounded px-2 py-2 text-sm focus:outline-none"
-                    value={dateYear}
-                    onChange={(e) => setDateYear(e.target.value)}
-                  >
-                    <option>2021</option>
-                    <option>2020</option>
-                  </select>
-                </div>
+                <input
+                  type="date"
+                  className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  value={foundedDate}
+                  onChange={(e) => setFoundedDate(e.target.value)}
+                  disabled={loading}
+                />
               </div>
 
               <div>
@@ -291,6 +353,8 @@ export default function CompanyOverviewTab(): JSX.Element {
                   className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                   value={hqCity}
                   onChange={(e) => setHqCity(e.target.value)}
+                  placeholder="e.g., London"
+                  disabled={loading}
                 />
               </div>
 
@@ -300,36 +364,9 @@ export default function CompanyOverviewTab(): JSX.Element {
                   className="mt-2 w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                   value={hqCountry}
                   onChange={(e) => setHqCountry(e.target.value)}
+                  placeholder="e.g., United Kingdom"
+                  disabled={loading}
                 />
-              </div>
-
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700">Tech Stack</label>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {techStack.map((t) => (
-                    <span
-                      key={t}
-                      className="px-2 py-1 rounded bg-indigo-50 text-indigo-700 text-xs"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700">Countries</label>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {countries.map((country) => (
-                    <span
-                      key={country.code}
-                      className="px-2 py-1 rounded bg-emerald-50 text-emerald-700 text-xs"
-                    >
-                      {country.code} - {country.name}
-                    </span>
-                  ))}
-                </div>
               </div>
             </div>
           </div>
@@ -351,6 +388,8 @@ export default function CompanyOverviewTab(): JSX.Element {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               maxLength={500}
+              placeholder="Tell us about your company, your mission, and what makes you unique..."
+              disabled={loading}
             />
             <div className="text-xs text-slate-400 mt-2 flex justify-between">
               <div>Maximum 500 characters</div>
@@ -361,7 +400,13 @@ export default function CompanyOverviewTab(): JSX.Element {
 
         {/* Save button */}
         <div className="mt-6 flex justify-end">
-          <button className="px-6 py-2 bg-[#4640DE] text-white rounded-md">Save Changes</button>
+          <button
+            onClick={handleSaveChanges}
+            disabled={loading || uploadingLogo || uploadingBg}
+            className="px-6 py-2 bg-[#4640DE] text-white rounded-md hover:bg-[#3730d8] disabled:opacity-50 disabled:cursor-not-allowed transition"
+          >
+            {loading ? "Saving..." : "Save Changes"}
+          </button>
         </div>
       </div>
     </>
