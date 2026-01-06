@@ -7,7 +7,7 @@ type JopCardProps = {
 const JopCard = ({ jop }: JopCardProps) => {
   return (
     <>
-      <article className="bg-[#FFFFFF] flex max-lg:flex-col max-md:flex-col max-sm:flex-col justify-between items-center p-6 my-6 gap-3 border-2 border-[#D6DDEB]">
+      <article className="bg-[#FFFFFF] flex max-lg:flex-col max-md:flex-col max-sm:flex-col justify-between items-center p-6 my-6 gap-3 border-2 border-[#D6DDEB] hover:border-[#4640DE] hover:shadow-lg transition duration-200 ease-in-out">
         <Link to={jop._id}>
           <div className="flex gap-3 max-xl:flex-col max-lg:flex-col max-sm:flex-col">
             <img className="w-12 h-14" src={jop?.logoUrl} alt="companyIcon" />
