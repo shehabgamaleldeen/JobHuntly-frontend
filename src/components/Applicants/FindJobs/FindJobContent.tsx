@@ -1,18 +1,35 @@
 import React from "react";
 
 function FindJobContent(props: any) {
+  const { 
+    title, 
+    highlightText, 
+    description,
+    searchTitle,
+    setSearchTitle,
+    searchLocation,
+    setSearchLocation,
+    handleSearch
+  } = props;
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <section className="w-full bg-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-6">
           <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-10">
-            {props.title}
+            {title}
             <span className="text-[#4640DE] ml-4">
-              {props.highlightText}
+              {highlightText}
             </span>
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-10">
-            {props.description}
+            {description}
           </p>
         </div>
         <div className="max-w-4xl mx-auto mb-8">
@@ -35,6 +52,9 @@ function FindJobContent(props: any) {
                 type="text"
                 placeholder="Job title or keyword"
                 className="flex-1 outline-none text-gray-700 placeholder-gray-400"
+                value={searchTitle}
+                onChange={(e) => setSearchTitle(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
             </div>
 
@@ -60,15 +80,19 @@ function FindJobContent(props: any) {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
                 />
               </svg>
-              <select className="flex-1 outline-none text-gray-700 bg-transparent cursor-pointer">
-                <option>Florence, Italy</option>
-                <option>Rome, Italy</option>
-                <option>Milan, Italy</option>
-                <option>Madrid, Spain</option>
-                <option>Paris, France</option>
-              </select>
+              <input 
+                type="text"
+                placeholder="City, state, zip code or country"
+                className="flex-1 outline-none text-gray-700 placeholder-gray-400 bg-transparent"
+                value={searchLocation}
+                onChange={(e) => setSearchLocation(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
             </div>
-            <button className="bg-[#4640DE] text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap">
+            <button 
+              onClick={() => handleSearch()}
+              className="bg-[#4640DE] text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
+            >
               Search
             </button>
           </div>
@@ -77,10 +101,30 @@ function FindJobContent(props: any) {
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className="text-gray-500">Popular :</span>
-            <span className="text-gray-700">UI Designer,</span>
-            <span className="text-gray-700">UX Researcher,</span>
-            <span className="text-gray-700">Android,</span>
-            <span className="text-gray-700">Admin</span>
+            <span 
+              className="text-gray-700 cursor-pointer hover:text-[#4640DE]"
+              onClick={() => handleSearch({ title: 'UI Designer' })}
+            >
+              UI Designer,
+            </span>
+            <span 
+              className="text-gray-700 cursor-pointer hover:text-[#4640DE]"
+              onClick={() => handleSearch({ title: 'UX Researcher' })}
+            >
+              UX Researcher,
+            </span>
+            <span 
+              className="text-gray-700 cursor-pointer hover:text-[#4640DE]"
+              onClick={() => handleSearch({ title: 'Android' })}
+            >
+              Android,
+            </span>
+            <span 
+              className="text-gray-700 cursor-pointer hover:text-[#4640DE]"
+              onClick={() => handleSearch({ title: 'Admin' })}
+            >
+              Admin
+            </span>
           </div>
         </div>
 
