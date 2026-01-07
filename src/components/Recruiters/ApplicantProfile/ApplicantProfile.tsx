@@ -8,7 +8,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 const ApplicantProfile = () => {
   dayjs.extend(relativeTime)
 
-  const { applicationId } = useParams()
+  const { applicationId, jobId } = useParams()
   type Application = {
     [key: string]: any
   }
@@ -17,7 +17,7 @@ const ApplicantProfile = () => {
   async function getApplication() {
     try {
       const res = await instance.get(
-        `/company/jobs/:jobId/applications/${applicationId}`
+        `/company/jobs/${jobId}/applications/${applicationId}`
       )
       setApplication(res.data.data)
     } catch (err) {
@@ -115,7 +115,6 @@ const ApplicantProfile = () => {
           </div>
         </section>
       </section>
-      <Outlet />
     </>
   )
 }

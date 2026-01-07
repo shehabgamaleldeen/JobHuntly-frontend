@@ -9,8 +9,21 @@ type Job = {
   [key: string]: any
 }
 
+type Pagination = {
+  totalCount: number
+  totalPages: number
+  currentPage: number
+  limit: number
+}
+
 function FindJobs() {
   const [jops, setjops] = useState<Job[]>([])
+  const [pagination, setPagination] = useState<Pagination>({
+    totalCount: 0,
+    totalPages: 0,
+    currentPage: 1,
+    limit: 5
+  })
   const [searchParams, setSearchParams] = useSearchParams()
   
   const title = searchParams.get('title') || ''
@@ -20,12 +33,24 @@ function FindJobs() {
   const [category, setCategory] = useState('')
   const [salaryMin, setSalaryMin] = useState('')
   const [salaryMax, setSalaryMax] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
 
+  // Local state for search inputs
+  const [searchTitle, setSearchTitle] = useState(title)
+  const [searchLocation, setSearchLocation] = useState(location)
+
+  // Sync internal state with URL params
+  useEffect(() => {
+    setSearchTitle(title)
+    setSearchLocation(location)
+  }, [title, location])
+
+  // Fetch jobs when URL params or page changes
   useEffect(() => {
     async function getJops() {
       try {
-        let url = '/jobs'
-        const params: string[] = []
+        let url = '/api/jobs'
+        const params: string[] = [`page=${currentPage}`, `limit=5`]
         
         if (title) params.push(`title=${title}`)
         if (location) params.push(`location=${location}`)
@@ -34,19 +59,51 @@ function FindJobs() {
         if (salaryMin) params.push(`salaryMin=${salaryMin}`)
         if (salaryMax) params.push(`salaryMax=${salaryMax}`)
         
-        if (params.length > 0) {
-          url = `/filter?${params.join('&')}`
+        // Use filter endpoint if any filter is active
+        if (title || location || employmentType || category || salaryMin || salaryMax) {
+          url = `/api/filter?${params.join('&')}`
+        } else {
+          url = `/api/jobs?${params.join('&')}`
         }
         
         const res = await instance.get(url)
         setjops(res.data.data)
+        if (res.data.pagination) {
+          setPagination(res.data.pagination)
+        }
       } catch (err) {
         console.log(err)
       }
     }
     
     getJops()
+  }, [title, location, employmentType, category, salaryMin, salaryMax, currentPage])
+
+  // Reset to page 1 when filters change (excluding page change itself)
+  useEffect(() => {
+    setCurrentPage(1)
   }, [title, location, employmentType, category, salaryMin, salaryMax])
+
+  const handleSearch = (overrides?: { title?: string, location?: string }) => {
+    const params: any = {}
+    const finalTitle = overrides?.title !== undefined ? overrides.title : searchTitle
+    const finalLocation = overrides?.location !== undefined ? overrides.location : searchLocation
+    
+    if (finalTitle) params.title = finalTitle
+    if (finalLocation) params.location = finalLocation
+    // Maintain existing filters
+    if (employmentType) params.employmentType = employmentType
+    if (category) params.category = category
+    if (salaryMin) params.salaryMin = salaryMin
+    if (salaryMax) params.salaryMax = salaryMax
+    
+    // Update state if overridden (e.g. from popular tags)
+    if (overrides?.title !== undefined) setSearchTitle(overrides.title)
+    if (overrides?.location !== undefined) setSearchLocation(overrides.location)
+    
+    setSearchParams(params)
+    setCurrentPage(1)
+  }
 
   const handleEmploymentFilter = (type: string) => {
     setEmploymentType(type === employmentType ? '' : type)
@@ -72,11 +129,15 @@ function FindJobs() {
     setSalaryMin('')
     setSalaryMax('')
     setSearchParams({})
+    setCurrentPage(1)
+    setSearchTitle('')
+    setSearchLocation('')
   }
 
-  useEffect(() => {
-    console.log(jops)
-  }, [jops])
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   return (
     <>
@@ -84,6 +145,11 @@ function FindJobs() {
         title="Find Your"
         highlightText="dream job"
         description="Find your next career at companies like HubSpot, Nike, and Dropbox"
+        searchTitle={searchTitle}
+        setSearchTitle={setSearchTitle}
+        searchLocation={searchLocation}
+        setSearchLocation={setSearchLocation}
+        handleSearch={handleSearch}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -160,8 +226,8 @@ function FindJobs() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h2 className="text-2xl font-bold">
                 {(title || location || employmentType || category || salaryMin) 
-                  ? `Results (${jops.length})` 
-                  : 'All Jobs'}
+                  ? `Results (${pagination.totalCount})` 
+                  : `All Jobs (${pagination.totalCount})`}
               </h2>
               
               {(employmentType || category || salaryMin) && (
@@ -193,6 +259,52 @@ function FindJobs() {
                   ))
                 )}
               </div>
+
+              {/* Pagination */}
+              {pagination.totalCount > 0 && (
+                <div className="flex justify-center items-center gap-2 mt-8">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                  >
+                    Previous
+                  </button>
+                  
+                  {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
+                    .filter(page => {
+                      // Show first, last, and pages around current
+                      return page === 1 || 
+                             page === pagination.totalPages || 
+                             Math.abs(page - currentPage) <= 2
+                    })
+                    .map((page, index, arr) => (
+                      <span key={page}>
+                        {index > 0 && arr[index - 1] !== page - 1 && (
+                          <span className="px-2">...</span>
+                        )}
+                        <button
+                          onClick={() => handlePageChange(page)}
+                          className={`px-4 py-2 border rounded-lg ${
+                            currentPage === page 
+                              ? 'bg-indigo-600 text-white' 
+                              : 'hover:bg-gray-100'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      </span>
+                    ))}
+                  
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === pagination.totalPages}
+                    className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

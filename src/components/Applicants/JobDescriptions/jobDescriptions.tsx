@@ -9,6 +9,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Button } from '@/components/ui/button'
 import JobPath from './JobPath.tsx'
+import Loader from '@/components/Basic/Loader'
 import { toast } from 'sonner'
 
 const shareJob = async () => {
@@ -39,9 +40,11 @@ const JobDescriptions = () => {
   }
   const [job, setJob] = useState<Job | null>(null)
   const [hasApplied, setHasApplied] = useState<boolean>(false)
+  const [loading, setLoading] = useState(true)
 
   async function getJob() {
     try {
+      setLoading(true)
       const res = await instance.get(`/jobs/${id}`, {
         headers: {
           access_token:
@@ -53,6 +56,8 @@ const JobDescriptions = () => {
       setJob(res.data.data)
     } catch (err) {
       console.log(err)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -68,6 +73,10 @@ const JobDescriptions = () => {
   useEffect(() => {
     console.log(job)
   }, [job])
+
+  if (loading) {
+    return <Loader />
+  }
 
   return (
     <>

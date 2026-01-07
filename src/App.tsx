@@ -42,6 +42,7 @@ import CompanyOverviewTab from './components/Recruiters/DashboardSettings/Compan
 import CompanySocialLinksTab from './components/Recruiters/DashboardSettings/CompanySocialLinks'
 import JobDetailsTab from './components/Recruiters/JobListing/JobDetails'
 import ApplicantsPage from './components/Recruiters/Applicants/Applicants'
+import ApplicantsTable from './components/Recruiters/Applicants/ApplicantsTable'
 import LoginCompanySettingsTab from './components/Recruiters/DashboardSettings/LoginCompanySettings'
 import SocialLinksTab from './components/Applicants/DashboardSettings/SocialLinks'
 import ProfileCareerTab from './components/Applicants/DashboardSettings/ProfileCareerTab'
@@ -121,15 +122,18 @@ function App() {
                 <Route index element={<JobListPage />} />
             
                 {/* job */}
-                <Route path=":jobId" element={<ApplicantsPage />} />
-            
-                {/* applicant profile (EXTENDS job path) */}
-                <Route
-                  path=":companyId/:jobId/applicant-profile/:applicationId"
-                  element={<ApplicantProfile />}
-                >
-                  <Route index element={<Resume />} />
-                  <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
+                <Route path=":jobId" element={<ApplicantsPage />}>
+                  <Route index element={<ApplicantsTable />} />
+                  
+                  {/* applicant profile (EXTENDS job path) */}
+                  <Route
+                    path="applicant-profile/:applicationId"
+                    element={<ApplicantProfile />}
+                  >
+                    <Route index element={<Resume />} />
+                    <Route path="resume" element={<Resume />} />
+                    <Route path="Q&A" element={<ApplyQuestionsAndAnswers />} />
+                  </Route>
                 </Route>
             
                 {/* job details */}
