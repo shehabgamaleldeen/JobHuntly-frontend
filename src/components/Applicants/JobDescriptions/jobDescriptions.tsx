@@ -88,7 +88,7 @@ const JobDescriptions = () => {
           <div className="flex max-sm:flex-col items-center  max-sm:place-items-start">
             <img
               className="w-24 max-sm:w-16"
-              src={job?.logoUrl}
+              src={job?.companyId?.logoUrl}
               alt="Company Logo"
             />
             <div className="m-6 max-sm:my-4 max-sm:mx-0">
