@@ -39,11 +39,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
         const initializeSocket = async () => {
             try {
-                const response = await instance.get("/auth/me");
+                const response = await instance.get("/auth/guest");
 
                 // DEBUG: See exactly what the server sent
                 //console.log("Server Response:", response.data.user);
-
                 const user = response.data.user;
 
                 if (user && user._id) {
