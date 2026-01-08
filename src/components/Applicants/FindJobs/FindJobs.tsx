@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import FindJobContent from './FindJobContent'
-import instance from '../../AxiosConfig/instance.ts'
-import JopCard from '../Jop/JopCard.tsx'
+import instance from '../../AxiosConfig/instance'
+import JopCard from '../Jop/JopCard'
 
 type Job = {
   _id: string
@@ -24,127 +24,180 @@ function FindJobs() {
     currentPage: 1,
     limit: 5
   })
+
   const [searchParams, setSearchParams] = useSearchParams()
-  
-  const title = searchParams.get('title') || ''
-  const location = searchParams.get('location') || ''
-  
-  const [employmentType, setEmploymentType] = useState('')
-  const [category, setCategory] = useState('')
-  const [salaryMin, setSalaryMin] = useState('')
-  const [salaryMax, setSalaryMax] = useState('')
+
+  const titleParam = searchParams.get('title') || ''
+  const locationParam = searchParams.get('location') || ''
+
+  const [employmentTypes, setEmploymentTypes] = useState<string[]>([])
+  const [workplaceModels, setWorkplaceModels] = useState<string[]>([])
+  const [category, setCategory] = useState<string[]>([])
+
+  const [tempMin, setTempMin] = useState<string>('');
+  const [tempMax, setTempMax] = useState<string>('');
+
+  const [salaryError, setSalaryError] = useState<string>('');
+
+  // Applied state that triggers the useEffect
+  const [appliedMin, setAppliedMin] = useState<string>('');
+  const [appliedMax, setAppliedMax] = useState<string>('');
+
   const [currentPage, setCurrentPage] = useState(1)
 
-  // Local state for search inputs
-  const [searchTitle, setSearchTitle] = useState(title)
-  const [searchLocation, setSearchLocation] = useState(location)
+  const [searchTitle, setSearchTitle] = useState(titleParam)
+  const [searchLocation, setSearchLocation] = useState(locationParam)
 
-  // Sync internal state with URL params
   useEffect(() => {
-    setSearchTitle(title)
-    setSearchLocation(location)
-  }, [title, location])
+    setSearchTitle(titleParam)
+    setSearchLocation(locationParam)
+  }, [titleParam, locationParam])
 
-  // Fetch jobs when URL params or page changes
+  // --- Fetch Data ---
   useEffect(() => {
-    async function getJops() {
+    async function getJobs() {
       try {
-        let url = '/api/jobs'
         const params: string[] = [`page=${currentPage}`, `limit=5`]
-        
-        if (title) params.push(`title=${title}`)
-        if (location) params.push(`location=${location}`)
-        if (employmentType) params.push(`employmentType=${employmentType}`)
-        if (category) params.push(`category=${category}`)
-        if (salaryMin) params.push(`salaryMin=${salaryMin}`)
-        if (salaryMax) params.push(`salaryMax=${salaryMax}`)
-        
-        // Use filter endpoint if any filter is active
-        if (title || location || employmentType || category || salaryMin || salaryMax) {
-          url = `/api/filter?${params.join('&')}`
-        } else {
-          url = `/api/jobs?${params.join('&')}`
-        }
-        
+
+        if (titleParam) params.push(`title=${titleParam}`)
+        if (locationParam) params.push(`location=${locationParam}`)
+        if (employmentTypes.length > 0) params.push(`employmentType=${employmentTypes.join(',')}`)
+        if (workplaceModels.length > 0) params.push(`workplaceModel=${workplaceModels.join(',')}`)
+        if (category.length > 0) params.push(`category=${category.join(',')}`)
+
+        if (appliedMin) params.push(`salaryMin=${appliedMin}`);
+        if (appliedMax) params.push(`salaryMax=${appliedMax}`);
+
+        const hasFilters = titleParam || locationParam || employmentTypes.length > 0 ||
+          workplaceModels.length > 0 || category.length > 0 ||
+          appliedMin || appliedMax;
+
+        const endpoint = hasFilters ? '/api/filter' : '/api/jobs'
+        const url = `${endpoint}?${params.join('&')}`
+
         const res = await instance.get(url)
         setjops(res.data.data)
         if (res.data.pagination) {
           setPagination(res.data.pagination)
         }
+
       } catch (err) {
-        console.log(err)
+        console.log("Fetch error:", err)
       }
     }
-    
-    getJops()
-  }, [title, location, employmentType, category, salaryMin, salaryMax, currentPage])
 
-  // Reset to page 1 when filters change (excluding page change itself)
+    getJobs()
+  }, [titleParam, locationParam, employmentTypes, workplaceModels, category, appliedMin, appliedMax, currentPage])
+
+  const handleApplySalary = () => {
+    const min = parseFloat(tempMin);
+    const max = parseFloat(tempMax);
+
+    setSalaryError('');
+
+    // Validation Logic
+    if (min < 0 || max < 0) {
+      setSalaryError("Salary cannot be negative");
+      return;
+    }
+
+    if (tempMin && tempMax && min > max) {
+      setSalaryError("Min must be less than Max");
+      return;
+    }
+
+    setAppliedMin(tempMin);
+    setAppliedMax(tempMax);
+    setCurrentPage(1);
+    handlePageChange(1)
+  };
+
+  // Prevent typing '-' character
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === '-') {
+      e.preventDefault();
+    }
+  };
+
   useEffect(() => {
     setCurrentPage(1)
-  }, [title, location, employmentType, category, salaryMin, salaryMax])
+  }, [titleParam, locationParam, employmentTypes, workplaceModels, category, appliedMin, appliedMax])
 
+  // --- Handlers ---
   const handleSearch = (overrides?: { title?: string, location?: string }) => {
     const params: any = {}
     const finalTitle = overrides?.title !== undefined ? overrides.title : searchTitle
     const finalLocation = overrides?.location !== undefined ? overrides.location : searchLocation
-    
+
     if (finalTitle) params.title = finalTitle
     if (finalLocation) params.location = finalLocation
-    // Maintain existing filters
-    if (employmentType) params.employmentType = employmentType
-    if (category) params.category = category
-    if (salaryMin) params.salaryMin = salaryMin
-    if (salaryMax) params.salaryMax = salaryMax
-    
-    // Update state if overridden (e.g. from popular tags)
-    if (overrides?.title !== undefined) setSearchTitle(overrides.title)
-    if (overrides?.location !== undefined) setSearchLocation(overrides.location)
-    
+
     setSearchParams(params)
     setCurrentPage(1)
+    handlePageChange(1)
   }
 
-  const handleEmploymentFilter = (type: string) => {
-    setEmploymentType(type === employmentType ? '' : type)
+  const handleEmploymentTypesFilter = (type: string) => {
+    setEmploymentTypes(prev => prev.includes(type) ? prev.filter(c => c !== type) : [...prev, type])
+    handlePageChange(1)
+  }
+
+  const handleWorkplaceModelsFilter = (type: string) => {
+    setWorkplaceModels(prev => prev.includes(type) ? prev.filter(c => c !== type) : [...prev, type])
+    handlePageChange(1)
   }
 
   const handleCategoryFilter = (cat: string) => {
-    setCategory(cat === category ? '' : cat)
-  }
-
-  const handleSalaryFilter = (min: string, max: string) => {
-    if (salaryMin === min && salaryMax === max) {
-      setSalaryMin('')
-      setSalaryMax('')
-    } else {
-      setSalaryMin(min)
-      setSalaryMax(max)
-    }
+    setCategory(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat])
+    handlePageChange(1)
   }
 
   const clearFilters = () => {
-    setEmploymentType('')
-    setCategory('')
-    setSalaryMin('')
-    setSalaryMax('')
+    setEmploymentTypes([])
+    setWorkplaceModels([])
+    setCategory([])
+    setTempMin('');
+    setTempMax('');
+    setSalaryError('');
+    setAppliedMin('');
+    setAppliedMax('');
     setSearchParams({})
     setCurrentPage(1)
     setSearchTitle('')
     setSearchLocation('')
+    handlePageChange(1)
   }
+
+  // For Scrolling to the Top of the results element
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setCurrentPage(page);
+
+    setTimeout(() => {
+      if (resultsRef.current) {
+        resultsRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }, 0);
   }
 
+  const isFiltering =
+    titleParam
+    || locationParam
+    || employmentTypes.length > 0
+    || workplaceModels.length > 0
+    || category.length > 0
+    || appliedMin
+    || appliedMax
+    
   return (
     <>
       <FindJobContent
         title="Find Your"
         highlightText="dream job"
-        description="Find your next career at companies like HubSpot, Nike, and Dropbox"
         searchTitle={searchTitle}
         setSearchTitle={setSearchTitle}
         searchLocation={searchLocation}
@@ -154,152 +207,170 @@ function FindJobs() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-1">
-            
+
+            {/* Employment Type */}
             <div className="bg-white p-4 rounded-lg border mb-4">
-              <h3 className="font-bold mb-3">Type of Employment</h3>
-              {['Full-Time', 'Part-Time', 'Remote', 'Internship', 'Contract'].map((type) => (
-                <label key={type} className="flex items-center mb-2 cursor-pointer">
+              <h3 className="font-bold mb-3 text-gray-800">Employment Type</h3>
+              {['Full-Time', 'Part-Time', 'Internship', 'Contract'].map((type) => (
+                <label key={type} className="flex items-center mb-2 cursor-pointer group">
                   <input
                     type="checkbox"
-                    checked={employmentType === type}
-                    onChange={() => handleEmploymentFilter(type)}
-                    className="mr-2"
+                    checked={employmentTypes.includes(type)}
+                    onChange={() => handleEmploymentTypesFilter(type)}
+                    className="mr-2 h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                   />
-                  <span className={employmentType === type ? 'text-blue-600 font-semibold' : ''}>
+                  <span className={`transition-colors ${employmentTypes.includes(type) ? 'text-indigo-600 font-bold' : 'text-gray-600 group-hover:text-indigo-500'}`}>
                     {type}
                   </span>
                 </label>
               ))}
             </div>
 
+            {/* Workplace Model */}
             <div className="bg-white p-4 rounded-lg border mb-4">
-              <h3 className="font-bold mb-3">Categories</h3>
-              {['Design', 'Sales', 'Marketing', 'Business', 'Human Resource', 'Engineering', 'Technology'].map((cat) => (
-                <label key={cat} className="flex items-center mb-2 cursor-pointer">
+              <h3 className="font-bold mb-3 text-gray-800">Workplace Model</h3>
+              {['On-Site', 'Remote', 'Hybrid'].map((type) => (
+                <label key={type} className="flex items-center mb-2 cursor-pointer group">
                   <input
                     type="checkbox"
-                    checked={category === cat}
-                    onChange={() => handleCategoryFilter(cat)}
-                    className="mr-2"
+                    checked={workplaceModels.includes(type)}
+                    onChange={() => handleWorkplaceModelsFilter(type)}
+                    className="mr-2 h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                   />
-                  <span className={category === cat ? 'text-blue-600 font-semibold' : ''}>
+                  <span className={`transition-colors ${workplaceModels.includes(type) ? 'text-indigo-600 font-bold' : 'text-gray-600 group-hover:text-indigo-500'}`}>
+                    {type}
+                  </span>
+                </label>
+              ))}
+            </div>
+
+            {/* Categories */}
+            <div className="bg-white p-4 rounded-lg border mb-4">
+              <h3 className="font-bold mb-3 text-gray-800">Categories</h3>
+              {['Design', 'Sales', 'Marketing', 'Business', 'Human Resource', 'Engineering', 'Technology'].map((cat) => (
+                <label key={cat} className="flex items-center mb-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={category.includes(cat)}
+                    onChange={() => handleCategoryFilter(cat)}
+                    className="mr-2 h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  />
+                  <span className={`transition-colors ${category.includes(cat) ? 'text-indigo-600 font-bold' : 'text-gray-600 group-hover:text-indigo-500'}`}>
                     {cat}
                   </span>
                 </label>
               ))}
             </div>
 
-            <div className="bg-white p-4 rounded-lg border mb-4">
-              <h3 className="font-bold mb-3">Salary Range</h3>
-              {[
-                { label: '$0 - $5000', min: '0', max: '5000' },
-                { label: '$5000 - $10000', min: '5000', max: '10000' },
-                { label: '$10000 - $15000', min: '10000', max: '15000' },
-                { label: '$15000+', min: '15000', max: '' },
-              ].map((range) => (
-                <label key={range.label} className="flex items-center mb-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={salaryMin === range.min && salaryMax === range.max}
-                    onChange={() => handleSalaryFilter(range.min, range.max)}
-                    className="mr-2"
-                  />
-                  <span className={salaryMin === range.min ? 'text-blue-600 font-semibold' : ''}>
-                    {range.label}
-                  </span>
-                </label>
-              ))}
+            {/* Salary Range Inputs */}
+            <div className="bg-white p-4 rounded-lg border mb-4 shadow-sm">
+              <h3 className="font-bold mb-3 text-gray-800">Monthly Salary (EGP)</h3>
+
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="Min"
+                      value={tempMin}
+                      onKeyDown={handleKeyDown}
+                      onChange={(e) => setTempMin(e.target.value)}
+                      className={`w-full border rounded-md px-2 py-2 text-sm outline-none transition ${salaryError ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+                        }`}
+                    />
+                  </div>
+                  <span className="text-gray-400">-</span>
+                  <div className="relative flex-1">
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="Max"
+                      value={tempMax}
+                      onKeyDown={handleKeyDown}
+                      onChange={(e) => setTempMax(e.target.value)}
+                      className={`w-full border rounded-md px-2 py-2 text-sm outline-none transition ${salaryError ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+                        }`}
+                    />
+                  </div>
+                </div>
+
+                {/* Error Text */}
+                {salaryError && (
+                  <p className="text-red-500 text-xs font-medium animate-pulse">
+                    {salaryError}
+                  </p>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleApplySalary}
+                  className="w-full py-2 bg-indigo-600 text-white rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
+                >
+                  Apply
+                </button>
+              </div>
             </div>
 
-            {(employmentType || category || salaryMin || title || location) && (
+            {isFiltering && (
               <button
+                type="button"
                 onClick={clearFilters}
-                className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+                className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-200 font-semibold shadow-sm"
               >
                 Clear All Filters
               </button>
             )}
-
           </div>
-          
-          <div className="lg:col-span-3">
+
+          <div className="lg:col-span-3 scroll-mt-10" ref={resultsRef}>
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-2xl font-bold">
-                {(title || location || employmentType || category || salaryMin) 
-                  ? `Results (${pagination.totalCount})` 
-                  : `All Jobs (${pagination.totalCount})`}
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                {isFiltering ? `Results (${pagination.totalCount})` : `All Jobs (${pagination.totalCount})`}
               </h2>
-              
-              {(employmentType || category || salaryMin) && (
-                <div className="flex flex-wrap gap-2 mt-2 mb-4">
-                  {employmentType && (
-                    <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">
-                      {employmentType}
-                    </span>
-                  )}
-                  {category && (
-                    <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">
-                      {category}
-                    </span>
-                  )}
-                  {salaryMin && (
-                    <span className="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-sm">
-                      ${salaryMin} - ${salaryMax || '∞'}
-                    </span>
-                  )}
+
+              {/* Badges for active filters */}
+              {isFiltering && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {employmentTypes.map(c => <span key={c} className="bg-lime-50 text-lime-600 px-3 py-1 rounded-full text-xs font-medium border border-lime-100">{c}</span>)}
+                  {workplaceModels.map(c => <span key={c} className="bg-green-50 text-green-600 px-3 py-1 rounded-full text-xs font-medium border border-green-100">{c}</span>)}
+                  {category.map(c => <span key={c} className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-medium border border-blue-100">{c}</span>)}
                 </div>
               )}
-              
+
               <div>
                 {jops.length === 0 ? (
-                  <p className="text-gray-500 py-8 text-center">No jobs found</p>
+                  <div className="text-center py-20">
+                    <p className="text-gray-400 text-lg">No jobs found matching your criteria.</p>
+                  </div>
                 ) : (
-                  jops.map((jop) => (
-                    <JopCard key={jop._id} jop={jop} />
-                  ))
+                  jops.map((job) => <JopCard key={job._id} jop={job} />)
                 )}
               </div>
 
               {/* Pagination */}
-              {pagination.totalCount > 0 && (
-                <div className="flex justify-center items-center gap-2 mt-8">
+              {pagination.totalPages > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-10">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                    className="px-4 py-2 text-sm border rounded-md disabled:opacity-30 hover:bg-gray-50 transition"
                   >
-                    Previous
+                    Prev
                   </button>
-                  
-                  {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
-                    .filter(page => {
-                      // Show first, last, and pages around current
-                      return page === 1 || 
-                             page === pagination.totalPages || 
-                             Math.abs(page - currentPage) <= 2
-                    })
-                    .map((page, index, arr) => (
-                      <span key={page}>
-                        {index > 0 && arr[index - 1] !== page - 1 && (
-                          <span className="px-2">...</span>
-                        )}
-                        <button
-                          onClick={() => handlePageChange(page)}
-                          className={`px-4 py-2 border rounded-lg ${
-                            currentPage === page 
-                              ? 'bg-indigo-600 text-white' 
-                              : 'hover:bg-gray-100'
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      </span>
-                    ))}
-                  
+                  {[...Array(pagination.totalPages)].map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handlePageChange(i + 1)}
+                      className={`w-10 h-10 rounded-md text-sm transition ${currentPage === i + 1 ? 'bg-indigo-600 text-white' : 'hover:bg-gray-50 border'}`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === pagination.totalPages}
-                    className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                    className="px-4 py-2 text-sm border rounded-md disabled:opacity-30 hover:bg-gray-50 transition"
                   >
                     Next
                   </button>
