@@ -69,7 +69,7 @@ function App() {
     // Dynamic route patterns
     const dynamicPatterns = [
       /^\/find-jobs\/[^/]+$/,        // Matches /find-jobs/:id
-      /^\/browse-companies\/[^/]+$/  // Matches /browse-companies/:id
+      /^\/companies\/[^/]+$/  // Matches /browse-companies/:id
     ];
     
     return dynamicPatterns.some(pattern => pattern.test(pathname));
