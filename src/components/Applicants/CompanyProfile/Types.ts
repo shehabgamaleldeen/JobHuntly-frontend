@@ -1,29 +1,36 @@
 export interface Location {
-  name: string; 
-  logo: string; 
+  name: string;
+  logo: string;
 }
 export interface Tech {
-  name: string; 
-  logo: string;  
+  name: string;
+  logo: string;
 }
 
-export interface Images{
+export interface Images {
   src: string;
 }
 
 export interface Company {
   id: number;
   name: string;
-  logo: string;
-  locations: Location[]; 
+  logoUrl: string;
+  backGroundUrl:string;
+  locations: Location[];
   website: string;
   industry: string;
   about: string;
-  founded: string;
-  employees: string;
-  linkedin: string;
-  facebook?: string;
-  twitter?: string;
+  foundedDate: string;
+  employeesRange: string;
+  // linkedin: string;
+  // facebook?: string;
+  // twitter?: string;
+  socialLinks?: {
+    linkedin?: string;
+    twitter?: string;
+    instagram?: string;
+    github?: string;
+  };
   techStack: Tech[];
   images: Images[];
 }

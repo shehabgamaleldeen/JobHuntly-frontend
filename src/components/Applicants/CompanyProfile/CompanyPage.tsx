@@ -28,7 +28,7 @@ function CompanyPage({ company }: Props) {
         <div className="max-w-7xl mx-auto px-6 mt-6">
           <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
             <img
-              src={company.logo}
+              src={company.logoUrl}
               alt={company.name}
               className="w-32 h-32 md:w-44 md:h-44 rounded-lg object-cover"
             />
@@ -55,8 +55,8 @@ function CompanyPage({ company }: Props) {
 
               <div className="flex justify-center md:justify-start">
                 <CompanyStats
-                  founded={company.founded}
-                  employees={company.employees}
+                  founded={company.foundedDate?.split("T")[0]}
+                  employees={company.employeesRange}
                   location={company?.locations?.length || 0}
                   industry={company.industry}
                 />
@@ -71,14 +71,19 @@ function CompanyPage({ company }: Props) {
           <div className="flex flex-col gap-10 lg:col-span-2">
             <CompanyProfileSection company={company} />
 
-            {company.about && (
-              <p className="max-w-[85%] text-gray-700 font-epilogue break-words">
-                {company.about}
-              </p>
-            )}
-
             {company.images && company.images.length > 0 && (
               <CompanyImagesSection images={company.images} />
+            )}
+            {company.backGroundUrl && (
+              <img
+                src={company.backGroundUrl}
+                alt="Company background"
+                className="w-full rounded-lg object-cover"
+                style={{
+                  maxWidth: "478px",
+                  height: "auto",
+                }}
+              />
             )}
 
             <ContactSection company={company} />
