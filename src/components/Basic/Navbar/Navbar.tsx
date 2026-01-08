@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import mainImage from '../../../assets/images/Logo.svg'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import PremiumNotification from '../../Premium/PremiumNotification'
 import NotificationDropdown from '@/components/ui/notificationDropdown'
-// Import your axios instance
 import instance from '@/components/AxiosConfig/instance'
 
 function Navbar() {
@@ -75,8 +74,8 @@ function Navbar() {
           </div>
 
           <div className="flex items-center gap-3 relative">
-            {/* Show Premium badge only for Job Seekers */}
-            {userRole === 'JOB_SEEKER' && <PremiumNotification isPremium={isPremium} />}
+            {/* Show Premium badge only for Job Seekers & Guests */}
+            {userRole !== 'COMPANY' && <PremiumNotification isPremium={isPremium} />}
 
             {!isAuthenticated ? (
               <div className="flex gap-2">
