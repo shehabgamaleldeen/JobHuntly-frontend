@@ -25,8 +25,10 @@ const JopCard = ({ jop }: JopCardProps) => {
             </h3>
             <span className="text-gray-500 text-sm block mb-3">
               {jop?.companyId?.name}
-              {jop.companyId.hqCountry !== undefined && (' ' + jop.companyId.hqCountry)}
-              {jop.companyId.hqCity !== undefined && (', ' + jop.companyId.hqCity)}
+              {jop.companyId.hqCountry !== undefined &&
+                ' ' + jop.companyId.hqCountry}
+              {jop.companyId.hqCity !== undefined &&
+                ', ' + jop.companyId.hqCity}
             </span>
 
             <div className="flex flex-wrap gap-2">

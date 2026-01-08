@@ -256,31 +256,39 @@ const JobDescriptions = () => {
                 Categories
               </h2>
               <div>
-                <span className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
-                  {job?.categories?.[0]}
-                </span>
-                <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
-                  {job?.categories?.[1]}
-                </span>
+                {job?.categories?.[0] && (
+                  <span className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
+                    {job?.categories?.[0]}
+                  </span>
+                )}
+
+                {job?.categories?.[1] && (
+                  <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
+                    {job?.categories?.[1]}
+                  </span>
+                )}
               </div>
             </div>
-            <div className="RequiredSkills mt-4">
-              <h2 className="text-[#25324B] text-3xl font-semibold mb-2">
-                Required Skills
-              </h2>
-              {job?.skillsIds.map((skill: any) => (
-                <span
-                  key={skill?._id}
-                  className="text-[#4640DE] p-3 bg-[#F8F8FD] w-fit inline-block text-base font-semibold rounded-2xl text-center my-1 mr-4"
-                >
-                  {skill?.name}
-                </span>
-              ))}
-            </div>
+            {job?.skillsIds?.length > 0 && (
+              <div className="RequiredSkills mt-4">
+                <h2 className="text-[#25324B] text-3xl font-semibold mb-2">
+                  Required Skills
+                </h2>
+                {job?.skillsIds.map((skill: any) => (
+                  <span
+                    key={skill?._id}
+                    className="text-[#4640DE] p-3 bg-[#F8F8FD] w-fit inline-block text-base font-semibold rounded-2xl text-center my-1 mr-4"
+                  >
+                    {skill?.name}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
-      <PerksBenefits Benefits={job?.benefits} />
+      {job?.benefits.length > 0 && <PerksBenefits Benefits={job?.benefits} />}
+
       <div className="bg-[#F8F8FD]">
         <SimilarJobs job={job} />
       </div>
