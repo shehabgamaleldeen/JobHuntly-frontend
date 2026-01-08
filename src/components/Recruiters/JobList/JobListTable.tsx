@@ -66,7 +66,8 @@ const JobTable: React.FC<Props> = ({ data, onRefresh }) => {
               <th className="py-3 px-4 text-left">Status</th>
               <th className="py-3 px-4 text-left">Date Posted</th>
               <th className="py-3 px-4 text-left">Due Date</th>
-              <th className="py-3 px-4 text-left">Job Type</th>
+              <th className="py-3 px-4 text-left w-[140px]">Job Type</th>
+              <th className="py-3 px-4 text-left w-[140px]">Workplace</th>
               <th className="py-3 px-4 text-left">Applicants</th>
               <th className="py-3 px-4 text-right">Actions</th>
             </tr>
@@ -105,8 +106,9 @@ const JobTable: React.FC<Props> = ({ data, onRefresh }) => {
                     ? new Date(job.dueDate).toLocaleDateString()
                     : "-"}
                 </td>
-                <td className="py-3 px-4">{job.jobType}</td>
-                <td className="py-3 px-12">{job.applicantsCount}</td>
+                <td className="py-3 px-4 whitespace-nowrap">{job.jobType}</td>
+                <td className="py-3 px-4 text-center whitespace-nowrap">{job.workplaceModel ?? "-"}</td>
+                <td className="py-3 px-4 text-center w-[90px]">{job.applicantsCount}</td>
 
                 {/* --- START ACTIONS CELL --- */}
                 <td className="py-3 px-4 text-right">

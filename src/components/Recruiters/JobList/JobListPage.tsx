@@ -9,6 +9,7 @@ export interface Job {
   _id: string;
   title: string;
   jobType: string;
+  workplaceModel: "On-Site" | "Remote" | "Hybrid";
   status: "live" | "closed";
   dueDate?: string;
   createdAt: string;
@@ -23,6 +24,7 @@ export default function JobListPage() {
     status: "",
     jobType: "",
     search: "",
+    workplaceModel: "",
   });
 
   const [searchParams] = useSearchParams();
@@ -101,6 +103,18 @@ export default function JobListPage() {
             <option value="Internship">Internship</option>
             <option value="Contract">Contract</option>
           </select>
+          <select
+            value={filters.workplaceModel}
+            onChange={(e) =>
+              setFilters({ ...filters, workplaceModel: e.target.value })
+            }
+            className="border px-2 py-1 rounded"
+          >
+            <option value="">All Workplaces</option>
+            <option value="On-Site">On-Site</option>
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
 
           <input
             type="text"
@@ -118,7 +132,7 @@ export default function JobListPage() {
               });
               searchParams.set("page", "1");
               searchParams.set("limit", limit.toString());
-              navigate(`?${searchParams.toString()}`); 
+              navigate(`?${searchParams.toString()}`);
             }}
             className="bg-[#4640DE] text-white px-3 py-1 rounded"
           >
