@@ -71,7 +71,7 @@ const JobDescriptionsRec = () => {
 
   return (
     <>
-      <section className="jobDescriptionsCard bg-[#F8F8FD] py-14 w-screen flex justify-center flex-col">
+      <section className="jobDescriptionsCard bg-[#F8F8FD] py-14 flex justify-center flex-col">
         <div className="w-4/5 m-auto mb-10">
           <JobPath jobName={job?.title} />
         </div>
@@ -130,7 +130,7 @@ const JobDescriptionsRec = () => {
         </div>
       </section>
 
-      <section className="jobDescriptionsInfo bg-[#FFFFFF] w-screen h-1/4 flex justify-center">
+      <section className="jobDescriptionsInfo bg-[#FFFFFF] h-1/4 flex justify-center">
         <div className="py-16 max-sm:py-10 w-4/5 grid grid-cols-[2fr_1fr] gap-16 max-sm:gap-8 max-md:grid-cols-1">
           <div className="description ">
             <div>
