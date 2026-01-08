@@ -1,7 +1,4 @@
-
-import React from "react";
-
-function Filter(props) {
+function Filter(props:any) {
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       
@@ -42,7 +39,6 @@ function Filter(props) {
           <span className="text-gray-400 text-sm">({props.contractCount})</span>
         </label>
       </div>
-
     </div>
   );
 }
