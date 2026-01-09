@@ -155,9 +155,9 @@ function FindJobs() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-1">
             
-            <div className="bg-white p-4 rounded-lg border mb-4">
+            <div className="bg-white p-4 rounded-lg border mb-4 ">
               <h3 className="font-bold mb-3">Type of Employment</h3>
-              {['Full-Time', 'Part-Time', 'Remote', 'Internship', 'Contract'].map((type) => (
+              {['Full-Time', 'Part-Time', 'Internship', 'Contract'].map((type) => (
                 <label key={type} className="flex items-center mb-2 cursor-pointer">
                   <input
                     type="checkbox"
