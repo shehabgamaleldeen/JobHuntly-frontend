@@ -84,6 +84,7 @@ interface ProfileData {
     educations: Education[];
     portfolioUrl?: string;
     logoUrl?: string;
+    backgroundUrl?: string;
   };
 }
 
@@ -135,6 +136,8 @@ const ProfileView: React.FC = () => {
     return <Loader />;
   }
 
+  console.log( profileData , "herer" );
+  
   if (!profileData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -160,8 +163,19 @@ const ProfileView: React.FC = () => {
           <div className="lg:col-span-2 space-y-6">
             {/* Profile Header Card */}
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              {/* Banner */}
-              <div className="h-32 bg-gradient-to-r from-pink-200 via-purple-300 to-purple-600"></div>
+
+              {/* backgroundUrl */}
+              <div className="h-32 overflow-hidden">
+                {profile.backgroundUrl ? (
+                  <img
+                    src={profile.backgroundUrl}
+                    alt="Profile background"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="h-full bg-gradient-to-r from-pink-200 via-purple-300 to-purple-600" />
+                )}
+              </div>
 
               <div className="px-6 pb-6">
                 {/* Avatar */}

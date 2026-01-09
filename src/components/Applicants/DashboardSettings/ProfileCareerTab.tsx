@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { useEffect, useState } from "react";
 import instance from "@/components/AxiosConfig/instance";
 import Loader from "@/components/Basic/Loader";
+import { toast } from "sonner";
 
 interface Skill {
   _id: string;
@@ -95,7 +96,6 @@ export default function ProfileCareerTab(): JSX.Element {
 
   const fetchSkills = async () => {
     const res = await instance.get("/settings/getSkills");
-    console.log(res , "hereee" );
   setAllSkills(res.data.data)
 }
 
@@ -131,6 +131,7 @@ useEffect(() => {
       }
     } catch (err) {
       console.error("Failed to load career profile", err);
+      
     } finally {
       setLoading(false);
     }
@@ -156,12 +157,14 @@ useEffect(() => {
       const res = await instance.put("/settings/updateProfile", updateData);
 
       if (res.data.success) {
-        alert("Career profile updated successfully!");
+    
+        toast.success("Career profile updated successfully!");
         fetchData();
       }
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to save career profile");
+       toast.error(err.response?.data?.message || "Failed to save career profile")
+      
     } finally {
       setSaving(false);
     }
@@ -184,11 +187,11 @@ useEffect(() => {
 
       if (res.data.success) {
         setData({ ...data, backgroundUrl: res.data.url });
-        alert("Background uploaded successfully!");
+        toast.success("Background uploaded successfully!");
       }
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to upload background");
+      toast.error(err.response?.data?.message || "Failed to upload background");
     } finally {
       setUploadingBg(false);
     }

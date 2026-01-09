@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { useState, useEffect } from "react";
 import instance from "@/components/AxiosConfig/instance";
 import Loader from "@/components/Basic/Loader";
+import { toast } from "sonner";
 
 export default function CompanyOverviewTab(): JSX.Element {
   const [companyName, setCompanyName] = useState("");
@@ -64,11 +65,11 @@ export default function CompanyOverviewTab(): JSX.Element {
 
       if (res.data.success) {
         setLogoUrl(res.data.url);
-        alert("Logo uploaded successfully!");
+         toast.success("Logo uploaded successfully!");
       }
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to upload logo");
+       toast.error(err.response?.data?.message || "Failed to upload logo");
     } finally {
       setUploadingLogo(false);
     }
@@ -91,11 +92,11 @@ export default function CompanyOverviewTab(): JSX.Element {
       if (res.data.success) {
         
         setBackgroundUrl(res.data.url);
-        alert("Background uploaded successfully!");
+         toast.success("Background uploaded successfully!");
       }
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to upload background");
+       toast.error(err.response?.data?.message || "Failed to upload background");
     } finally {
       setUploadingBg(false);
     }
@@ -119,12 +120,12 @@ export default function CompanyOverviewTab(): JSX.Element {
       console.log( response.data );
       
       if (response.data.success) {
-        alert("Company profile updated successfully!");
+         toast.success("Company profile updated successfully!");
         fetchCompanyProfile();
       }
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Failed to update company profile";
-      alert(errorMessage);
+       toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -311,9 +312,10 @@ export default function CompanyOverviewTab(): JSX.Element {
                   <option value="">Select size</option>
                   <option value="1-50">1 - 50</option>
                   <option value="51-200">51 - 200</option>
-                  <option value="201-500">201 - 500</option>
+                  <option value="151-250">151 - 250</option>
+                  <option value="251-500">251 - 500</option>
                   <option value="501-1000">501 - 1000</option>
-                  <option value="1000+">1000+</option>
+                  <option value="1000+">1000+ above</option>
                 </select>
               </div>
 
