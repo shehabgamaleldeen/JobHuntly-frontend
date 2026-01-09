@@ -1,5 +1,5 @@
 import type { JSX } from 'react'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, NavLink } from 'react-router-dom'
 
 import mainImage from '../../../assets/images/Logo.svg'
@@ -20,18 +20,17 @@ interface UserProfile {
     role: string
   }
   profile: {
-    avatarUrl?: string
     logoUrl?: string
+    avatarUrl?: string
   }
 }
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   `flex items-center gap-3 px-3 py-2 rounded-lg w-full transition
-   ${
-     isActive
-       ? 'bg-blue-50 text-[#4640DE] font-semibold'
-       : 'text-[#7C8493] hover:bg-blue-50'
-   }`
+    ${isActive
+    ? 'bg-blue-50 text-[#4640DE] font-semibold'
+    : 'text-[#7C8493] hover:bg-blue-50'
+  }`
 
 export function DashboardSidebarComponent(): JSX.Element {
   const navigate = useNavigate()
@@ -74,10 +73,13 @@ export function DashboardSidebarComponent(): JSX.Element {
     sessionStorage.removeItem('accessToken')
     sessionStorage.removeItem('refreshToken')
     sessionStorage.removeItem('role')
+
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
     localStorage.removeItem('role')
+
     localStorage.removeItem('isPremium')
+
     navigate('/login')
     window.dispatchEvent(new Event('storage'))
   }
@@ -93,11 +95,13 @@ export function DashboardSidebarComponent(): JSX.Element {
   // Get avatar/logo URL
   const getAvatarUrl = () => {
     if (!userProfile) return null
-    return userProfile.profile.avatarUrl || userProfile.profile.logoUrl || null
+    return userProfile.profile.logoUrl || userProfile.profile.avatarUrl || null
   }
 
-  // Don't render if no user data and not loading
-  if (!loading && !userProfile) return null
+
+  // Error
+  // // Don't render if no user data and not loading
+  // if (!loading && !userProfile) return
 
   return (
     <>
@@ -170,46 +174,48 @@ export function DashboardSidebarComponent(): JSX.Element {
           </div>
         </div>
 
-        {/* Profile */}
-        {loading ? (
-          <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-full bg-gray-200 animate-pulse" />
-            <div className="flex-1">
-              <div className="h-4 bg-gray-200 rounded animate-pulse mb-2" />
-              <div className="h-3 bg-gray-200 rounded animate-pulse w-3/4" />
-            </div>
-          </div>
-        ) : userProfile ? (
-          <div className="flex items-center gap-3">
-            {getAvatarUrl() ? (
-              <img
-                src={getAvatarUrl()!}
-                alt={userProfile.user.fullName}
-                className="w-14 h-14 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-                <span className="text-xl font-bold text-white">
-                  {getAvatarLetter()}
-                </span>
-              </div>
-            )}
-            <div>
-              <div className="font-semibold text-gray-900 truncate max-w-[120px]">
-                {userProfile.user.fullName}
-              </div>
-              <div className="text-xs text-[#7C8493] truncate max-w-[120px]">
-                {userProfile.user.email}
-              </div>
-              <button
-                onClick={handleLogout}
-                className="mt-2 px-3 py-1 border border-rose-200 text-rose-500 rounded hover:bg-rose-50 text-sm transition"
-              >
-                Log Out
-              </button>
-            </div>
-          </div>
-        ) : null}
+{/* Profile */}
+{loading ? (
+  <div className="flex items-center gap-3">
+    <div className="w-14 h-14 rounded-full bg-gray-200 animate-pulse" />
+    <div className="flex-1">
+      <div className="h-4 bg-gray-200 rounded animate-pulse mb-2" />
+      <div className="h-3 bg-gray-200 rounded animate-pulse w-3/4" />
+    </div>
+  </div>
+) : userProfile ? (
+  <div className="flex items-center gap-3">
+    {getAvatarUrl() ? (
+      <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100">
+        <img
+          src={getAvatarUrl()!}
+          alt={userProfile.user.fullName}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    ) : (
+      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+        <span className="text-xl font-bold text-white">
+          {getAvatarLetter()}
+        </span>
+      </div>
+    )}
+    <div>
+      <div className="font-semibold text-gray-900 truncate max-w-[120px]">
+        {userProfile.user.fullName}
+      </div>
+      <div className="text-xs text-[#7C8493] truncate max-w-[120px]">
+        {userProfile.user.email}
+      </div>
+      <button
+        onClick={handleLogout}
+        className="mt-2 px-3 py-1 border border-rose-200 text-rose-500 rounded hover:bg-rose-50 text-sm transition"
+      >
+        Log Out
+      </button>
+    </div>
+  </div>
+) : null}
       </aside>
 
       {/* MOBILE DRAWER */}

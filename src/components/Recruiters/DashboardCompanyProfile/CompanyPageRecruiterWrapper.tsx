@@ -1,56 +1,72 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import type { Company } from './Types';
+import instance from '@/components/AxiosConfig/instance';
+import Loader from '@/components/Basic/Loader';
 import CompanyRecruiterPage from './CompanyRecruiterPage';
-import NotFoundPage from '@/components/Basic/NotFoundPage';
 
 function CompanyPageRecruiterWrapper() {
-  const { id } = useParams<{ id: string }>();
   const [company, setCompany] = useState<Company | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCompany = async()=>{
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const companyId = id || '1';
-        
-        const response = await axios.get<Company>(
-          `http://localhost:3000/companies/${companyId}`
-        );
-        
-        setCompany(response.data);
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setError(err.response?.data?.message || 'Failed to fetch company');
-        } else {
-          setError('An unexpected error occurred');
-        }
-        console.error('Error fetching company:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCompany();
-  }, [id]);
+  }, []);
+
+  const fetchCompany = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await instance.get('/settings/getProfileRecruiter');
+
+      if (response.data.success) {
+        const { user, profile } = response.data.data;
+
+        // Transform API data to match Company interface
+        const transformedCompany: Company = {
+          _id: user._id,
+          name: profile.name || user.fullName,
+          logoUrl: profile.logoUrl || '',
+          website: profile.website || '',
+          industry: profile.industry || '',
+          about: profile.about || '',
+          foundedDate: profile.foundedDate || '',
+          employeesRange: profile.employeesRange || '',
+          hqCountry: profile.hqCountry || '',
+          countries: profile.countries || [],
+          socialLinks: profile.socialLinks || {},
+          techStack: profile.techStack || [],
+          images: profile.images || [],
+        };
+
+        setCompany(transformedCompany);
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || 'Failed to fetch company profile';
+      setError(errorMessage);
+      console.error('Error fetching company:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl"><NotFoundPage/></div>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl text-red-500">Error: {error}</div>
+        <div className="text-center">
+          <div className="text-xl text-red-500 mb-4">Error: {error}</div>
+          <button
+            onClick={fetchCompany}
+            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
@@ -58,7 +74,7 @@ function CompanyPageRecruiterWrapper() {
   if (!company) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl">Company not found</div>
+        <div className="text-xl">Company profile not found</div>
       </div>
     );
   }

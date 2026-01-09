@@ -9,6 +9,7 @@ export interface Job {
   _id: string;
   title: string;
   jobType: string;
+  workplaceModel: "On-Site" | "Remote" | "Hybrid";
   status: "live" | "closed";
   dueDate?: string;
   createdAt: string;
@@ -23,6 +24,7 @@ export default function JobListPage() {
     status: "",
     jobType: "",
     search: "",
+    workplaceModel: "",
   });
 
   const [searchParams] = useSearchParams();
@@ -70,8 +72,7 @@ export default function JobListPage() {
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* <DashboardSidebarRecruiterComponent /> */}
-
+      
       <div className="flex-1 w-full px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-8">
         <div className="mb-6">
           <h2 className="font-bold text-[#25324B] text-2xl">Job Listings</h2>
@@ -101,6 +102,18 @@ export default function JobListPage() {
             <option value="Internship">Internship</option>
             <option value="Contract">Contract</option>
           </select>
+          <select
+            value={filters.workplaceModel}
+            onChange={(e) =>
+              setFilters({ ...filters, workplaceModel: e.target.value })
+            }
+            className="border px-2 py-1 rounded"
+          >
+            <option value="">All Workplaces</option>
+            <option value="On-Site">On-Site</option>
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
 
           <input
             type="text"
@@ -118,9 +131,9 @@ export default function JobListPage() {
               });
               searchParams.set("page", "1");
               searchParams.set("limit", limit.toString());
-              navigate(`?${searchParams.toString()}`); 
+              navigate(`?${searchParams.toString()}`);
             }}
-            className="bg-purple-600 text-white px-3 py-1 rounded"
+            className="bg-[#4640DE] text-white px-3 py-1 rounded"
           >
             Filter
           </button>

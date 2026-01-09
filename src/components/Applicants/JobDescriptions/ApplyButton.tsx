@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom'
 type Question = {
   _id: string
   questionText: string
+  type: 'YES_NO' | 'TEXT' | string
 }
 
 type ApplyButtonProps = {
@@ -133,7 +134,7 @@ export function ApplyButton(props: ApplyButtonProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="w-44 h-14 shrink font-semibold text-lg text-white bg-[#4640DE] hover:bg-[#3b36b5]"
+          className="w-35 h-11 md:w-44 md:h-14 shrink font-semibold text-lg text-white bg-[#4640DE] hover:bg-[#3b36b5]"
           variant="outline"
           onClick={() => {
             if (!isLoggedIn()) {
@@ -163,17 +164,48 @@ export function ApplyButton(props: ApplyButtonProps) {
                     {question?.questionText}
                     <span className="text-red-500 ml-1">*</span>
                   </Label>
-                  <Textarea
-                    id={question._id}
-                    placeholder="Write your answer here.."
-                    maxLength={500}
-                    {...register(`answers.${question._id}`, {
-                      required: 'This field is required',
-                    })}
-                    className={
-                      errors.answers?.[question._id] ? 'border-red-500' : ''
-                    }
-                  />
+                  {question.type === 'YES_NO' ? (
+                    <div className="flex gap-6 mt-2">
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          value="Yes"
+                          {...register(`answers.${question._id}`, {
+                            required: 'This field is required',
+                          })}
+                          className="w-4 h-4 text-[#4640DE] border-gray-300 focus:ring-[#4640DE]"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          Yes
+                        </span>
+                      </label>
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          value="No"
+                          {...register(`answers.${question._id}`, {
+                            required: 'This field is required',
+                          })}
+                          className="w-4 h-4 text-[#4640DE] border-gray-300 focus:ring-[#4640DE]"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          No
+                        </span>
+                      </label>
+                    </div>
+                  ) : (
+                    <Textarea
+                      id={question._id}
+                      placeholder="Write your answer here.."
+                      maxLength={500}
+                      {...register(`answers.${question._id}`, {
+                        required: 'This field is required',
+                      })}
+                      className={
+                        errors.answers?.[question._id] ? 'border-red-500' : ''
+                      }
+                    />
+                  )}
                   {errors.answers?.[question._id] && (
                     <p className="text-red-500 text-sm mt-1">
                       {errors.answers?.[question._id]?.message}

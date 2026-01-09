@@ -9,7 +9,7 @@ type similarJobProps = {
 const SimilarJobs = ({ job }: similarJobProps) => {
   type SimilarJobs = Array<{ [key: string]: any }>
 
-  const [similarJobs, setsimilarJobs] = useState<SimilarJobs | null>(null)
+  const [similarJobs, setsimilarJobs] = useState<SimilarJobs>([])
   async function getSimilarJobs() {
     try {
       const res = await instance.get('/jobs/similar', {
@@ -40,11 +40,17 @@ const SimilarJobs = ({ job }: similarJobProps) => {
         <h2 className="text-[#25324B] text-3xl font-semibold mt-8 mb-12">
           Similar Jobs
         </h2>
-        <div className="grid grid-cols-2 max-md:grid-cols-1 max-sm:grid-cols-1 gap-8 mb-8">
-          {similarJobs?.map((job) => (
-            <SimilarJopCard key={job._id} job={job} />
-          ))}
-        </div>
+        {similarJobs?.length > 0 ? (
+          <div className="grid grid-cols-2 max-md:grid-cols-1 max-sm:grid-cols-1 gap-8 mb-8">
+            {similarJobs?.map((job) => (
+              <SimilarJopCard key={job._id} job={job} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-[#515B6F] mb-8">
+            No similar jobs available right now
+          </p>
+        )}
       </section>
     </>
   )

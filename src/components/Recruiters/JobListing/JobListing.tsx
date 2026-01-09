@@ -1,6 +1,5 @@
 import type { JSX } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { PageHeader } from "../DashboardSettings/headParts/headerPart";
 
 export function JobListing(): JSX.Element {
   const tabClass = ({ isActive }: { isActive: boolean }) =>
@@ -12,11 +11,6 @@ export function JobListing(): JSX.Element {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      {/* <PageHeader
-        title="Social Media Assistant"
-        description="full time"
-        backTo="/DashboardRecruiter"
-      /> */}
 
       {/* Card */}
       <main className="max-w-6xl mx-auto bg-white rounded-lg shadow-sm ring-1 ring-slate-100">
@@ -27,9 +21,6 @@ export function JobListing(): JSX.Element {
               Applicants
             </NavLink>
 
-            <NavLink to="job-details" className={tabClass}>
-              Job Details
-            </NavLink>
           </nav>
         </div>
 

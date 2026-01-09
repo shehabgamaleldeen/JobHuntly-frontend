@@ -51,6 +51,8 @@ function JobSeekerForm() {
       localStorage.setItem("isPremium", String(res.data.data.user.isPremium));
 
       navigate("/Dashboard/settings");
+      // 🔥 reload app state completely
+      window.location.reload()
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response?.data?.message) {
         setErrorMsg(err.response.data.message);

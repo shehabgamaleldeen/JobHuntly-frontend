@@ -9,6 +9,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Button } from '@/components/ui/button'
 import JobPath from './JobPath.tsx'
+import Loader from '@/components/Basic/Loader'
 import { toast } from 'sonner'
 
 const shareJob = async () => {
@@ -39,9 +40,11 @@ const JobDescriptions = () => {
   }
   const [job, setJob] = useState<Job | null>(null)
   const [hasApplied, setHasApplied] = useState<boolean>(false)
+  const [loading, setLoading] = useState(true)
 
   async function getJob() {
     try {
+      setLoading(true)
       const res = await instance.get(`/jobs/${id}`, {
         headers: {
           access_token:
@@ -53,6 +56,8 @@ const JobDescriptions = () => {
       setJob(res.data.data)
     } catch (err) {
       console.log(err)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -69,6 +74,10 @@ const JobDescriptions = () => {
     console.log(job)
   }, [job])
 
+  if (loading) {
+    return <Loader />
+  }
+
   return (
     <>
       <section className="jobDescriptionsCard bg-[#F8F8FD] py-14 w-screen flex justify-center flex-col">
@@ -79,7 +88,7 @@ const JobDescriptions = () => {
           <div className="flex max-sm:flex-col items-center  max-sm:place-items-start">
             <img
               className="w-24 max-sm:w-16"
-              src={job?.logoUrl}
+              src={job?.companyId?.logoUrl}
               alt="Company Logo"
             />
             <div className="m-6 max-sm:my-4 max-sm:mx-0">
@@ -230,7 +239,7 @@ const JobDescriptions = () => {
                   Job Type
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.employmentTypes}
+                  {job?.employmentType}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
@@ -247,31 +256,39 @@ const JobDescriptions = () => {
                 Categories
               </h2>
               <div>
-                <span className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
-                  {job?.categories?.[0]}
-                </span>
-                <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
-                  {job?.categories?.[1]}
-                </span>
+                {job?.categories?.[0] && (
+                  <span className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
+                    {job?.categories?.[0]}
+                  </span>
+                )}
+
+                {job?.categories?.[1] && (
+                  <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
+                    {job?.categories?.[1]}
+                  </span>
+                )}
               </div>
             </div>
-            <div className="RequiredSkills mt-4">
-              <h2 className="text-[#25324B] text-3xl font-semibold mb-2">
-                Required Skills
-              </h2>
-              {job?.skillsIds.map((skill: any) => (
-                <span
-                  key={skill?._id}
-                  className="text-[#4640DE] p-3 bg-[#F8F8FD] w-fit inline-block text-base font-semibold rounded-2xl text-center my-1 mr-4"
-                >
-                  {skill?.name}
-                </span>
-              ))}
-            </div>
+            {job?.skillsIds?.length > 0 && (
+              <div className="RequiredSkills mt-4">
+                <h2 className="text-[#25324B] text-3xl font-semibold mb-2">
+                  Required Skills
+                </h2>
+                {job?.skillsIds.map((skill: any) => (
+                  <span
+                    key={skill?._id}
+                    className="text-[#4640DE] p-3 bg-[#F8F8FD] w-fit inline-block text-base font-semibold rounded-2xl text-center my-1 mr-4"
+                  >
+                    {skill?.name}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
-      <PerksBenefits Benefits={job?.benefits} />
+      {job?.benefits.length > 0 && <PerksBenefits Benefits={job?.benefits} />}
+
       <div className="bg-[#F8F8FD]">
         <SimilarJobs job={job} />
       </div>

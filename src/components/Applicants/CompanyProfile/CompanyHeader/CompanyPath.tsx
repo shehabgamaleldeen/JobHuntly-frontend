@@ -1,22 +1,30 @@
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 
 interface PathProps {
-  companyName: string;
-  className?: string;
+  companyName: string
+  className?: string
 }
 
-function CompanyPath({ companyName, className = "" }: PathProps) {
-  const navigate = useNavigate();
+function CompanyPath({ companyName, className = '' }: PathProps) {
+  const navigate = useNavigate()
 
   return (
-    <div className={`text-gray-500 text-sm flex items-center gap-1 ${className}`}>
-      <span onClick={() => navigate("/")} className="cursor-pointer hover:underline">
+    <div
+      className={`text-gray-500 text-sm flex items-center gap-1 ${className}`}
+    >
+      <span
+        onClick={() => navigate('/')}
+        className="cursor-pointer hover:underline"
+      >
         Home
       </span>
 
       <span>/</span>
 
-      <span onClick={() => navigate("/companies")} className="cursor-pointer hover:underline">
+      <span
+        onClick={() => navigate('/browse-companies')}
+        className="cursor-pointer hover:underline"
+      >
         Companies
       </span>
 
@@ -24,8 +32,7 @@ function CompanyPath({ companyName, className = "" }: PathProps) {
 
       <span className="text-gray-800 font-medium">{companyName}</span>
     </div>
-  );
+  )
 }
 
-export default CompanyPath;
-
+export default CompanyPath

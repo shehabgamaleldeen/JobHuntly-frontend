@@ -9,7 +9,7 @@ function CompanyProfileSection({company}: CompanyProfileProps) {
     <div>
       <h2 className="text-3xl font-bold mb-4">Company Profile</h2>
       <p className="col-span-3 max-w-[85%]  text-gray-700 font-epilogue wrap-break-word">
-        {company?.description}
+        {company.about}
       </p>
     </div>
   );

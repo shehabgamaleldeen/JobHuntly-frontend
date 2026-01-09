@@ -19,10 +19,6 @@ export default function Loader(): JSX.Element {
             "
           />
         </div>
-
-        <span className="text-sm font-medium text-[#4640DE]">
-          Loading...
-        </span>
       </div>
     </div>
   );

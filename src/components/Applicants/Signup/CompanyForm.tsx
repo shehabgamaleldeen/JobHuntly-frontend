@@ -47,6 +47,8 @@ function CompanyForm() {
       localStorage.setItem("isPremium", String(response.data.data.user.isPremium));
 
       navigate("/DashboardRecruiter/settings");
+      // 🔥 reload app state completely
+      window.location.reload()
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response?.data?.message) {
         setErrorMsg(err.response.data.message);

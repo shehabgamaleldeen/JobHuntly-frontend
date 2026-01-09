@@ -1,13 +1,137 @@
 import type { JSX } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import instance from "@/components/AxiosConfig/instance";
+import { toast } from "sonner";
 
 export default function LoginCompanySettingsTab(): JSX.Element {
+  const navigate = useNavigate();
+  const [currentEmail, setCurrentEmail] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [closeReason, setCloseReason] = useState("");
   const [confirmText, setConfirmText] = useState("");
+  const [deletePassword, setDeletePassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(true);
+
+  // Fetch user data
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await instance.get("/settings/getProfileRecruiter");
+      if (response.data.success) {
+        setCurrentEmail(response.data.data.user.email);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  // Update Email
+  const handleUpdateEmail = async () => {
+    if (!newEmail.trim()) {
+       toast.error("Please enter a new email address");
+      return;
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(newEmail)) {
+       toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await instance.put("/settings/change-email", {
+        newEmail,
+      });
+
+      if (response.data.success) {
+         toast.success("Email updated successfully! Please check your new email for verification.");
+        setCurrentEmail(newEmail);
+        setNewEmail("");
+        fetchUserData(); // Refresh data
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Failed to update email";
+       toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Change Password
+  const handleChangePassword = async () => {
+    if (!oldPassword.trim() || !newPassword.trim()) {
+       toast.error("Please fill in both password fields");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+       toast.error("New password must be at least 8 characters long");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await instance.put("/settings/reset-password", {
+        oldPassword,
+        newPassword,
+      });
+
+      if (response.data.success) {
+         toast.success("Password changed successfully!");
+        setOldPassword("");
+        setNewPassword("");
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Failed to change password";
+       toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Delete Account
+  const handleDeleteAccount = async () => {
+    if (confirmText.trim() !== "DELETE") {
+       toast.error("Please type DELETE to confirm account deletion");
+      return;
+    }
+
+    if (!deletePassword.trim()) {
+       toast.error("Please enter your password to confirm");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await instance.delete("/settings/delete-account", {
+        data: {
+          password: deletePassword,
+          reason: closeReason || undefined,
+        },
+      });
+
+      if (response.data.success) {
+         toast.success("Your account has been deleted successfully");
+        // Clear all storage
+        sessionStorage.clear();
+        localStorage.clear();
+        navigate("/login");
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Failed to delete account";
+       toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -39,23 +163,25 @@ export default function LoginCompanySettingsTab(): JSX.Element {
           <div className="lg:col-span-2">
             {/* Current email with verification */}
             <div className="mb-6">
-              <div className="font-semibold">jakegyll@email.com</div>
-              <div className="text-xs text-slate-400 flex items-center gap-2 mt-1">
-                <svg
-                  className="w-4 h-4 text-emerald-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <path
-                    d="M20 6L9 17l-5-5"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span>Your email address is verified.</span>
-              </div>
+              <div className="font-semibold">{currentEmail}</div>
+              {emailVerified && (
+                <div className="text-xs text-slate-400 flex items-center gap-2 mt-1">
+                  <svg
+                    className="w-4 h-4 text-emerald-500"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M20 6L9 17l-5-5"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span>Your email address is verified.</span>
+                </div>
+              )}
             </div>
 
             {/* New email input */}
@@ -65,9 +191,14 @@ export default function LoginCompanySettingsTab(): JSX.Element {
                 onChange={(e) => setNewEmail(e.target.value)}
                 placeholder="Enter your new email"
                 className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                disabled={loading}
               />
-              <button className="mt-3 w-full sm:w-auto px-4 py-2 bg-[#4640DE] text-white rounded text-sm shadow-sm hover:opacity-95">
-                Update Email
+              <button
+                onClick={handleUpdateEmail}
+                disabled={loading}
+                className="mt-3 w-full sm:w-auto px-4 py-2 bg-[#4640DE] text-white rounded text-sm shadow-sm hover:opacity-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Updating..." : "Update Email"}
               </button>
             </div>
           </div>
@@ -95,6 +226,7 @@ export default function LoginCompanySettingsTab(): JSX.Element {
                 onChange={(e) => setOldPassword(e.target.value)}
                 placeholder="Enter your old password"
                 className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                disabled={loading}
               />
               <div className="text-xs text-slate-400 mt-1">
                 Minimum 8 characters
@@ -111,14 +243,19 @@ export default function LoginCompanySettingsTab(): JSX.Element {
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter your new password"
                 className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                disabled={loading}
               />
               <div className="text-xs text-slate-400 mt-1">
                 Minimum 8 characters
               </div>
             </div>
 
-            <button className="mt-5 px-4 py-2 bg-[#4640DE] text-white rounded text-sm shadow-sm">
-              Change Password
+            <button
+              onClick={handleChangePassword}
+              disabled={loading}
+              className="mt-5 px-4 py-2 bg-[#4640DE] text-white rounded text-sm shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Changing..." : "Change Password"}
             </button>
           </div>
         </div>
@@ -167,7 +304,12 @@ export default function LoginCompanySettingsTab(): JSX.Element {
                 </div>
 
                 <button
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setCloseReason("");
+                    setConfirmText("");
+                    setDeletePassword("");
+                  }}
                   className="text-slate-400 hover:text-slate-600"
                 >
                   ✕
@@ -183,12 +325,30 @@ export default function LoginCompanySettingsTab(): JSX.Element {
                   onChange={(e) => setCloseReason(e.target.value)}
                   rows={4}
                   className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  disabled={loading}
                 />
               </div>
 
               <div className="mt-4">
                 <label className="block text-sm font-medium text-slate-700">
-                  Type
+                  Password
+                  <span className="text-xs text-slate-400 ml-2">
+                    Enter your password to confirm
+                  </span>
+                </label>
+                <input
+                  type="password"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-slate-700">
+                  Type to confirm
                   <span className="text-xs text-slate-400 ml-2">
                     Type <strong>DELETE</strong> to confirm
                   </span>
@@ -196,29 +356,31 @@ export default function LoginCompanySettingsTab(): JSX.Element {
                 <input
                   value={confirmText}
                   onChange={(e) => setConfirmText(e.target.value)}
+                  placeholder="DELETE"
                   className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  disabled={loading}
                 />
               </div>
 
               <div className="mt-6 flex justify-end gap-3">
                 <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border rounded text-sm"
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setCloseReason("");
+                    setConfirmText("");
+                    setDeletePassword("");
+                  }}
+                  disabled={loading}
+                  className="px-4 py-2 border rounded text-sm disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
-                    if (confirmText.trim() !== "DELETE") {
-                      alert("Type DELETE to confirm.");
-                      return;
-                    }
-                    alert("Mock: account closed");
-                    setIsModalOpen(false);
-                  }}
-                  className="px-4 py-2 bg-rose-500 text-white rounded text-sm"
+                  onClick={handleDeleteAccount}
+                  disabled={loading}
+                  className="px-4 py-2 bg-rose-500 text-white rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Close Account
+                  {loading ? "Deleting..." : "Close Account"}
                 </button>
               </div>
             </div>

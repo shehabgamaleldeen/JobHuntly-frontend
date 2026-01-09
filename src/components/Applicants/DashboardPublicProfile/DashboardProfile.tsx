@@ -41,11 +41,13 @@ interface Education {
   fieldOfStudy: string;
   startDate: string;
   endDate: string;
+  description: string;
   _id: string;
 }
 
 interface SocialLinks {
   linkedin?: string;
+  instagram?: string;
   github?: string;
   twitter?: string;
   website?: string;
@@ -82,7 +84,8 @@ interface ProfileData {
     experiences: Experience[];
     educations: Education[];
     portfolioUrl?: string;
-    avatarUrl?: string;
+    logoUrl?: string;
+    backgroundUrl?: string;
   };
 }
 
@@ -159,22 +162,35 @@ const Profile: React.FC = () => {
           <div className="lg:col-span-2 space-y-6">
             {/* Profile Header Card */}
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+              
               {/* Banner */}
-              <div className="h-32 bg-gradient-to-r from-pink-200 via-purple-300 to-purple-600 relative">
-                <button 
-                  onClick={() => navigate('/dashboard/settings')}
-                  className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition"
-                >
-                  <ExternalLink className="w-5 h-5 text-white" />
-                </button>
-              </div>
+            <div className="h-32 overflow-hidden relative">
+              {profile.backgroundUrl ? (
+                <img
+                  src={profile.backgroundUrl}
+                  alt="Profile background"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="h-full bg-gradient-to-r from-pink-200 via-purple-300 to-purple-600" />
+              )}
+            
+              {/* Action Button */}
+              <button
+                onClick={() => navigate('/dashboard/settings')}
+                className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition"
+              >
+                <ExternalLink className="w-5 h-5 text-white" />
+              </button>
+            </div>
+
 
               <div className="px-6 pb-6">
                 {/* Avatar */}
                 <div className="relative -mt-16 mb-4">
                   <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-4 border-white flex items-center justify-center overflow-hidden">
-                    {profile.avatarUrl ? (
-                      <img src={profile.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
+                    {profile.logoUrl ? (
+                      <img src={profile.logoUrl} alt={user.fullName} className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-3xl font-bold text-white">
                         {user.fullName.split(' ').map(n => n[0]).join('')}
@@ -202,13 +218,25 @@ const Profile: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <button 
-                    onClick={() => navigate('/dashboard/settings')}
-                    className="px-4 py-2 border-2 border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-50 transition flex items-center gap-2 font-medium"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                    Edit Profile
-                  </button>
+                    <button 
+                      onClick={() => navigate('/dashboard/settings')}
+                      className="
+                        px-3 py-2
+                        md:px-4 md:py-2
+                        border-2 border-indigo-600
+                        text-indigo-600
+                        rounded-lg
+                        hover:bg-indigo-50
+                        transition
+                        flex items-center gap-2
+                        font-medium
+                        text-sm md:text-base
+                      "
+                    >
+                      <Edit2 className="w-4 h-4" />
+                      <span className="hidden sm:inline">Edit Profile</span>
+                    </button>
+
                 </div>
 
                 {/* Open for Opportunities Badge */}
@@ -329,6 +357,9 @@ const Profile: React.FC = () => {
                             <p className="text-gray-500 text-sm">
                               {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
                             </p>
+                            {edu.description && (
+                          <p className="text-gray-600 mt-2">{edu.description}</p>
+                        )}
                           </div>
                           <button 
                             onClick={() => navigate('/dashboard/settings/career')}
@@ -436,7 +467,7 @@ const Profile: React.FC = () => {
             </div>
 
             {/* Social Links */}
-            {(profile?.socialLinks?.linkedin || profile?.socialLinks?.github || profile?.portfolioUrl || profile?.socialLinks?.twitter || profile?.socialLinks?.website) && (
+            {(profile?.socialLinks?.linkedin || profile?.socialLinks?.github || profile?.portfolioUrl || profile?.socialLinks?.twitter || profile?.socialLinks?.instagram || profile?.socialLinks?.website) && (
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-lg font-bold text-gray-900">Social Links</h2>
@@ -461,6 +492,42 @@ const Profile: React.FC = () => {
                         <p className="text-sm text-gray-500">LinkedIn</p>
                         <p className="text-indigo-600 group-hover:text-indigo-700">
                           {profile.socialLinks.linkedin.replace('https://', '')}
+                        </p>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-gray-400" />
+                    </a>
+                  )}
+
+                  {profile.socialLinks.twitter && (
+                    <a
+                      href={profile.socialLinks.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition group"
+                    >
+                      <Github className="w-5 h-5 text-gray-400" />
+                      <div className="flex-grow">
+                        <p className="text-sm text-gray-500">Twitter</p>
+                        <p className="text-indigo-600 group-hover:text-indigo-700">
+                          {profile.socialLinks.twitter.replace('https://', '')}
+                        </p>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-gray-400" />
+                    </a>
+                  )}
+
+                  {profile.socialLinks.instagram && (
+                    <a
+                      href={profile.socialLinks.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition group"
+                    >
+                      <Github className="w-5 h-5 text-gray-400" />
+                      <div className="flex-grow">
+                        <p className="text-sm text-gray-500">Instagram</p>
+                        <p className="text-indigo-600 group-hover:text-indigo-700">
+                          {profile.socialLinks.instagram.replace('https://', '')}
                         </p>
                       </div>
                       <ExternalLink className="w-4 h-4 text-gray-400" />

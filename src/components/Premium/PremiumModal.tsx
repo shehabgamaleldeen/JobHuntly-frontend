@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { X, Crown, Check, Zap } from 'lucide-react'
 import { toast } from 'sonner'
 import instance from '@/components/AxiosConfig/instance'
@@ -18,7 +18,7 @@ export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
   const handleUpgrade = async () => {
     try {
       setIsLoading(true)
-      const token = localStorage.getItem('accessToken')
+      const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken')
 
       if (!token) {
         toast.warning('Please login to upgrade to Premium')

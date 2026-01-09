@@ -56,19 +56,24 @@ const JobTable: React.FC<Props> = ({ data, onRefresh }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg w-full max-w-[1104px]">
+    <div className="bg-white rounded-lg w-full max-w-[1104px] overflow-x-auto">
       <div>
-        <table className="w-full min-w-[800px] table-auto">
+        <table className="w-full table-auto">
           <thead className="bg-white border-b border-[#D6DDEB]">
             <tr className="text-[#7C8493] text-sm uppercase tracking-wider">
-              <th className="py-3 px-4 text-left">#</th>
+              <th className="py-3 px-4 text-left w-[60px]">#</th>
               <th className="py-3 px-4 text-left">Role</th>
-              <th className="py-3 px-4 text-left">Status</th>
-              <th className="py-3 px-4 text-left">Date Posted</th>
-              <th className="py-3 px-4 text-left">Due Date</th>
-              <th className="py-3 px-4 text-left">Job Type</th>
-              <th className="py-3 px-4 text-left">Applicants</th>
-              <th className="py-3 px-4 text-right">Actions</th>
+              <th className="py-3 px-4 text-left w-[90px]">Status</th>
+              <th className="py-3 px-4 text-left hidden md:table-cell">
+                Date Posted
+              </th>
+              <th className="py-3 px-4 text-left hidden lg:table-cell">
+                Due Date
+              </th>
+              <th className="py-3 px-4 text-left w-[130px]">Job Type</th>
+              <th className="py-3 px-4 text-left w-[130px]">Workplace</th>
+              <th className="py-3 px-4 text-center w-[90px]">Applicants</th>
+              <th className="py-3 px-4 text-right w-[70px]">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -85,28 +90,32 @@ const JobTable: React.FC<Props> = ({ data, onRefresh }) => {
                 }}
               >
                 <td className="py-3 px-4">{index + 1}</td>
-                <td className="py-3 px-4">{job.title}</td>
+                <td className="py-3 px-4 font-medium">{job.title}</td>
+
                 <td className="py-3 px-4">
-                  <span
-                    className={`inline-flex items-center justify-center w-20 py-1 rounded text-sm font-medium ${
-                      job.status === "closed"
-                        ? "bg-red-100 text-red-600"
-                        : "bg-green-100 text-green-600"
-                    }`}
-                  >
-                    {job.status ?? "live"}
+                  <span className="inline-flex w-20 justify-center py-1 rounded text-sm font-medium">
+                    {job.status}
                   </span>
                 </td>
-                <td className="py-3 px-4">
+
+                <td className="py-3 px-4 hidden md:table-cell">
                   {new Date(job.createdAt).toLocaleDateString()}
                 </td>
-                <td className="py-3 px-4">
+
+                <td className="py-3 px-4 hidden lg:table-cell">
                   {job.dueDate
                     ? new Date(job.dueDate).toLocaleDateString()
                     : "-"}
                 </td>
-                <td className="py-3 px-4">{job.jobType}</td>
-                <td className="py-3 px-12">{job.applicantsCount}</td>
+
+                <td className="py-3 px-4 whitespace-nowrap">{job.jobType}</td>
+                <td className="py-3 px-4 whitespace-nowrap text-center">
+                  {job.workplaceModel ?? "-"}
+                </td>
+
+                <td className="py-3 px-4 text-center w-[90px]">
+                  {job.applicantsCount}
+                </td>
 
                 {/* --- START ACTIONS CELL --- */}
                 <td className="py-3 px-4 text-right">
