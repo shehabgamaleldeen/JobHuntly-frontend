@@ -1,6 +1,6 @@
-export interface Location {
+export interface Country {
+  code: string;
   name: string;
-  logo: string;
 }
 export interface Tech {
   name: string;
@@ -12,33 +12,30 @@ export interface Images {
 }
 
 export interface Company {
-  id: number;
+  _id: string;
   name: string;
   logoUrl: string;
-  backGroundUrl:string;
-  locations: Location[];
+  countries: Country[];
   website: string;
   industry: string;
   about: string;
   foundedDate: string;
   employeesRange: string;
-  // linkedin: string;
-  // facebook?: string;
-  // twitter?: string;
   socialLinks?: {
     linkedin?: string;
     twitter?: string;
     instagram?: string;
     github?: string;
+    website?: string;
   };
   techStack: Tech[];
   images: Images[];
 }
 
-export interface Job {
-  id: number;
-  title: string;
-  location: string;
-  type: string;
-  level: string;
-}
+// export interface Job {
+//   id: number;
+//   title: string;
+//   location: string;
+//   type: string;
+//   level: string;
+// }
