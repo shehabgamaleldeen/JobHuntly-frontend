@@ -239,7 +239,7 @@ const JobDescriptions = () => {
                   Job Type
                 </span>
                 <span className="text-[#25324B] text-base font-semibold">
-                  {job?.employmentTypes}
+                  {job?.employmentType}
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
