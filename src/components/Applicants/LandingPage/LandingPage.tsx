@@ -1,11 +1,7 @@
-import React from 'react'
-import CategoryCollection from './CategoryCollection'
-import CategoryHeader from './CategoryHeader'
-import CTA from './CTA'
 import HeaderTitle from './HeaderTitle'
 import JobCollection from './JobCollection'
 import JobHeader from './JobHeader'
-import LandingCompany from './LandingCompany'
+import CompaniesSlider from './CompaniesSlider'
 
 
   function LandingPage() {
@@ -15,13 +11,9 @@ import LandingCompany from './LandingCompany'
   return (
     <> 
       <HeaderTitle/>
-      <LandingCompany/>
-      <CategoryHeader/>
-      <CategoryCollection/>
-      <CTA/>
+      <CompaniesSlider/>
       <JobHeader/>
       <JobCollection/>
-      
     </>
   )
 }
