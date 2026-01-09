@@ -44,7 +44,7 @@ export default function CompanyLogin({ rememberMe }: Props) {
       }
 
       if (user.role !== 'COMPANY') {
-        setErrorMsg('You are not authorized to login as a company')
+        setErrorMsg('You are not authorized to login as a Company')
         return
       }
 
