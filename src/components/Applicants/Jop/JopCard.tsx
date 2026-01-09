@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 type JopCardProps = {
   jop: any // Using 'jop' to match the props passed from parent
 }
-
+const role = localStorage.getItem("role") || sessionStorage.getItem("role")
 const JopCard = ({ jop }: JopCardProps) => {
   return (
     <article className="bg-white flex max-lg:flex-col justify-between items-center p-6 my-6 gap-4 border border-gray-200 rounded-lg hover:border-indigo-600 hover:shadow-md transition duration-200 ease-in-out">
@@ -61,11 +61,12 @@ const JopCard = ({ jop }: JopCardProps) => {
         </div>
       </Link>
 
-      <div className="flex-shrink-0 max-lg:w-full max-lg:mt-4">
-        <Link to={jop._id}>
+      {role !== 'COMPANY' &&
+        <div className="flex-shrink-0 max-lg:w-full max-lg:mt-4">
           <ApplyButton jobId={jop?._id} questions={jop?.questions} />
-        </Link>
-      </div>
+        </div>
+      }
+
     </article>
   )
 }
