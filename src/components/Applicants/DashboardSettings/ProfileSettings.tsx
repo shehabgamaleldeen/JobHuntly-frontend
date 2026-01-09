@@ -149,11 +149,13 @@ export default function ProfileSettingsTab(): JSX.Element {
           <div className="lg:col-span-2 ">
             <div className="flex flex-col  sm:flex-row items-center gap-6">
               {profile.logoUrl ? (
-                <img
-                  src={profile.logoUrl}
-                  alt="avatar"
-                  className="w-24 h-24 rounded-full object-cover  ring-2 ring-slate-100"
-                />
+                <div className="w-24 h-24 rounded-full overflow-hidden ring-2 ring-slate-100 bg-gray-100">
+                  <img
+                    src={profile.logoUrl}
+                    alt="avatar"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               ) : (
                 <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center ring-2 ring-slate-100">
                   <span className="text-3xl font-bold text-white">
@@ -161,6 +163,7 @@ export default function ProfileSettingsTab(): JSX.Element {
                   </span>
                 </div>
               )}
+
 
               <label
                 htmlFor="avatar-upload"

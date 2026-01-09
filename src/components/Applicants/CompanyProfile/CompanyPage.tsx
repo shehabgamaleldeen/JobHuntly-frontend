@@ -27,11 +27,22 @@ function CompanyPage({ company }: Props) {
         </div>
         <div className="max-w-7xl mx-auto px-6 mt-6">
           <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
-            <img
-              src={company.logoUrl}
-              alt={company.name}
-              className="w-32 h-32 md:w-44 md:h-44 rounded-lg object-cover"
-            />
+                        {/* Company Logo */}
+              {company.logoUrl ? (
+              <div className="w-32 h-32 md:w-44 md:h-44 rounded-lg overflow-hidden bg-gray-100">
+                <img
+                  src={company.logoUrl}
+                  alt={company.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-32 h-32 md:w-44 md:h-44 rounded-lg bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center">
+                <span className="text-5xl md:text-6xl font-bold text-white">
+                  {company.name.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
 
             <div className="flex-1 space-y-2 text-center md:text-left">
               <div className="flex flex-col md:flex-row items-center md:items-center gap-3 md:gap-4">
@@ -71,9 +82,28 @@ function CompanyPage({ company }: Props) {
           <div className="flex flex-col gap-10 lg:col-span-2">
             <CompanyProfileSection company={company} />
 
+            {/* Company Images Gallery */}
             {company.images && company.images.length > 0 && (
-              <CompanyImagesSection images={company.images} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 mt-6">
+                {company.images.map((img: any, index: number) => {
+                  const src = typeof img === "string" ? img : img.src
+            
+                  return (
+                    <div
+                      key={index}
+                      className="w-full aspect-square bg-gray-100 border border-slate-200 overflow-hidden"
+                    >
+                      <img
+                        src={src}
+                        alt="Company"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )
+                })}
+              </div>
             )}
+
 
 
             {/* <ContactSection company={company} /> */}
