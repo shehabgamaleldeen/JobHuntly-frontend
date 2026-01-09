@@ -16,6 +16,7 @@ export interface Company {
   name: string;
   logoUrl: string;
   countries: Country[];
+  hqCountry: string,
   website: string;
   industry: string;
   about: string;
