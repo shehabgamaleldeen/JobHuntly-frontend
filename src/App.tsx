@@ -61,7 +61,7 @@ function App() {
     const pathname = location.pathname;
     
     // Exact matches
-    const exactRoutes = ['/', '/find-jobs', '/browse-companies'];
+    const exactRoutes = ['/', '/find-jobs', '/browse-companies' , '/login' ,'/signup'];
     if (exactRoutes.includes(pathname)) {
       return true;
     }

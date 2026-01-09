@@ -1,5 +1,6 @@
 import { useState, useMemo, type JSX } from "react";
 import { PageHeader } from "./headParts/headerPart";
+import { toast } from "sonner";
 
 /**
  * DashboardHelpCenterRecruiter — improved typography version.
@@ -82,7 +83,7 @@ export function DashboardHelpCenter(): JSX.Element {
       setContactError("Please enter a valid email address.");
       return;
     }
-    alert(`Message sent — ${contactName}`);
+     toast.success(`Message sent — ${contactName}`);
     setIsContactOpen(false);
   }
 

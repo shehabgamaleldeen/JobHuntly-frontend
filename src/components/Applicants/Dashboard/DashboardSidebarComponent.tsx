@@ -176,7 +176,7 @@ export function DashboardSidebarComponent(): JSX.Element {
 
         {/* Profile */}
         {loading ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 ">
             <div className="w-14 h-14 rounded-full bg-gray-200 animate-pulse" />
             <div className="flex-1">
               <div className="h-4 bg-gray-200 rounded animate-pulse mb-2" />
@@ -184,7 +184,7 @@ export function DashboardSidebarComponent(): JSX.Element {
             </div>
           </div>
         ) : userProfile ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 ">
             {getAvatarUrl() ? (
               <img
                 src={getAvatarUrl()!}
