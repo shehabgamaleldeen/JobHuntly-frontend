@@ -22,6 +22,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
             'group-[.toaster]:!bg-emerald-50 group-[.toaster]:!border-emerald-200 group-[.toaster]:!text-emerald-700',
           warning:
             'group-[.toaster]:!bg-amber-50 group-[.toaster]:!border-amber-200 group-[.toaster]:!text-amber-800',
+          info:
+            'group-[.toaster]:!bg-[#FFFBEB] group-[.toaster]:!border-[#FDE68A] group-[.toaster]:!text-[#92400E] cursor-pointer hover:brightness-95 transition-all active:scale-[0.98]',
         },
         style: { zIndex: 99999 },
       }}

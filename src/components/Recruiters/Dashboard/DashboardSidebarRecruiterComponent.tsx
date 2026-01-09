@@ -1,6 +1,6 @@
 import type { JSX } from "react";
-import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 import mainImage from "../../../assets/images/Logo.svg";
 import HouseIcon from "../../../assets/icons/house-solid-full (1).svg";
@@ -8,7 +8,22 @@ import FolderIcon from "../../../assets/icons/folder-closed-solid-full.svg";
 import UserIcon from "../../../assets/icons/user-solid-full.svg";
 import HelpIcon from "../../../assets/icons/circle-question-regular-full.svg";
 import GearIcon from "../../../assets/icons/gear-solid-full.svg";
-import ProfileImage from "../../../assets/images/alex-suprun-ZHvM3XIOHoE-unsplash 1.png";
+import instance from "@/components/AxiosConfig/instance";
+
+
+interface UserProfile {
+  user: {
+    _id: string
+    fullName: string
+    email: string
+    role: string
+  }
+  profile: {
+    logoUrl?: string
+    avatarUrl?: string
+  }
+}
+
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   `flex items-center gap-3 px-3 py-2 rounded-lg w-full transition
@@ -19,11 +34,69 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
    }`;
 
 export function DashboardSidebarRecruiterComponent(): JSX.Element {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const navigate = useNavigate()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [isPremium, setIsPremium] = useState(
+    () => localStorage.getItem('isPremium') === 'true'
+  )
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const closeDrawer = () => setDrawerOpen(false);
+  // Fetch user profile
+  useEffect(() => {
+    fetchUserProfile()
+  }, [])
 
+  // Listen to premium status changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsPremium(localStorage.getItem('isPremium') === 'true')
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
+  }, [])
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await instance.get('/settings/getProfileRecruiter')
+      if (response.data.success) {
+        setUserProfile(response.data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('accessToken')
+    sessionStorage.removeItem('refreshToken')
+    sessionStorage.removeItem('role')
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('role')
+    localStorage.removeItem('isPremium')
+    navigate('/login')
+    window.dispatchEvent(new Event('storage'))
+  }
+
+  const closeDrawer = () => setDrawerOpen(false)
+
+  // Get avatar letter based on role
+  const getAvatarLetter = () => {
+    if (!userProfile) return 'U'
+    return userProfile.user.role === 'COMPANY' ? 'C' : 'U'
+  }
+
+  // Get avatar/logo URL
+  const getAvatarUrl = () => {
+    if (!userProfile) return null
+    return userProfile.profile.logoUrl || userProfile.profile.avatarUrl || null
+  }
   
+
   return (
     <>
       {/* MOBILE: hamburger */}
@@ -41,7 +114,7 @@ export function DashboardSidebarRecruiterComponent(): JSX.Element {
       {/* DESKTOP SIDEBAR */}
       <aside className="hidden md:flex md:w-64 min-h-screen bg-[#fbfdff] border-r border-gray-200 p-6 flex-col justify-between">
         <div>
-          <Link to="/" > <img src={mainImage} alt="logo" className="w-28 mb-6" /></Link>
+          <Link to="/DashboardRecruiter" > <img src={mainImage} alt="logo" className="w-28 mb-6" /></Link>
 
           <nav className="flex flex-col gap-3">
             <NavLink to="" end className={linkClass}>
@@ -75,18 +148,52 @@ export function DashboardSidebarRecruiterComponent(): JSX.Element {
           </div>
         </div>
 
+ 
         {/* Profile */}
-        <div className="flex items-center gap-3">
-          <img src={ProfileImage} className="w-14 h-14 rounded-full object-cover" />
-          <div>
-            <div className="font-semibold">Jake Gyll</div>
-            <div className="text-xs text-[#7C8493]">jakegyll@email.com</div>
-            <button className="mt-2 px-3 py-1 border border-rose-200 text-rose-500 rounded hover:bg-rose-50 text-sm">
-              Log Out
-            </button>
-          </div>
-        </div>
+{loading ? (
+  <div className="flex items-center gap-3">
+    <div className="w-14 h-14 rounded-full bg-gray-200 animate-pulse" />
+    <div className="flex-1">
+      <div className="h-4 bg-gray-200 rounded animate-pulse mb-2" />
+      <div className="h-3 bg-gray-200 rounded animate-pulse w-3/4" />
+    </div>
+  </div>
+) : userProfile ? (
+  <div className="flex items-center gap-3">
+    {getAvatarUrl() ? (
+      <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100">
+        <img
+          src={getAvatarUrl()!}
+          alt={userProfile.user.fullName}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    ) : (
+      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+        <span className="text-xl font-bold text-white">
+          {getAvatarLetter()}
+        </span>
+      </div>
+    )}
+    <div>
+      <div className="font-semibold text-gray-900 truncate max-w-[120px]">
+        {userProfile.user.fullName}
+      </div>
+      <div className="text-xs text-[#7C8493] truncate max-w-[120px]">
+        {userProfile.user.email}
+      </div>
+      <button
+        onClick={handleLogout}
+        className="mt-2 px-3 py-1 border border-rose-200 text-rose-500 rounded hover:bg-rose-50 text-sm transition"
+      >
+        Log Out
+      </button>
+    </div>
+  </div>
+) : null}
+
       </aside>
+
 
       {/* MOBILE DRAWER */}
       {drawerOpen && (
