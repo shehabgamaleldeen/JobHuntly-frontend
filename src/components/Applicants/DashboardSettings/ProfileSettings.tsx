@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { useEffect, useState } from "react";
 import instance from "@/components/AxiosConfig/instance";
 import Loader from "@/components/Basic/Loader";
+import { toast } from "sonner";
 
 interface ProfileData {
   fullName: string;
@@ -80,11 +81,11 @@ export default function ProfileSettingsTab(): JSX.Element {
 
       if (res.data.success) {
         setProfile({ ...profile, logoUrl: res.data.url });
-        alert("Avatar uploaded successfully!");
+        toast.success("Avatar uploaded successfully!");
       }
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to upload avatar");
+       toast.error(err.response?.data?.message || "Failed to upload avatar");
     } finally {
       setUploading(false);
     }
@@ -104,12 +105,12 @@ export default function ProfileSettingsTab(): JSX.Element {
       const res = await instance.put("/settings/updateProfile", updateData);
 
       if (res.data.success) {
-        alert("Profile updated successfully");
+         toast.success("Profile updated successfully");
         fetchProfile(); // Refresh data
       }
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to update profile");
+       toast.error(err.response?.data?.message || "Failed to update profile");
     } finally {
       setSaving(false);
     }
@@ -145,13 +146,13 @@ export default function ProfileSettingsTab(): JSX.Element {
           </div>
 
           {/* Avatar */}
-          <div className="lg:col-span-2">
-            <div className="flex flex-col sm:flex-row items-center gap-6">
+          <div className="lg:col-span-2 ">
+            <div className="flex flex-col  sm:flex-row items-center gap-6">
               {profile.logoUrl ? (
                 <img
                   src={profile.logoUrl}
                   alt="avatar"
-                  className="w-24 h-24 rounded-full object-cover ring-2 ring-slate-100"
+                  className="w-24 h-24 rounded-full object-cover  ring-2 ring-slate-100"
                 />
               ) : (
                 <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center ring-2 ring-slate-100">

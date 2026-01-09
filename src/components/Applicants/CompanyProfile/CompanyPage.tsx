@@ -17,7 +17,7 @@ function CompanyPage({ company }: Props) {
       <div
         className="w-full"
         style={{
-          backgroundColor: "oklch(97.7% 0.014 308.299)",
+          background :"#F8F8FD" ,
           paddingTop: "40px",
           paddingBottom: "80px",
         }}

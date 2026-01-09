@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { useEffect, useState } from "react";
 import instance from "@/components/AxiosConfig/instance";
 import Loader from "@/components/Basic/Loader";
+import { toast } from "sonner";
 
 interface Skill {
   _id: string;
@@ -54,6 +55,8 @@ export default function ProfileCareerTab(): JSX.Element {
   const [uploadingBg, setUploadingBg] = useState(false);
 
   // Skills input
+  const [allSkills, setAllSkills] = useState<Skill[]>([])
+  const [selectedSkillId, setSelectedSkillId] = useState("")
   const [skillInput, setSkillInput] = useState("");
 
   // Modal states
@@ -86,14 +89,28 @@ export default function ProfileCareerTab(): JSX.Element {
     description: "",
   });
 
-  /* Load data */
+  /* Load skills */
   useEffect(() => {
     fetchData();
   }, []);
 
+  const fetchSkills = async () => {
+    const res = await instance.get("/settings/getSkills");
+  setAllSkills(res.data.data)
+}
+
+useEffect(() => {
+  fetchSkills()
+}, [])
+
+
+
+
   const fetchData = async () => {
     try {
       const res = await instance.get("/settings/getProfile");
+
+      
 
       if (res.data.success) {
         const profile = res.data.data.profile;
@@ -114,6 +131,7 @@ export default function ProfileCareerTab(): JSX.Element {
       }
     } catch (err) {
       console.error("Failed to load career profile", err);
+      
     } finally {
       setLoading(false);
     }
@@ -139,12 +157,14 @@ export default function ProfileCareerTab(): JSX.Element {
       const res = await instance.put("/settings/updateProfile", updateData);
 
       if (res.data.success) {
-        alert("Career profile updated successfully!");
+    
+        toast.success("Career profile updated successfully!");
         fetchData();
       }
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to save career profile");
+       toast.error(err.response?.data?.message || "Failed to save career profile")
+      
     } finally {
       setSaving(false);
     }
@@ -167,24 +187,34 @@ export default function ProfileCareerTab(): JSX.Element {
 
       if (res.data.success) {
         setData({ ...data, backgroundUrl: res.data.url });
-        alert("Background uploaded successfully!");
+        toast.success("Background uploaded successfully!");
       }
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to upload background");
+      toast.error(err.response?.data?.message || "Failed to upload background");
     } finally {
       setUploadingBg(false);
     }
   };
 
   /* Skills */
-  const addSkill = () => {
-    if (skillInput.trim()) {
-      const newSkill = { _id: Date.now().toString(), name: skillInput.trim() };
-      setData({ ...data, skills: [...data.skills, newSkill] });
-      setSkillInput("");
-    }
-  };
+const addSkill = () => {
+  if (!selectedSkillId) return
+
+  const skill = allSkills.find(s => s._id === selectedSkillId)
+  if (!skill) return
+
+  const alreadyAdded = data.skills.some(s => s._id === skill._id)
+  if (alreadyAdded) return
+
+  setData({
+    ...data,
+    skills: [...data.skills, skill],
+  })
+
+  setSelectedSkillId("")
+}
+
 
   const removeSkill = (index: number) => {
     setData({ ...data, skills: data.skills.filter((_, i) => i !== index) });
@@ -445,14 +475,20 @@ export default function ProfileCareerTab(): JSX.Element {
 
           <div className="lg:col-span-2">
             <div className="flex gap-2 mb-3">
-              <input
-                className="flex-1 border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                placeholder="Add a skill (e.g., JavaScript, Design)"
-                value={skillInput}
-                onChange={(e) => setSkillInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && addSkill()}
+              <select
+                value={selectedSkillId}
+                onChange={(e) => setSelectedSkillId(e.target.value)}
                 disabled={saving}
-              />
+                className="flex-1 border border-slate-200 rounded px-3 py-2 text-sm"
+              >
+                <option value="">Select a skill</option>
+                {allSkills.map(skill => (
+                  <option key={skill._id} value={skill._id}>
+                    {skill.name}
+                  </option>
+                ))}
+              </select>
+
               <button
                 onClick={addSkill}
                 disabled={saving}

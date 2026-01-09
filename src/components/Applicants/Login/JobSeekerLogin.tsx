@@ -65,6 +65,9 @@ export default function JobSeekerLogin({ rememberMe }: Props) {
       )
 
       navigate('/find-jobs')
+      // 🔥 reload app state completely
+      window.location.reload()
+
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response?.data?.message) {
         setErrorMsg(err.response.data.message)

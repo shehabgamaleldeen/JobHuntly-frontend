@@ -13,7 +13,7 @@ export default function MyApplications() {
         buttonText="Back to homepage"
         buttonLink="/Dashboard" 
       />
-      <div className="flex min-h-screen bg-white">
+      <div className="flex min-h-screen  bg-white">
         <div className="flex-1 w-full px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-8">        
           <div className="w-full max-w-[1104px] mx-auto">
             <div className="flex justify-between items-center mb-4">
