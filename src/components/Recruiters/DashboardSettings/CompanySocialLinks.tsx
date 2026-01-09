@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { useState, useEffect } from "react";
 import instance from "@/components/AxiosConfig/instance";
 import Loader from "@/components/Basic/Loader";
+import { toast } from "sonner";
 
 export default function CompanySocialLinksTab(): JSX.Element {
   const [instagram, setInstagram] = useState("");
@@ -52,11 +53,11 @@ export default function CompanySocialLinksTab(): JSX.Element {
       });
 
       if (response.data.success) {
-        alert("Social links updated successfully!");
+         toast.success("Social links updated successfully!");
       }
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Failed to update social links";
-      alert(errorMessage);
+       toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -85,7 +86,7 @@ export default function CompanySocialLinksTab(): JSX.Element {
             {/* left label empty intentionally */}
           </div>
 
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-3 space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700">
                 LinkedIn

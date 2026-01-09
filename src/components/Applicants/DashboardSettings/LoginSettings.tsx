@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import instance from "@/components/AxiosConfig/instance";
+import { toast } from "sonner";
 
 export default function LoginSettingsTab(): JSX.Element {
   const navigate = useNavigate();
@@ -35,12 +36,12 @@ export default function LoginSettingsTab(): JSX.Element {
   // Update Email
   const handleUpdateEmail = async () => {
     if (!newEmail.trim()) {
-      alert("Please enter a new email address");
+       toast.error("Please enter a new email address");
       return;
     }
 
     if (!/^\S+@\S+\.\S+$/.test(newEmail)) {
-      alert("Please enter a valid email address");
+       toast.error("Please enter a valid email address");
       return;
     }
 
@@ -51,14 +52,14 @@ export default function LoginSettingsTab(): JSX.Element {
       });
 
       if (response.data.success) {
-        alert("Email updated successfully! Please check your new email for verification.");
+         toast.success("Email updated successfully! Please check your new email for verification.");
         setCurrentEmail(newEmail);
         setNewEmail("");
         fetchUserData(); // Refresh data
       }
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Failed to update email";
-      alert(errorMessage);
+     toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -67,12 +68,12 @@ export default function LoginSettingsTab(): JSX.Element {
   // Change Password
   const handleChangePassword = async () => {
     if (!oldPassword.trim() || !newPassword.trim()) {
-      alert("Please fill in both password fields");
+       toast.error("Please fill in both password fields");
       return;
     }
 
     if (newPassword.length < 8) {
-      alert("New password must be at least 8 characters long");
+       toast.error("New password must be at least 8 characters long");
       return;
     }
 
@@ -84,13 +85,13 @@ export default function LoginSettingsTab(): JSX.Element {
       });
 
       if (response.data.success) {
-        alert("Password changed successfully!");
+         toast.success("Password changed successfully!");
         setOldPassword("");
         setNewPassword("");
       }
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Failed to change password";
-      alert(errorMessage);
+       toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -99,12 +100,12 @@ export default function LoginSettingsTab(): JSX.Element {
   // Delete Account
   const handleDeleteAccount = async () => {
     if (confirmText.trim() !== "DELETE") {
-      alert("Please type DELETE to confirm account deletion");
+       toast.error("Please type DELETE to confirm account deletion");
       return;
     }
 
     if (!deletePassword.trim()) {
-      alert("Please enter your password to confirm");
+       toast.error("Please enter your password to confirm");
       return;
     }
 
@@ -118,7 +119,7 @@ export default function LoginSettingsTab(): JSX.Element {
       });
 
       if (response.data.success) {
-        alert("Your account has been deleted successfully");
+         toast.success("Your account has been deleted successfully");
         // Clear all storage
         sessionStorage.clear();
         localStorage.clear();
@@ -126,7 +127,7 @@ export default function LoginSettingsTab(): JSX.Element {
       }
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Failed to delete account";
-      alert(errorMessage);
+       toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
