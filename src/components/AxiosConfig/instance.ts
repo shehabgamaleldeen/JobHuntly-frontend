@@ -1,11 +1,11 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://jobhuntly-backend-production.up.railway.app',
 })
 
 export const refreshClient = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://jobhuntly-backend-production.up.railway.app",
 });
 
 const getAuthStorage = () => {
