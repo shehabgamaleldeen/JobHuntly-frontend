@@ -4,7 +4,43 @@ import instance from "@/components/AxiosConfig/instance";
 import Loader from "@/components/Basic/Loader";
 import { toast } from "sonner";
 
+type TechItem = {
+name: string
+logo: string
+}
+
 export default function CompanyOverviewTab(): JSX.Element {
+
+const TECH_STACK_OPTIONS = [
+  "HTML",
+  "CSS",
+  "JAVASCRIPT",
+  "TYPESCRIPT",
+  "REACT",
+  "NEXTJS",
+  "VUE",
+  "NODEJS",
+  "EXPRESS",
+  "NESTJS",
+  "DJANGO",
+  "RUBY",
+  "MONGODB",
+  "POSTGRES",
+  "MYSQL",
+  "REDIS",
+  "DOCKER",
+  "KUBERNETES",
+  "AWS",
+  "GCP",
+  "MIXPANEL",
+  "GOOGLE_ANALYTICS",
+  "FRAMER",
+  "FIGMA",
+]
+
+  
+  
+  
   const [companyName, setCompanyName] = useState("");
   const [website, setWebsite] = useState("");
   const [employees, setEmployees] = useState("");
@@ -14,8 +50,12 @@ export default function CompanyOverviewTab(): JSX.Element {
   const [hqCountry, setHqCountry] = useState("");
   const [description, setDescription] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
-  const [backgroundUrl, setBackgroundUrl] = useState("");
+  const [companyImages, setCompanyImages] = useState<string[]>([]);
+  const [techStack, setTechStack] = useState<TechItem[]>([])
   
+  
+  const [techInput, setTechInput] = useState("")
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [uploadingLogo, setUploadingLogo] = useState(false);
@@ -40,7 +80,10 @@ export default function CompanyOverviewTab(): JSX.Element {
         setHqCountry(profile.hqCountry || "");
         setDescription(profile.about || "");
         setLogoUrl(profile.logoUrl || "");
-        setBackgroundUrl(profile.backGroundUrl || "");
+        setCompanyImages(profile.images.map((img: any) => img.src));
+        setTechStack(profile.techStack || [])
+
+
       }
     } catch (error) {
       console.error("Error fetching company profile:", error);
@@ -65,7 +108,7 @@ export default function CompanyOverviewTab(): JSX.Element {
 
       if (res.data.success) {
         setLogoUrl(res.data.url);
-         toast.success("Logo uploaded successfully!");
+        toast.success("Logo uploaded successfully!");
       }
     } catch (err: any) {
       console.error(err);
@@ -75,32 +118,61 @@ export default function CompanyOverviewTab(): JSX.Element {
     }
   };
 
-  const handleBackgroundUpload = async (file: File) => {
-    if (!file) return;
 
-    setUploadingBg(true);
+  const removeCompanyImage = async (index: number) => {
+    const imageUrl = companyImages[index]
+
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      await instance.delete("/settings/CompanyImages", {
+        data: { imageUrl },
+      })
 
-      const res = await instance.post("/settings/backgroundUrl", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      setCompanyImages((prev) =>
+        prev.filter((_, i) => i !== index)
+      )
 
-      if (res.data.success) {
-        
-        setBackgroundUrl(res.data.url);
-         toast.success("Background uploaded successfully!");
-      }
-    } catch (err: any) {
-      console.error(err);
-       toast.error(err.response?.data?.message || "Failed to upload background");
-    } finally {
-      setUploadingBg(false);
+      toast.success("company images deleted successfully!");
+      
+    } catch (err:any) {
+      console.error(err)
+      toast.error(err.response?.data?.message || "Failed to upload logo");
     }
-  };
+  }
+
+
+  const handleCompanyImageUpload = async (files: FileList) => {
+  setUploadingImage(true)
+
+  try {
+    const formData = new FormData()
+
+    Array.from(files).forEach((file) => {
+      formData.append("files", file)
+    })
+
+    const res = await instance.post("/settings/companyImages", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+
+    if (res.data.success) {
+      setCompanyImages((prev) => [
+        ...prev,
+        ...res.data.images,
+      ])
+      toast.success("company images uploaded successfully!");
+    }
+  } catch (err:any) {
+    console.error(err)
+    toast.error(err.response?.data?.message || "Failed to upload logo");
+  } finally {
+    setUploadingImage(false)
+  }
+}
+
+
+
 
   const handleSaveChanges = async () => {
     setLoading(true);
@@ -113,11 +185,15 @@ export default function CompanyOverviewTab(): JSX.Element {
         hqCity: hqCity.trim(),
         hqCountry: hqCountry.trim(),
         about: description.trim(),
+        techStack: techStack.map((t) => ({
+         name: t.name, 
+       }))
+
       };
 
       const response = await instance.put("/settings/updateProfileRecruiter", updateData);
 
-      console.log( response.data );
+      // console.log( response.data );
       
       if (response.data.success) {
          toast.success("Company profile updated successfully!");
@@ -209,26 +285,48 @@ export default function CompanyOverviewTab(): JSX.Element {
         </div>
       </div>
 
-      {/* Background Image / Upload */}
+      {/* Company Images */}
       <div className="border-b py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <div className="text-sm text-slate-700">
-            <div className="font-medium mb-2">Background Image</div>
+            <div className="font-medium mb-2">Company Images</div>
             <p className="text-xs text-slate-400">
-              This image will be shown as the company background banner.
+              Upload images to showcase your company culture and workspace.
             </p>
           </div>
 
           <div className="lg:col-span-2">
             <div className="flex flex-col gap-6">
-              {backgroundUrl && (
-                <div className="w-full h-32 rounded-md overflow-hidden bg-gray-100">
-                  <img src={backgroundUrl} alt="background" className="w-full h-full object-cover" />
+
+              {/* Preview Grid (زي background preview) */}
+              {companyImages.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {companyImages.map((img, index) => (
+                    <div
+                      key={index}
+                      className="relative w-full h-32 rounded-md overflow-hidden bg-gray-100 group"
+                    >
+                      <img
+                        src={img}
+                        alt="company"
+                        className="w-full h-full object-cover"
+                      />
+
+                      <button
+                        onClick={() => removeCompanyImage(index)}
+                        className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/80 text-rose-500 text-sm
+                                   opacity-0 group-hover:opacity-100 transition"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
 
+              {/* Upload box (نفس background بالظبط) */}
               <label
-                htmlFor="background-upload"
+                htmlFor="company-images-upload"
                 className="border-2 border-dashed border-[#4640DE] rounded-md p-6 text-center cursor-pointer hover:bg-blue-50 transition"
               >
                 <div className="flex flex-col items-center justify-center gap-2">
@@ -245,27 +343,127 @@ export default function CompanyOverviewTab(): JSX.Element {
                       d="M7 16v-4m0 0l5-5 5 5M12 12v8"
                     />
                   </svg>
+            
                   <div className="text-sm font-medium text-slate-700">
-                    {uploadingBg ? "Uploading..." : "Click to replace or drag and drop"}
+                    {uploadingImage ? "Uploading..." : "Click to upload company images"}
                   </div>
-                  <div className="text-xs text-slate-400">SVG, PNG, JPG or GIF (max. 1920 x 400px)</div>
+                  <div className="text-xs text-slate-400">
+                    PNG, JPG (recommended 1200 × 800)
+                  </div>
                 </div>
+            
                 <input
-                  id="background-upload"
+                  id="company-images-upload"
                   type="file"
                   className="hidden"
                   accept="image/*"
-                  disabled={uploadingBg}
+                  multiple
+                  disabled={uploadingImage}
                   onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleBackgroundUpload(file);
+                    const files = e.target.files
+                    if (!files) return
+                  
+                    if (companyImages.length + files.length > 3) {
+                      toast.error("Maximum 3 company images allowed")
+                      return
+                   }
+                 
+                 
+                    handleCompanyImageUpload(files)
                   }}
                 />
+
               </label>
+                
             </div>
           </div>
         </div>
       </div>
+
+
+{/* ================= TECH STACK ================= */}
+<div className="py-8 border-b">
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="text-sm text-slate-700">
+      <div className="font-medium mb-2">Tech Stack</div>
+      <p className="text-xs text-slate-400">
+        Technologies your company works with
+      </p>
+    </div>
+
+    <div className="lg:col-span-2">
+     {/* Add tech */}
+<div className="flex gap-2 mb-3">
+  <select
+    value={techInput}
+    onChange={(e) => setTechInput(e.target.value)}
+    className="flex-1 border border-slate-200 rounded px-3 py-2 text-sm bg-white"
+  >
+    <option value="">Select technology</option>
+
+    {TECH_STACK_OPTIONS.map((tech) => (
+      <option
+        key={tech}
+        value={tech}
+        disabled={techStack.some((t) => t.name === tech)}
+      >
+        {tech}
+      </option>
+    ))}
+  </select>
+
+  <button
+    onClick={() => {
+      if (!techInput) return
+
+      setTechStack((prev) => [
+        ...prev,
+        { name: techInput, logo: "" }, // logo backend هيضيفه
+      ])
+      setTechInput("")
+    }}
+    className="px-4 py-2 bg-[#4640DE] text-white rounded text-sm"
+  >
+    Add
+  </button>
+</div>
+
+
+      {/* List */}
+      {techStack.length === 0 ? (
+        <p className="text-sm text-slate-400">No tech added yet</p>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {techStack.map((tech, i) => (
+            <span
+              key={i}
+              className="px-3 py-1 rounded bg-indigo-50 text-indigo-700 text-xs flex items-center gap-2"
+            >
+              {tech.logo && (
+                <img src={tech.logo} className="w-4 h-4" />
+              )}
+              {tech.name}
+              <button
+                onClick={() =>
+                  setTechStack((prev) =>
+                    prev.filter((_, index) => index !== i)
+                  )
+                }
+                className="text-indigo-500 hover:text-indigo-700"
+              >
+                ✕
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+
+
+
 
       {/* Company Details */}
       <div className="py-8">
