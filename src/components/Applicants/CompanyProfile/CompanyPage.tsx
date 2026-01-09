@@ -57,7 +57,7 @@ function CompanyPage({ company }: Props) {
                 <CompanyStats
                   founded={company.foundedDate?.split("T")[0]}
                   employees={company.employeesRange}
-                  location={company?.locations?.length || 0}
+                  location={company?.countries?.length || 0}
                   industry={company.industry}
                 />
               </div>
@@ -74,17 +74,7 @@ function CompanyPage({ company }: Props) {
             {company.images && company.images.length > 0 && (
               <CompanyImagesSection images={company.images} />
             )}
-            {company.backGroundUrl && (
-              <img
-                src={company.backGroundUrl}
-                alt="Company background"
-                className="w-full rounded-lg object-cover"
-                style={{
-                  maxWidth: "478px",
-                  height: "auto",
-                }}
-              />
-            )}
+
 
             <ContactSection company={company} />
           </div>
@@ -96,8 +86,8 @@ function CompanyPage({ company }: Props) {
               )}
             </div>
 
-            {company.locations?.length > 0 && (
-              <OfficeLocationSection locations={company.locations} />
+            {company.countries?.length > 0 && (
+              <OfficeLocationSection countries={company.countries} />
             )}
           </div>
         </div>
