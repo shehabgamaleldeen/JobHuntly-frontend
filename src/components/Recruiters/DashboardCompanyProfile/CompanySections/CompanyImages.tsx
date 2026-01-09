@@ -3,37 +3,34 @@ import type { Images } from "../Types";
 function CompanyImagesSection({ images }: { images: Images[] }) {
   if (!images || images.length === 0) return null;
 
+  const [mainImage, ...restImages] = images;
+
   return (
-    <div>
-      <div className="flex flex-col lg:flex-row gap-4">
-        <div className="flex-1">
+    <div className="w-full">
+      <div className="flex flex-col md:flex-row gap-4">
+        
+        <div className="w-full md:w-2/3 lg:w-[478px] aspect-[478/606]">
           <img
-            src={images[0].src}
+            src={mainImage.src}
             alt="Company"
-            className="w-full object-cover rounded-lg"
-            style={{
-              maxWidth: "478px",
-              height: "auto",
-              aspectRatio: "478/606",
-            }}
+            className="w-full h-full object-cover rounded-lg"
           />
         </div>
 
-        <div className="flex flex-col gap-4 flex-1">
-          {images.slice(1).map((img, idx) => (
-            <img
-              key={idx}
-              src={img.src}
-              alt={`Company ${idx + 2}`}
-              className="w-full object-cover rounded-lg"
-              style={{
-                maxWidth: "262px",
-                height: "auto",
-                aspectRatio: "262/194",
-              }}
-            />
-          ))}
-        </div>
+        {restImages.length > 0 && (
+          <div className="flex flex-row md:flex-col gap-4 w-full md:w-1/3 lg:w-[262px]">
+            {restImages.map((img, idx) => (
+              <div key={idx} className="w-full aspect-[262/194]">
+                <img
+                  src={img.src}
+                  alt={`Company ${idx + 2}`}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
       </div>
     </div>
   );
