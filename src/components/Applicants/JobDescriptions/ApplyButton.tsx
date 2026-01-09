@@ -134,7 +134,7 @@ export function ApplyButton(props: ApplyButtonProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="w-44 h-14 shrink font-semibold text-lg text-white bg-[#4640DE] hover:bg-[#3b36b5]"
+          className="w-35 h-11 md:w-44 md:h-14 shrink font-semibold text-lg text-white bg-[#4640DE] hover:bg-[#3b36b5]"
           variant="outline"
           onClick={() => {
             if (!isLoggedIn()) {

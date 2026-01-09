@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 export interface JobProps {
@@ -10,7 +9,7 @@ export interface JobProps {
     hqCity: string;
     hqCountry: string;
   };
-  categories: string[]; // Changed from skillsIds to categories (array of strings)
+  categories: string[]; 
   employmentType: string;
   workplaceModel: string;
 }
@@ -20,7 +19,7 @@ function JobCard(props: JobProps) {
 
   return (
     <Link
-      to={`/jobs/${props._id}`}
+      to={`/find-jobs/${props._id}`}
       className="block h-full bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-[#4640DE] transition-all duration-300 cursor-pointer group flex flex-col justify-between"
     >
       <div>
@@ -39,8 +38,9 @@ function JobCard(props: JobProps) {
             />
           </div>
 
-          <div>
-            <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#4640DE] transition-colors line-clamp-2 leading-tight">
+          <div className="w-full">
+            {/* REMOVED 'line-clamp-2' so title displays fully */}
+            <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#4640DE] transition-colors leading-tight break-words">
               {props.title}
             </h3>
             <p className="text-gray-500 text-sm mt-1 font-medium">
@@ -61,7 +61,7 @@ function JobCard(props: JobProps) {
 
         {/* Location */}
         <div className="flex items-center gap-1.5 text-gray-500 text-sm mb-4">
-          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
@@ -69,7 +69,7 @@ function JobCard(props: JobProps) {
         </div>
       </div>
 
-      {/* Footer: Categories (Blue Tags) */}
+      {/* Footer: Categories */}
       <div className="pt-4 border-t border-gray-100 mt-auto">
         <div className="flex flex-wrap gap-2">
           {props.categories && props.categories.slice(0, 2).map((category, index) => (
