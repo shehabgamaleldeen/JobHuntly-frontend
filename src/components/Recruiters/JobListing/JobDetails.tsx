@@ -1,11 +1,41 @@
 import type { JSX } from "react";
 import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import JobDescriptionsRec from "../JobDescriptionsDashboard/jobDescriptionsRec";
+import instance from "@/components/AxiosConfig/instance";
+import { toast } from "sonner";
 
 export default function JobDetailsTab(): JSX.Element {
+  const { id } = useParams(); // Get job ID from URL params
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [closeReason, setCloseReason] = useState("");
   const [confirmText, setConfirmText] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleDeleteJob = async () => {
+    if (confirmText !== "DELETE") {
+      toast.error("Type DELETE to confirm.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await instance.delete(`/job/${id}`);
+
+      if (response.data.success) {
+        toast.success("Job deleted successfully!");
+        setIsModalOpen(false);
+        // Navigate to jobs list or dashboard after successful deletion
+        navigate("/jobs"); // Adjust route as needed
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Failed to delete job";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -54,6 +84,7 @@ export default function JobDetailsTab(): JSX.Element {
                 <button
                   onClick={() => setIsModalOpen(false)}
                   className="text-slate-400 hover:text-slate-600"
+                  disabled={loading}
                 >
                   ✕
                 </button>
@@ -68,6 +99,7 @@ export default function JobDetailsTab(): JSX.Element {
                   onChange={(e) => setCloseReason(e.target.value)}
                   rows={4}
                   className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  disabled={loading}
                 />
               </div>
 
@@ -82,6 +114,7 @@ export default function JobDetailsTab(): JSX.Element {
                   value={confirmText}
                   onChange={(e) => setConfirmText(e.target.value)}
                   className="w-full border border-slate-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  disabled={loading}
                 />
               </div>
 
@@ -89,21 +122,16 @@ export default function JobDetailsTab(): JSX.Element {
                 <button
                   onClick={() => setIsModalOpen(false)}
                   className="px-4 py-2 border rounded text-sm"
+                  disabled={loading}
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
-                    if (confirmText !== "DELETE") {
-                      alert("Type DELETE to confirm.");
-                      return;
-                    }
-                    alert("Mock: job deleted");
-                    setIsModalOpen(false);
-                  }}
-                  className="px-4 py-2 bg-rose-500 text-white rounded text-sm"
+                  onClick={handleDeleteJob}
+                  className="px-4 py-2 bg-rose-500 text-white rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={loading}
                 >
-                  Delete Job
+                  {loading ? "Deleting..." : "Delete Job"}
                 </button>
               </div>
             </div>

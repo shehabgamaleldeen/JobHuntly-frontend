@@ -2,11 +2,11 @@ import PerksBenefits from './PerksBenefits.tsx'
 import { useEffect, useState } from 'react'
 import instance from '../../AxiosConfig/instance.ts'
 import './style.css'
-import { useParams } from 'react-router-dom'
+import { useParams , useNavigate } from "react-router-dom";
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import JobPath from './JobPath.tsx'
 import { toast } from 'sonner'
+import { ArrowLeft } from 'lucide-react'
 
 const shareJob = async () => {
   const url = window.location.href
@@ -28,6 +28,7 @@ const shareJob = async () => {
 }
 
 const JobDescriptionsRec = () => {
+  const navigate = useNavigate();
   dayjs.extend(relativeTime)
   const { id } = useParams()
 
@@ -65,10 +66,14 @@ const JobDescriptionsRec = () => {
   return (
     <>
       {/* ================= HEADER ================= */}
+          <button
+             onClick={() => navigate(-1)}
+             className="flex items-center gap-2 text-[#4640DE] hover:underline pb-8"
+           >
+             <ArrowLeft size={18} />
+             <span className="text-sm font-medium ">Back to Applications</span>
+           </button>
       <section className="jobDescriptionsCard bg-[#F8F8FD] py-14 max-sm:py-8 flex justify-center flex-col">
-        <div className="w-4/5 max-sm:w-[92%] m-auto mb-10">
-          <JobPath jobName={job?.title} />
-        </div>
 
         <div className="bg-[#FFFFFF] w-4/5 max-sm:w-[92%] m-auto p-6 max-sm:p-4 flex max-sm:flex-col justify-between border border-[#D6DDEB]">
           <div className="flex max-sm:flex-col items-center max-sm:items-start">
