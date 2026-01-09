@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import type { Company } from './Types';
-import CompanyRecruiterPage from './CompanyRecruiterPage';
-import NotFoundPage from '@/components/Basic/NotFoundPage';
+import CompanyRecruiterPage from './CompanyRecruiterPage'; 
+import instance from '@/components/AxiosConfig/instance'
+import Loader from '@/components/Basic/Loader';
+
 
 function CompanyPageRecruiterWrapper() {
   const { id } = useParams<{ id: string }>();
@@ -12,38 +13,36 @@ function CompanyPageRecruiterWrapper() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCompany = async()=>{
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const companyId = id || '1';
-        
-        const response = await axios.get<Company>(
-          `http://localhost:3000/companies/${companyId}`
-        );
-        
-        setCompany(response.data);
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setError(err.response?.data?.message || 'Failed to fetch company');
-        } else {
-          setError('An unexpected error occurred');
-        }
-        console.error('Error fetching company:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCompany = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-    fetchCompany();
-  }, [id]);
+      const companyId = id || "1";
+
+        const response = await instance.get(`/companies/${companyId}`);
+        
+        setCompany(response.data.data);
+
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to fetch company");
+      }
+      console.error("Error fetching company:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCompany();
+}, [id]);
+
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl"><NotFoundPage/></div>
-      </div>
+      <Loader/>
     );
   }
 
@@ -66,4 +65,4 @@ function CompanyPageRecruiterWrapper() {
   return <CompanyRecruiterPage company={company} />;
 }
 
-export default CompanyPageRecruiterWrapper;
+export default CompanyPageRecruiterWrapper

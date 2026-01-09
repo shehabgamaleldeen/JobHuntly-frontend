@@ -13,7 +13,7 @@ function CompanyStats({ founded, employees, location, industry }: Props) {
     <div className="flex flex-wrap gap-10 justify-items-stretch pt-3 font-epilogue text-base text-slate-600">
       <DetailItem icon={faCalendarAlt} label="Founded" value={founded} />
       <DetailItem icon={faUsers} label="Employees" value={employees} />
-      <DetailItem icon={faMapMarkerAlt} label="Location" value={location?.toLocaleString() + " Countries"} />
+      <DetailItem icon={faMapMarkerAlt} label="Location" value={location.toLocaleString() + " Countries"} />
       <DetailItem icon={faBuilding} label="Industry" value={industry} />
     </div>
   );
