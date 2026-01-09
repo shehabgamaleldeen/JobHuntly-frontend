@@ -21,9 +21,6 @@ export function JobListing(): JSX.Element {
               Applicants
             </NavLink>
 
-            <NavLink to="job-details" className={tabClass}>
-              Job Details
-            </NavLink>
           </nav>
         </div>
 
