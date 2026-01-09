@@ -94,7 +94,7 @@ function FindJobContent(props: any) {
               onClick={() => handleSearch()}
               className="bg-[#4640DE] text-white font-semibold px-8 py-3 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
             >
-              Search
+              Search jobs
             </button>
           </div>
         </div>
@@ -103,7 +103,7 @@ function FindJobContent(props: any) {
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className="text-gray-500">Popular :</span>
-            {['UI Designer', 'UX Researcher', 'Android', 'Admin'].map((tag, index, arr) => (
+            {['UI Designer', 'UX Researcher', 'Android', 'Developer'].map((tag, index, arr) => (
               <span 
                 key={tag}
                 className="text-gray-700 cursor-pointer hover:text-[#4640DE]"
