@@ -46,8 +46,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
                 const user = response.data.user;
 
                 if (user && user._id) {
-                    const newSocket = io("http://localhost:3000");
-                    activeSocket = newSocket; // Assign for cleanup
+                    const socketUrl = import.meta.env.VITE_API_BASE_URL;
+
+                    const newSocket = io(socketUrl);
+                    activeSocket = newSocket;
 
                     newSocket.on("connect", () => {
                         //console.log("Socket Connected. Registering:", user._id);
@@ -57,7 +59,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
                     newSocket.on("notification_received", (data) => {
                         // Adding the new notification
                         setNotifications(prev => [data, ...prev]);
-                        
+
                         const audio = new Audio(notificationSound);
                         audio.play().catch(err => console.log("Audio play blocked by browser:", err));
 

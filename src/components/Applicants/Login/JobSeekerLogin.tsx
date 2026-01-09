@@ -45,7 +45,7 @@ export default function JobSeekerLogin({ rememberMe }: Props) {
       
 
       if (user.role !== 'JOB_SEEKER') {
-        setErrorMsg('You are not authorized to login as a company')
+        setErrorMsg('You are not authorized to login as a Job Seeker')
         return
       }
 
