@@ -207,12 +207,12 @@ function SearchCompany() {
               <h3 className="font-bold mb-3">Industry</h3>
               {[
                 'Technology',
-                'E-commerce',
-                'Entertainment',
-                'Travel',
-                'Transportation',
                 'Finance',
                 'Healthcare',
+                'Education',
+                'Marketing',
+                'Social & Non-Profit',
+                'Other',
               ].map((ind) => (
                 <label
                   key={ind}
