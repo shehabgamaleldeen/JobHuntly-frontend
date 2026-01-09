@@ -4,7 +4,7 @@ import CompanyStats from './CompanyHeader/CompanyStats';
 import CompanyProfileSection from './CompanySections/CompanyProfileSection';
 import ContactSection from './CompanySections/ContactSection';
 import TechStackSection from './CompanySections/TechStackSection';
-import OfficeLocationSection from './CompanySections/OfficeLocationSection';
+// import OfficeLocationSection from './CompanySections/OfficeLocationSection';
 import CompanyImagesSection from './CompanySections/CompanyImages';
 
 interface Props {
@@ -39,9 +39,9 @@ function CompanyPage({ company }: Props) {
                   {company.name}
                 </h1>
 
-                <span className="text-xs border text-[#4640de] bg-[#F8F8FD] px-3 py-1 rounded">
+                {/* <span className="text-xs border text-[#4640de] bg-[#F8F8FD] px-3 py-1 rounded">
                   {company.jobCount} Jobs
-                </span>
+                </span> */}
               </div>
 
               <a
@@ -57,7 +57,7 @@ function CompanyPage({ company }: Props) {
                 <CompanyStats
                   founded={company.foundedDate?.split("T")[0]}
                   employees={company.employeesRange}
-                  location={company?.countries?.length || 0}
+                  location={company?.hqCountry}
                   industry={company.industry}
                 />
               </div>
@@ -76,7 +76,7 @@ function CompanyPage({ company }: Props) {
             )}
 
 
-            <ContactSection company={company} />
+            {/* <ContactSection company={company} /> */}
           </div>
 
           <div className="flex flex-col gap-10">
@@ -86,9 +86,11 @@ function CompanyPage({ company }: Props) {
               )}
             </div>
 
-            {company.countries?.length > 0 && (
+            {/* {company.countries?.length > 0 && (
               <OfficeLocationSection countries={company.countries} />
-            )}
+            )} */}
+             <ContactSection company={company} />
+
           </div>
         </div>
       </div>
