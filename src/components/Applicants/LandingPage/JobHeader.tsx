@@ -3,19 +3,20 @@ import { Link } from "react-router-dom";
 
 const JobHeader: React.FC = () => {
   return (
-    <section className="w-full bg-white pb-8 pt-16 px-4 sm:px-6 lg:px-8">
+    // Removed bottom padding (pb-0) so it visually connects to the Collection below
+    <section className="w-full bg-white pt-16 pb-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-end sm:items-center gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">
               Latest <span className="text-[#4640DE]">jobs</span>
             </h2>
           </div>
 
           <div>
             <Link
-              to="/find-jobs" // 2. Use 'to' instead of 'href'
-              className="flex items-center gap-2 text-[#4640DE] font-semibold hover:text-[#4640DE] transition-colors group"
+              to="/find-jobs"
+              className="flex items-center gap-2 text-[#4640DE] font-semibold hover:opacity-80 transition-all group"
             >
               <span>Show all jobs</span>
               <svg

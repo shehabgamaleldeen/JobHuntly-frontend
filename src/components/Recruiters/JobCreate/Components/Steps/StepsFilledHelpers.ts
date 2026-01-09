@@ -1,11 +1,11 @@
 import { type Step1Data, type Step2Data, type Step3Data, type Step4Data } from "../../JobCreateContext";
 
 export const isStep1Filled = (step1: Step1Data | undefined): boolean => {
-    console.log("=== Checking Step1 ===");
-    console.log("step1 data:", step1);
+    //console.log("=== Checking Step1 ===");
+    //console.log("step1 data:", step1);
 
     if (!step1) {
-        console.log("❌ step1 is undefined");
+        //console.log("❌ step1 is undefined");
         return false;
     }
 
@@ -22,20 +22,20 @@ export const isStep1Filled = (step1: Step1Data | undefined): boolean => {
         workplaceModel: step1.workplaceModel !== ""
     };
 
-    console.log("Step1 validation checks:", checks);
+    //console.log("Step1 validation checks:", checks);
 
     const isValid = Object.values(checks).every(check => check === true);
-    console.log(`Step1 is ${isValid ? "✅ VALID" : "❌ INVALID"}`);
+    //console.log(`Step1 is ${isValid ? "✅ VALID" : "❌ INVALID"}`);
 
     return isValid;
 };
 
 export const isStep2Filled = (step2: Step2Data | undefined): boolean => {
-    console.log("=== Checking Step2 ===");
-    console.log("step2 data:", step2);
+    //console.log("=== Checking Step2 ===");
+    //console.log("step2 data:", step2);
 
     if (!step2) {
-        console.log("❌ step2 is undefined");
+        //console.log("❌ step2 is undefined");
         return false;
     }
 
@@ -52,40 +52,40 @@ export const isStep2Filled = (step2: Step2Data | undefined): boolean => {
             step2.niceToHaves.every(r => r?.trim() !== "")
     };
 
-    console.log("Step2 validation checks:", checks);
+    //console.log("Step2 validation checks:", checks);
 
     const isValid = Object.values(checks).every(check => check === true);
-    console.log(`Step2 is ${isValid ? "✅ VALID" : "❌ INVALID"}`);
+    //console.log(`Step2 is ${isValid ? "✅ VALID" : "❌ INVALID"}`);
 
     return isValid;
 };
 
 export const isStep3Filled = (step3: Step3Data | undefined): boolean => {
-    console.log("=== Checking Step3 ===");
-    console.log("step3 data:", step3);
+    //console.log("=== Checking Step3 ===");
+    //console.log("step3 data:", step3);
 
     if (!step3) {
-        console.log("❌ step3 is undefined");
+        //console.log("❌ step3 is undefined");
         return false;
     }
 
     const isValid = Array.isArray(step3.benefits) && step3.benefits.length > 0;
-    console.log(`Step3 is ${isValid ? "✅ VALID" : "❌ INVALID"}`);
+    //console.log(`Step3 is ${isValid ? "✅ VALID" : "❌ INVALID"}`);
 
     return isValid;
 };
 
 export const isStep4Filled = (step4: Step4Data | undefined): boolean => {
-    console.log("=== Checking Step4 ===");
-    console.log("step4 data:", step4);
+    //console.log("=== Checking Step4 ===");
+    //console.log("step4 data:", step4);
 
     if (!step4) {
-        console.log("❌ step4 is undefined");
+        //console.log("❌ step4 is undefined");
         return false;
     }
 
     const isValid = Array.isArray(step4.questions) && step4.questions.length > 0;
-    console.log(`Step4 is ${isValid ? "✅ VALID" : "❌ INVALID"}`);
+    //console.log(`Step4 is ${isValid ? "✅ VALID" : "❌ INVALID"}`);
 
     return isValid;
 };
