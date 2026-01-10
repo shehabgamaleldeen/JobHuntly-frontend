@@ -98,22 +98,6 @@ function FindJobContent(props: any) {
             </button>
           </div>
         </div>
-
-        {/* Popular Tags Section */}
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="text-gray-500">Popular :</span>
-            {['UI Designer', 'AI Engineer', 'HR Specialist', 'Developer'].map((tag, index, arr) => (
-              <span 
-                key={tag}
-                className="text-gray-700 cursor-pointer hover:text-[#4640DE]"
-                onClick={() => handleSearch({ title: tag })}
-              >
-                {tag}{index < arr.length - 1 ? ',' : ''}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

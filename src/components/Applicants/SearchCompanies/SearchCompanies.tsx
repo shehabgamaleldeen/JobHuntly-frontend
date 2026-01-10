@@ -262,24 +262,6 @@ function SearchCompany() {
                 Search
               </button>
             </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-              <span className="text-gray-600">Popular:</span>
-              {[
-                { name: 'Facebook', display: 'Facebook,' },
-                { name: 'Twitter', display: 'Twitter,' },
-                { name: 'Apple', display: 'Apple,' },
-                { name: 'Microsoft', display: 'Microsoft' }
-              ].map((company) => (
-                <span
-                  key={company.name}
-                  className="text-gray-700 cursor-pointer hover:text-blue-600 transition"
-                  onClick={() => setSearchName(company.name)}
-                >
-                  {company.display}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
       </section>
