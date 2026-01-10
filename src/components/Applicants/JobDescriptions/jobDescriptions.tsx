@@ -255,18 +255,15 @@ const JobDescriptions = () => {
               <h2 className="text-[#25324B] text-3xl font-semibold">
                 Categories
               </h2>
-              <div>
-                {job?.categories?.[0] && (
-                  <span className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
-                    {job?.categories?.[0]}
+              <div className="flex flex-wrap gap-2">
+                {job?.categories?.map((category: any, index: any) => (
+                  <span
+                    key={index}
+                    className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2"
+                  >
+                    {category}
                   </span>
-                )}
-
-                {job?.categories?.[1] && (
-                  <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
-                    {job?.categories?.[1]}
-                  </span>
-                )}
+                ))}
               </div>
             </div>
             {job?.skillsIds?.length > 0 && (

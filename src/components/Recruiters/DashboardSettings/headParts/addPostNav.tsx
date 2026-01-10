@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import React from "react";
 
 interface CompanyHeaderProps {
-  logo: string;
+  logo: string | React.ReactNode; // Updated to allow JSX
   companyName: string;
   buttonText?: string;
   buttonLink?: string;
@@ -13,18 +14,16 @@ export function CompanyHeader({
   buttonText = "Post a job",
   buttonLink = "/company/jobs/step-1",
 }: CompanyHeaderProps) {
-
   const handleClearStorage = () => localStorage.removeItem("job_create_data");
 
   return (
     <header className="w-full bg-white border-b border-gray-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-
         <div className="flex items-center justify-between">
-
-          {/* LEFT SIDE: Burger + Logo + Name */}
+          
+          {/* LEFT SIDE: Burger + Logo/Fallback + Name */}
           <div className="flex items-center gap-3">
-
+            
             {/* 🍔 Burger (mobile only) */}
             <button
               className="md:hidden p-2 rounded-md border border-gray-200 bg-white"
@@ -45,15 +44,23 @@ export function CompanyHeader({
               </svg>
             </button>
 
-            {/* Logo */}
-            <img
-              src={logo}
-              className="w-10 h-10 rounded-md object-cover"
-              alt="Company Logo"
-            />
+            {/* Logo Logic */}
+            {logo && typeof logo === "string" && logo !== "" ? (
+              <img
+                src={logo}
+                className="w-12 h-12 rounded-full object-cover shrink-0"
+                alt="Company Logo"
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shrink-0 shadow-sm">
+                <span className="text-xl font-bold text-white uppercase">
+                  {companyName ? companyName.charAt(0) : "C"}
+                </span>
+              </div>
+            )}
 
             {/* Name */}
-            <span className="text-base font-semibold text-slate-900 whitespace-nowrap">
+            <span className="text-base font-semibold text-slate-900 whitespace-nowrap ml-1">
               {companyName}
             </span>
           </div>
@@ -74,7 +81,6 @@ export function CompanyHeader({
             {buttonText}
           </Link>
         </div>
-
       </div>
     </header>
   );
