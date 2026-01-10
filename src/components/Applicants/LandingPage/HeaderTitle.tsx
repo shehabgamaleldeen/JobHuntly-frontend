@@ -10,8 +10,6 @@ const HeaderTitle: React.FC = () => {
     navigate(`/find-jobs?title=${encodeURIComponent(title)}&location=${encodeURIComponent(location)}`);
   };
 
-  const popularTags: string[] = ["UI Designer", "AI Engineer", "HR Specialist", "Developer"];
-
   return (
     <section className="bg-white pb-16 pt-8 px-4 sm:px-6 lg:px-8">
       {/* Centralized Container */}
@@ -66,19 +64,6 @@ const HeaderTitle: React.FC = () => {
             >
               Search jobs
             </button>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="text-gray-500 font-medium">Popular:</span>
-            {popularTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => setTitle(tag)}
-                className="text-gray-700 hover:text-[#4640DE] transition-colors"
-              >
-                {tag},
-              </button>
-            ))}
           </div>
         </div>
       </div>
