@@ -12,22 +12,24 @@ const SimilarJopCard = ({ job }: SimilarJobCardProps) => {
           className="flex max-xl:flex-col max-lg:flex-col max-sm:flex-col gap-5"
           to={`/find-jobs/${job._id}`}
         >
-          <img className="w-12 h-14" src="/SimilarJopIcon.png" alt="jobIcon" />
+          <img className="w-12 h-14" src={job.companyId.logoUrl} alt="jobIcon" />
           <div>
             <h3 className="text-xl text-[#25324B] group-hover:text-[#4640DE] font-semibold mb-2">
               {job?.title}
             </h3>
             <span className=" text-[#515B6F] my-2">{job?.companyId?.name}</span>
             <div>
-              <span className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
-                {job?.employmentTypes}
+              <span className="text-lime-600 bg-lime-50 w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2">
+                {job?.employmentType}
               </span>
-              <span className="text-[#56CDAD] bg-[#56CDAD1A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 ">
-                {job?.categories?.[0]}
-              </span>
-              <span className="text-[#4640DE] p-2 bg-[#F8F8FD] w-fit inline-block text-base font-semibold rounded-3xl text-center my-1 mt-4 mr-4">
-                {job?.categories?.[1]}
-              </span>
+              {job?.categories?.map((category: any, index:any) => (
+                <span
+                  key={index}
+                  className="text-[#FFB836] bg-[#EB85331A] w-fit inline-block text-base font-semibold rounded-3xl text-center mt-4 mr-4 p-2 "
+                >
+                  {category}
+                </span>
+              ))}
             </div>
           </div>
         </Link>
