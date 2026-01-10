@@ -224,7 +224,7 @@ function FindJobs() {
 
       {/* Salary */}
       <div className="bg-white p-4 rounded-lg border mb-4">
-        <h3 className="font-bold mb-3">Monthly Salary (EGP)</h3>
+        <h3 className="font-bold mb-3">Monthly Salary</h3>
         <div className="flex gap-2 mb-2">
           <input
             type="number"
