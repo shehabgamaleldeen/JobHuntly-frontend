@@ -19,6 +19,8 @@ const SimilarJobs = ({ job }: similarJobProps) => {
           limit: 6,
         },
       })
+      console.log(res.data.data);
+      
       setsimilarJobs(res.data.data)
     } catch (err) {
       console.log(err)
