@@ -74,7 +74,7 @@ JobHuntly Frontend is the client-side application of a comprehensive job search 
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/MoazRyhan/JobHuntly-frontend.git
+git clone https://github.com/shehabgamaleldeen/JobHuntly-frontend.git
 cd JobHuntly-frontend
 ```
 
