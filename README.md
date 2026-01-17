@@ -12,8 +12,8 @@
 JobHuntly Frontend is the client-side application of a comprehensive job search platform that connects job seekers with recruiters. Built with cutting-edge technologies, it provides an intuitive, responsive, and feature-rich user experience for browsing jobs, managing applications, and company recruitment workflows.
 
 **🔗 Related Repositories:**
-- [Backend API](https://github.com/MoazRyhan/JobHuntly-Backend) - Express.js REST API
-- [Admin Dashboard](https://github.com/MoazRyhan/JobHuntly-Admin) - Next.js Admin Panel
+- [Backend API](https://github.com/shehabgamaleldeen/JobHuntly-Backend) - Express.js REST API
+- [Admin Dashboard](https://github.com/shehabgamaleldeen/JobHuntly-Admin) - Next.js Admin Panel
 
 ## ✨ Key Features
 
@@ -68,7 +68,7 @@ JobHuntly Frontend is the client-side application of a comprehensive job search 
 
 ### Prerequisites
 - Node.js 18+ and npm/yarn
-- Backend API running (see [Backend Repository](https://github.com/MoazRyhan/JobHuntly-Backend))
+- Backend API running (see [Backend Repository](https://github.com/shehabgamaleldeen/JobHuntly-Backend))
 
 ### Installation
 
@@ -199,11 +199,8 @@ This is a capstone project for the NTI Full-Stack Development Program. Contribut
 ## 👨‍💻 Authors
 
 **Shehab Gamal El-Deen**
-- GitHub: [@000Shehab000](https://github.com/000Shehab000)
-- LinkedIn: [Shehab Gamal El-Deen](https://www.linkedin.com/in/shehab-gamal-el-deen/)
-
-**Team Members:**
-- Moaz Ryhan - [@MoazRyhan](https://github.com/MoazRyhan)
+- GitHub: [shehabgamaleldeen](https://github.com/shehabgamaleldeen)
+- LinkedIn: [Shehab Gamal El-Deen](https://www.linkedin.com/in/shehabgamaleldeen/)
 
 ## 📄 License
 
